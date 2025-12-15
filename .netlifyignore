@@ -1,0 +1,23 @@
+# Old content (not needed)
+2024 content/
+references/
+
+# 2025 content - only keep January media
+2025 content/*.docx
+2025 content/*.pdf
+2025 content/Media/February/
+2025 content/Media/March/
+2025 content/Media/April/
+2025 content/Media/May/
+2025 content/Media/June/
+2025 content/Media/July & August/
+2025 content/Media/September/
+
+# Large video files
+*.mp4
+*.mov
+**/*.mp4
+**/*.mov
+
+# Git
+.git/

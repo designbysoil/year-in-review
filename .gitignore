@@ -22,12 +22,26 @@ references/
 *.swp
 *.swo
 
-# Keep 2025 content media images
-!2025 content/Media/**/*.jpg
-!2025 content/Media/**/*.jpeg
-!2025 content/Media/**/*.png
-!2025 content/Media/**/*.gif
-!2025 content/Media/**/*.webp
-!2025 content/Media/**/*.JPG
-!2025 content/Media/**/*.JPEG
-!2025 content/Media/**/*.PNG
+# 2025 content - exclude non-January months
+2025 content/Media/February/
+2025 content/Media/March/
+2025 content/Media/April/
+2025 content/Media/May/
+2025 content/Media/June/
+2025 content/Media/July & August/
+2025 content/Media/September/
+2025 content/*.docx
+2025 content/*.pdf
+
+# Keep January media images only
+!2025 content/Media/January/**/*.jpg
+!2025 content/Media/January/**/*.jpeg
+!2025 content/Media/January/**/*.png
+!2025 content/Media/January/**/*.gif
+!2025 content/Media/January/**/*.webp
+!2025 content/Media/January/**/*.JPG
+!2025 content/Media/January/**/*.JPEG
+!2025 content/Media/January/**/*.PNG
+
+# Local Netlify folder
+.netlify
