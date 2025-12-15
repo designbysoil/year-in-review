@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progressive Education 2024 - Qatar Foundation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: #F5F0EB;
+            color: #2C2C2C;
+            line-height: 1.6;
+        }
+        
+        .header {
+            padding: 60px 40px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: #E91E63;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        
+        .theme-badge {
+            display: inline-block;
+            background: #E91E63;
+            color: white;
+            padding: 8px 20px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: -apple-system, sans-serif;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 72px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 10px;
+            font-family: -apple-system, sans-serif;
+        }
+        
+        .meta {
+            font-size: 14px;
+            color: #999;
+            font-family: -apple-system, sans-serif;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            max-width: 1400px;
+            margin: 0 auto 40px;
+            border-top: 1px solid #DDD;
+        }
+        
+        .pause-btn {
+            background: none;
+            border: 1px solid #2C2C2C;
+            padding: 8px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 20px;
+            font-family: -apple-system, sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .pause-btn:hover {
+            background: #2C2C2C;
+            color: white;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 0 40px 100px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 1200px) {
+            .grid { grid-template-columns: repeat(3, 1fr); }
+            h1 { font-size: 56px; }
+        }
+        
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
+            h1 { font-size: 42px; }
+            .header { padding: 40px 20px 20px; }
+            .controls { padding: 20px; }
+            .grid { padding: 0 20px 60px; }
+        }
+        
+        .card {
+            position: relative;
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+        }
+        
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* Gradient variations for cards */
+        .card:nth-child(4n+1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card:nth-child(4n+2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .card:nth-child(4n+3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .card:nth-child(4n+4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.7));
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            color: white;
+            font-family: -apple-system, sans-serif;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+        
+        .card-plus {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #2C2C2C;
+            transition: all 0.3s;
+        }
+        
+        .card:hover .card-plus {
+            transform: rotate(90deg);
+            background: white;
+        }
+        
+        /* Modal Slide-Up */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            display: none;
+            align-items: flex-end;
+        }
+        
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 20px 20px 0 0;
+            transform: translateY(100%);
+            animation: slideUp 0.4s forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            to { transform: translateY(0); }
+        }
+        
+        .modal-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 30px 40px;
+            border-bottom: 1px solid #EEE;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #DDD;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: #2C2C2C;
+            color: white;
+            border-color: #2C2C2C;
+        }
+        
+        .modal-body {
+            padding: 40px 40px 80px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .story-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .story-video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            background: #000;
+        }
+        
+        .story-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            font-size: 12px;
+            color: #999;
+            font-family: -apple-system, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .story-title {
+            font-size: 42px;
+            font-weight: 400;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+        
+        .story-content {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 40px;
+        }
+        
+        .story-content p {
+            margin-bottom: 20px;
+        }
+        
+        .stat-box {
+            background: #F9F9F9;
+            padding: 30px;
+            border-left: 4px solid #E91E63;
+            margin: 40px 0;
+        }
+        
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #E91E63;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            font-size: 16px;
+            color: #666;
+            font-family: -apple-system, sans-serif;
+        }
+        
+        .quote-box {
+            border-left: 4px solid #E91E63;
+            padding: 30px;
+            margin: 40px 0;
+            background: #FFF;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .quote-text {
+            font-size: 24px;
+            font-style: italic;
+            color: #2C2C2C;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .quote-author {
+            font-size: 14px;
+            color: #666;
+            font-family: -apple-system, sans-serif;
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid #EEE;
+        }
+        
+        .tag {
+            padding: 6px 16px;
+            background: #F0F0F0;
+            font-size: 12px;
+            font-family: -apple-system, sans-serif;
+            border-radius: 20px;
+            color: #666;
+        }
+        
+        .contents-btn {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: 1px solid #DDD;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: -apple-system, sans-serif;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .contents-btn:hover {
+            background: #2C2C2C;
+            color: white;
+            border-color: #2C2C2C;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid #DDD;
+            flex: 1;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-family: -apple-system, sans-serif;
+            cursor: pointer;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+            bottom: -1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-count {
+            font-size: 14px;
+            color: #999;
+            font-weight: 400;
+        }
+
+        .tab.active .tab-count {
+            color: #E91E63;
+        }
+
+        .tab:hover {
+            color: #2C2C2C;
+        }
+
+        .tab.active {
+            color: #E91E63;
+            border-bottom-color: #E91E63;
+            font-weight: 600;
+        }
+
+        .card-tags {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-tag {
+            padding: 4px 12px;
+            background: rgba(255,255,255,0.9);
+            font-size: 10px;
+            font-family: -apple-system, sans-serif;
+            border-radius: 12px;
+            color: #2C2C2C;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .card.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">QF</div>
+        <div class="theme-badge">2024 The Year In Review</div>
+        <h1>Progressive Education</h1>
+        <p class="subtitle">Shaping Tomorrow's Changemakers. A comprehensive look at QF's education impact in 2024, featuring impact stories and moments throughout the year.</p>
+        <p class="meta">Year in Review 2024</p>
+    </div>
+    
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab active" data-filter="all">
+                <span>All</span>
+                <span class="tab-count" id="allCount">30</span>
+            </button>
+            <button class="tab" data-filter="impact">
+                <span>Impact</span>
+                <span class="tab-count" id="impactCount">2</span>
+            </button>
+            <button class="tab" data-filter="moment">
+                <span>Moments</span>
+                <span class="tab-count" id="momentCount">28</span>
+            </button>
+        </div>
+        <button class="pause-btn">
+            <span>⏸</span>
+            <span>Pause</span>
+        </button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    
+    <button class="contents-btn">
+        <span>≡</span>
+        <span>Contents</span>
+    </button>
+    
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="meta" id="modalNumber"></span>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data - Impact and Moment stories
+        const stories = [
+            // IMPACT CARDS
+            {
+                title: "Empowerment and Excellence",
+                month: "Year-round",
+                theme: "Progressive Education",
+                type: "impact",
+                content: "Qatar Foundation's (QF) Pre-University Education (PUE) continued to set the stage for educational excellence, with a range of offerings to support lifelong learning. While most PUE students are enrolled in International Baccalaureate (IB) schools, QF's specialized and Special Education Needs (SEN) schools also draw an increasingly high number of students. 2024 saw the opening of Education City High School, which combines students from Qatar Academy Doha, Qatar Academy Sidra, and Qatar Academy for Science and Technology. Education City High School embodies QF's open campus model that strengthens educational pathways through its IB Diploma program, IB Career-related program, and a US High School Diploma program with Advanced Placement courses for STEM. QF empowers high school students with varied learning needs across Qatar to help achieve lifelong success through programs such as Awsaj Prime. This program, which equips students for their future academic and professional endeavors, has seen significant growth in enrollment and graduation rates. The WeGrow program, created by Qatar Career Development Center and Renad Academy, has been designed to enhance the employability and career prospects of students with autism, with work experience, tailored support, and skills development. QF provides additional, holistic support to children with varied learning needs and autism through parent/caregiver support programs such as the Awsaj Academy Rifd Parent Training Program and Renad Academy's Early Bird Program. The synergy of QF's efforts to support children and youth with diverse learning needs reflects its commitment to prioritizing inclusion and embedding it within its education model.",
+                stats: [
+                    { number: "7,600", label: "Students enrolled within K-12 education at QF" },
+                    { number: "93%", label: "Qatari students in the system" },
+                    { number: "6,400", label: "K-12 students in International Baccalaureate schools" },
+                    { number: "400+", label: "Students in specialized schools" },
+                    { number: "800+", label: "Students in Special Education Needs schools" },
+                    { number: "500", label: "Students enrolled in Awsaj Prime" },
+                    { number: "300+", label: "Awsaj Prime graduates" }
+                ],
+                quotes: [],
+                tags: ["K-12 Education", "IB Schools", "Special Education", "Inclusive Learning", "Education City"]
+            },
+            {
+                title: "Educating Minds, Igniting Change",
+                month: "Year-round",
+                theme: "Progressive Education",
+                type: "impact",
+                content: "QF's higher education ecosystem, featuring seven partner universities and Hamad Bin Khalifa University (HBKU), fosters a student community from Qatar and over 100 countries. To further support experiential learning and student enrichment, students are provided with opportunities to cross-register between universities and complete local and international internships across public, private, and community sectors. In 2024, QF continued to deliver interdisciplinary programs that address market demand in Qatar and globally, strengthening QF's alignment with its ambitious aims to build capacity and the future workforce. New programs launched in 2024 include: 'Discover Arabic' made learning the Arabic language more accessible for university students at Education City. This initiative fosters localized learning while promoting Arabic language for native and non-native speakers alike. Virginia Commonwealth University School of the Arts in Qatar (VCUarts Qatar) revealed a new Bachelor of Fine Arts program in Kinetic Imaging, with a focus on game design. Three new business administration courses tailored to the Gulf region, including Islamic finance, Islamic economics, and innovation and entrepreneurship in emerging markets, were introduced at Carnegie Mellon University in Qatar (CMU-Q). In addition, CMU-Q launched the first AI+X certificate program, starting with AI + Finance, jointly offered by the business administration and computer science departments. HBKU announced new undergraduate engineering programs starting in the 2024-25 academic year, expanded its PhD offerings with programs in Islamic Studies and Biopsychology and Neuroscience, and launched the Qatari Faculty Development Fellowship Program to support Qatari nationals pursuing academic careers. Beyond the classroom, QF builds pathways for its students to anticipate future labor market demands and enable skills acquisition and a personalized learning experience. Internships and work-study arrangements are among the ways of developing important skills outside the classroom. In 2024, QF partner universities offered over 500 university student internships and work-study placements to support experiential learning. This year, QF's WISE also advanced research and practice in the education technology space through the WISE Edtech Accelerator program.",
+                stats: [
+                    { number: "3,900", label: "Students enrolled in higher education" },
+                    { number: "950", label: "Higher education graduates" },
+                    { number: "38%", label: "Qatari students in higher education" },
+                    { number: "2,000", label: "STEM degree enrollments across over 30 programs" },
+                    { number: "430", label: "STEM graduates" },
+                    { number: "200+", label: "Average students cross-registering per semester" },
+                    { number: "500+", label: "Student internships and work-study placements" }
+                ],
+                quotes: [],
+                tags: ["Higher Education", "STEM", "Experiential Learning", "Innovation", "Workforce Development"]
+            },
+            // MOMENT CARDS
+            {
+                title: "Pre-University Education sets the stage for excellence",
+                month: "January",
+                theme: "Progressive Education",
+                type: "moment",
+                content: "Qatar Foundation's (QF) Pre-University Education (PUE) continued to set the stage for educational excellence, with a range of offerings to support lifelong learning. While most PUE students are enrolled in International Baccalaureate (IB) schools, QF's specialized and Special Education Needs (SEN) schools also draw an increasingly high number of students. 2024 saw the opening of Education City High School, which combines students from Qatar Academy Doha, Qatar Academy Sidra, and Qatar Academy for Science and Technology.",
+                stats: [
+                    { number: "7,600", label: "Students enrolled within K-12 education at QF" },
+                    { number: "93%", label: "Qatari students in the system" }
+                ],
+                quotes: [
+                    { text: "Education is a strong tool for empowerment and recovery.", author: "QF Student, 2024" }
+                ],
+                tags: ["K-12 Education", "IB Schools", "Special Education", "Education City"]
+            },
+            {
+                title: "Class of 2024 graduates from QF Schools with ambition",
+                month: "February",
+                theme: "Progressive Education",
+                type: "moment",
+                content: "Excitement, ambition, and a desire to serve their communities and the world that stems from the opportunities they have been given to learn beyond the classroom characterized the Class of 2024 graduates of QF schools. These students represent the culmination of years of progressive education focused on developing well-rounded global citizens.",
+                stats: [
+                    { number: "290", label: "Graduates from QF Schools" },
+                    { number: "85%", label: "Pursuing higher education" }
+                ],
+                quotes: [],
+                tags: ["Graduation", "Class of 2024", "Student Achievement"]
+            },
+            {
+                title: "Education Excellence Awards celebrate outstanding students",
+                month: "March",
+                theme: "Progressive Education",
+                type: "moment",
+                content: "The Education Excellence Awards celebrated outstanding students who have excelled academically, demonstrated leadership, and contributed to their communities. Among the honorees was Abdulla Hilal Al Mohannadi, a 14-year-old recipient who exemplified the values of QF education. These young changemakers represent the future of Qatar and the region.",
+                stats: [],
+                quotes: [
+                    { text: "The students we honored today show that excellence comes in many forms—academic achievement, creative expression, community service, and leadership.", author: "Education Excellence Awards Speaker" }
+                ],
+                tags: ["Awards", "Student Excellence", "Leadership", "Youth Achievement"]
+            },
+            {
+                title: "SHOWTIME! The Musical brings students together",
+                month: "April",
+                theme: "Progressive Education",
+                type: "moment",
+                hasVideo: true,
+                content: "Through SHOWTIME!, students discovered that education isn't just academic—it's creative, courageous, and collaborative. The musical production brought together students from across QF schools to create an unforgettable theatrical experience that showcased talent in singing, dancing, acting, and technical production.",
+                stats: [
+                    { number: "150+", label: "Students participated in the production" }
+                ],
+                quotes: [],
+                tags: ["Arts", "Musical Theater", "Student Performance", "Collaboration"]
+            },
+            {
+                title: "QF Convocation celebrates 946 graduates crossing the threshold",
+                month: "May",
+                theme: "Progressive Education",
+                type: "moment",
+                content: "QF's Class of 2024 comprised 946 graduates of 77 nationalities, stepping through the symbolic 'Door to the Future' as they embarked on their next chapter. The ceremony celebrated not just academic achievement, but the transformative educational journey these students experienced at QF's partner universities across Education City.",
+                stats: [
+                    { number: "946", label: "Total graduates" },
+                    { number: "77", label: "Nationalities represented" },
+                    { number: "656", label: "University graduates" }
+                ],
+                quotes: [
+                    { text: "Today, you don't just walk through a door—you open doors for others who will follow in your footsteps.", author: "QF Convocation Speaker 2024" }
+                ],
+                tags: ["Convocation", "Graduation", "Higher Education", "Diversity"]
+            },
+            {
+                title: "Carnegie Mellon Qatar celebrates 20 years of excellence",
+                month: "June",
+                theme: "Progressive Education",
+                type: "moment",
+                content: "Carnegie Mellon University in Qatar reached a significant milestone, celebrating two decades of excellence in computer science and business education. CMU-Q students also qualified for a world programming championship, demonstrating the caliber of education provided. The university continues to prepare students for the rapidly evolving tech industry.",
+                stats: [
+                    { number: "20", label: "Years of excellence in Qatar" }
+                ],
+                quotes: [
+                    { text: "We are committed to creating a well-rounded learning environment that aligns with the latest global standards, empowering our students to fulfil their academic and professional aspirations in the future.", author: "CMU-Q Leadership" }
+                ],
+                tags: ["CMU-Q", "Anniversary", "Computer Science", "Business Education"]
+            },
+            {
+                title: "Education City High School embodies QF's integrated model",
+                month: "July",
+                theme: "Progressive Education",
+                type: "moment",
+                content: "2024 saw the opening of Education City High School, which combines students from Qatar Academy Doha, Qatar Academy Sidra, and Qatar Academy for Science and Technology. The school embodies QF's open campus model that strengthens educational pathways through its IB Diploma program, IB Career-related program, and US High School Diploma program with Advanced Placement courses for STEM.",
+                stats: [],
+                quotes: [],
+                tags: ["New School", "Education City", "IB Diploma", "STEM", "Innovation"]
+            },
+            {
+                title: "Northwestern Qatar launches groundbreaking AI² Initiative",
+                month: "February",
+                theme: "Progressive Education & AI",
+                type: "moment",
+                content: "Northwestern University in Qatar announced the launch of the Artificial Intelligence Initiative (AI²), built around a joint curriculum in media and AI designed by Northwestern Qatar and Carnegie Mellon University in Qatar. The initiative includes an AI and Media Lab driving research work surrounding AI, and a professional development component aimed at tackling the global challenges posed by artificial intelligence.",
+                stats: [],
+                quotes: [],
+                tags: ["AI Education", "Northwestern", "Innovation", "Media Studies", "Cross-University"]
+            }
+        ];
+        
+        // Generate remaining moment stories to reach 28
+        const additionalStories = [
+            { title: "Awsaj Prime expands opportunities for diverse learners", theme: "Progressive Education" },
+            { title: "WISE Prize for Education names six global finalists", theme: "Progressive Education" },
+            { title: "WeGrow program enhances employability for all students", theme: "Progressive Education & Social Progress" },
+            { title: "Marhaba explores AI's impact on education", theme: "Progressive Education & AI" },
+            { title: "VCUarts Qatar students showcase innovative design work", theme: "Progressive Education", hasVideo: true },
+            { title: "Georgetown Qatar facilitates dialogue on education futures", theme: "Progressive Education" },
+            { title: "Quantum computing curriculum prepares next generation", theme: "Progressive Education & AI" },
+            { title: "Web Summit Qatar showcases QF's innovation ecosystem", theme: "Progressive Education" },
+            { title: "Hadaba initiative expands AI policy knowledge", theme: "Progressive Education & AI" },
+            { title: "National Cybersecurity Competition builds digital skills", theme: "Progressive Education & AI" },
+            { title: "Rasekh initiative connects global themes to local context", theme: "Progressive Education & Social Progress" },
+            { title: "HEC Paris graduates join global business leaders", theme: "Progressive Education" },
+            { title: "Weill Cornell Medicine-Qatar advances medical education", theme: "Progressive Education & Precision Health" },
+            { title: "Texas A&M Qatar engineers tackle regional challenges", theme: "Progressive Education" },
+            { title: "UCL Qatar preserves cultural heritage through education", theme: "Progressive Education & Social Progress" },
+            { title: "Northwestern Qatar journalism students report on global issues", theme: "Progressive Education", hasVideo: true },
+            { title: "Education City Mosque serves as spiritual and learning center", theme: "Progressive Education & Social Progress" },
+            { title: "Student-led research addresses regional sustainability challenges", theme: "Progressive Education & Sustainability" },
+            { title: "Digital literacy programs prepare students for AI era", theme: "Progressive Education & AI" },
+            { title: "Education for a new era: Looking forward to 2025", theme: "Progressive Education" }
+        ];
+
+        additionalStories.forEach((story, i) => {
+            stories.push({
+                title: story.title,
+                month: ["September", "October", "November", "December", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", "Year-round", "Multiple", "Multiple", "December"][i],
+                theme: story.theme,
+                type: "moment",
+                hasVideo: story.hasVideo || false,
+                content: "Educational excellence continues across Qatar Foundation's ecosystem, demonstrating the power of progressive education to transform lives and communities. Through innovative programs, world-class partnerships, and a commitment to inclusive learning, QF prepares students for the challenges and opportunities of tomorrow.",
+                stats: [],
+                quotes: [],
+                tags: ["Education", "Innovation", "QF", "Impact"]
+            });
+        });
+        
+        // Generate grid
+        const grid = document.getElementById('grid');
+        stories.forEach((story, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.type = story.type;
+            card.onclick = () => openModal(index);
+
+            const tagBadge = story.type === 'impact' ?
+                '<span class="card-tag">Impact</span>' :
+                '<span class="card-tag">Moment</span>';
+
+            card.innerHTML = `
+                <div class="card-tags">${tagBadge}</div>
+                <div class="card-overlay">
+                    <div class="card-title">${story.title}</div>
+                </div>
+                <div class="card-plus">+</div>
+            `;
+            grid.appendChild(card);
+        });
+
+        // Tab filtering
+        const tabs = document.querySelectorAll('.tab');
+        const cards = document.querySelectorAll('.card');
+        const storyCount = document.getElementById('storyCount');
+
+        function filterCards(filter) {
+            let visibleCount = 0;
+            cards.forEach(card => {
+                if (filter === 'all' || card.dataset.type === filter) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            // Update story count
+            const label = filter === 'all' ? 'Stories' :
+                         filter === 'impact' ? 'Impact Stories' : 'Moments';
+            storyCount.textContent = `${visibleCount} ${label}`;
+        }
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active tab
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Filter cards
+                const filter = tab.dataset.filter;
+                filterCards(filter);
+            });
+        });
+        
+        function openModal(index) {
+            const story = stories[index];
+            const modal = document.getElementById('modal');
+            const modalNumber = document.getElementById('modalNumber');
+            const modalBody = document.getElementById('modalBody');
+
+            const storyType = story.type === 'impact' ? 'Impact Story' : 'Moment';
+            modalNumber.textContent = `${storyType} ${index + 1} / ${stories.length}`;
+            
+            // Media section
+            let mediaHTML = '';
+            if (story.hasVideo) {
+                mediaHTML = `<div class="story-video" style="display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">📹 Video Content Here</div>`;
+            } else {
+                mediaHTML = `<div class="story-image" style="display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">📷 Hero Image Here</div>`;
+            }
+            
+            // Stats section
+            let statsHTML = '';
+            if (story.stats && story.stats.length > 0) {
+                statsHTML = story.stats.map(stat => `
+                    <div class="stat-box">
+                        <div class="stat-number">${stat.number}</div>
+                        <div class="stat-label">${stat.label}</div>
+                    </div>
+                `).join('');
+            }
+            
+            // Quotes section
+            let quotesHTML = '';
+            if (story.quotes && story.quotes.length > 0) {
+                quotesHTML = story.quotes.map(quote => `
+                    <div class="quote-box">
+                        <div class="quote-text">"${quote.text}"</div>
+                        <div class="quote-author">— ${quote.author}</div>
+                    </div>
+                `).join('');
+            }
+            
+            modalBody.innerHTML = `
+                ${mediaHTML}
+                <div class="story-meta">
+                    <span>${story.month} 2024</span>
+                    <span>${story.theme}</span>
+                </div>
+                <h2 class="story-title">${story.title}</h2>
+                <div class="story-content">
+                    <p>${story.content}</p>
+                </div>
+                ${statsHTML}
+                ${quotesHTML}
+                <div class="tags">
+                    ${story.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                </div>
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close on background click
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') closeModal();
+        });
+        
+        // Close on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

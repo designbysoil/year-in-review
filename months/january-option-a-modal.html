@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>January 2025 - Year in Review - Qatar Foundation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #F4F0EB;
+            color: #2C2C2C;
+            line-height: 1.6;
+        }
+
+        body.drawer-open {
+            overflow: hidden;
+        }
+
+        /* Header */
+        .site-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #11362A;
+        }
+
+        .header-logo .logo {
+            width: 32px;
+            height: 22px;
+            background: #11362A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        .header-logo-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .header-nav a {
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .header-nav a:hover {
+            color: #11362A;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px 80px;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 60px;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 56px;
+            font-weight: 500;
+            color: #11362A;
+            letter-spacing: -1.5px;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        .month-intro {
+            font-size: 18px;
+            color: #555;
+            max-width: 700px;
+            line-height: 1.7;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            margin-bottom: 24px;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        /* Chapter Card */
+        .chapter-card {
+            position: relative;
+            height: 400px;
+            border-radius: 24px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            background: linear-gradient(135deg, #4D7B6B 0%, #11362A 100%);
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(17, 54, 42, 0.2);
+        }
+
+        .chapter-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+            z-index: 1;
+        }
+
+        .card-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-top {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .card-number {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+            color: #F4F0EB;
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        .card-description {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.9;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .card-tag {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .card-tag.education { background: rgba(233, 30, 99, 0.85); }
+        .card-tag.social { background: rgba(255, 152, 0, 0.85); }
+        .card-tag.sustainability { background: rgba(67, 160, 71, 0.85); }
+        .card-tag.ai { background: rgba(33, 150, 243, 0.85); }
+        .card-tag.health { background: rgba(76, 175, 80, 0.85); }
+
+        /* Drawer Overlay */
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 500;
+        }
+
+        .drawer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Drawer */
+        .drawer {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 90vh;
+            background: #F4F0EB;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 600;
+            display: flex;
+            flex-direction: column;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .drawer.active {
+            transform: translateY(0);
+        }
+
+        /* Drawer Header */
+        .drawer-header {
+            background: white;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            flex-shrink: 0;
+            border-radius: 24px 24px 0 0;
+            padding-top: 20px;
+        }
+
+        .drawer-header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px 20px;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* Drawer Handle */
+        .drawer-handle {
+            width: 40px;
+            height: 4px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        .drawer-chapter-indicator {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .drawer-chapter-indicator strong {
+            color: #11362A;
+        }
+
+        .drawer-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: #F4F0EB;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .drawer-close:hover {
+            background: #e8e4df;
+        }
+
+        /* Drawer Content */
+        .drawer-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px 32px 100px;
+        }
+
+        .drawer-content-inner {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* Story Styles */
+        .story-hero {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            margin-bottom: 32px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #4D7B6B 0%, #11362A 100%);
+        }
+
+        .story-meta {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .theme-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .theme-badge.education { background: rgba(233, 30, 99, 0.15); color: #E91E63; }
+        .theme-badge.social { background: rgba(255, 152, 0, 0.15); color: #F57C00; }
+        .theme-badge.sustainability { background: rgba(67, 160, 71, 0.15); color: #43A047; }
+        .theme-badge.ai { background: rgba(33, 150, 243, 0.15); color: #1976D2; }
+        .theme-badge.health { background: rgba(76, 175, 80, 0.15); color: #388E3C; }
+
+        .story-title {
+            font-size: 36px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            line-height: 1.2;
+            color: #11362A;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        .story-content {
+            font-size: 17px;
+            line-height: 1.85;
+            color: #444;
+        }
+
+        .story-content p {
+            margin-bottom: 20px;
+        }
+
+        .story-content a {
+            color: #11362A;
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 2px;
+            transition: opacity 0.2s ease;
+        }
+
+        .story-content a:hover {
+            opacity: 0.7;
+        }
+
+        /* Quote Block */
+        .quote-block {
+            background: white;
+            border-left: 4px solid #4D7B6B;
+            padding: 24px 28px;
+            margin: 28px 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .quote-text {
+            font-size: 18px;
+            font-style: italic;
+            line-height: 1.6;
+            color: #11362A;
+            margin-bottom: 12px;
+        }
+
+        .quote-attribution {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Stats Block */
+        .stats-block {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin: 28px 0;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #11362A;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Info List */
+        .info-list {
+            background: white;
+            padding: 20px 24px;
+            border-radius: 14px;
+            margin: 28px 0;
+        }
+
+        .info-list-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #4D7B6B;
+            margin-bottom: 14px;
+        }
+
+        .info-list ul {
+            list-style: none;
+        }
+
+        .info-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            font-size: 14px;
+            color: #444;
+        }
+
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Image Carousel */
+        .image-carousel-wrapper {
+            margin: 28px -32px;
+            position: relative;
+        }
+
+        .image-carousel {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: 0 32px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .image-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .image-carousel-item {
+            flex: 0 0 90%;
+            scroll-snap-align: start;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .image-carousel-item img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 14px;
+            padding: 0 32px;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(17, 54, 42, 0.2);
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .carousel-dot.active {
+            background: #11362A;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* Inline Image */
+        .inline-image {
+            width: 100%;
+            border-radius: 12px;
+            margin: 24px 0;
+        }
+
+        /* Video Embed */
+        .video-embed {
+            margin: 28px 0;
+            border-radius: 14px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+        }
+
+        .video-embed iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Drawer Footer Navigation */
+        .drawer-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .drawer-footer-inner {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 32px;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .drawer-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: #F4F0EB;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #11362A;
+            transition: all 0.2s ease;
+        }
+
+        .drawer-nav-btn:hover:not(:disabled) {
+            background: #11362A;
+            color: white;
+        }
+
+        .drawer-nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .drawer-nav-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 40px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .chapter-card {
+                height: 360px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-inner {
+                padding: 14px 20px;
+            }
+            .header-nav {
+                display: none;
+            }
+            .main-container {
+                padding: 30px 20px 60px;
+            }
+            h1 {
+                font-size: 36px;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .chapter-card {
+                height: 320px;
+            }
+            .drawer {
+                height: 100vh;
+                border-radius: 0;
+            }
+            .drawer-content {
+                padding: 30px 20px 100px;
+            }
+            .drawer-header {
+                border-radius: 0;
+                padding-top: 16px;
+            }
+            .drawer-handle {
+                display: none;
+            }
+            .drawer-header-inner {
+                padding: 0 20px 16px;
+            }
+            .drawer-footer-inner {
+                padding: 16px 20px;
+            }
+            .story-title {
+                font-size: 28px;
+            }
+            .image-carousel-wrapper {
+                margin: 24px -20px;
+            }
+            .image-carousel {
+                padding: 0 20px;
+            }
+            .carousel-indicators {
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="../index.html" class="header-logo">
+                <div class="logo">QF</div>
+                <span class="header-logo-text">Year in Review</span>
+            </a>
+            <nav class="header-nav">
+                <a href="../index.html">All Months</a>
+                <a href="#">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <p class="breadcrumb">
+                <a href="../index.html">Year in Review</a> / January
+            </p>
+            <h1>January 2025</h1>
+            <p class="month-intro">
+                The year that marked QF's 30th anniversary began with an Arabic language-focused celebration of education, platforms for dialogue being opened up at home and abroad, a new school being launched – and the start of an international sustainability partnership.
+            </p>
+        </div>
+
+        <!-- Stories Section -->
+        <section>
+            <h2 class="section-title">10 Stories</h2>
+
+            <div class="cards-grid">
+                <!-- Card 1 -->
+                <article class="chapter-card" data-chapter="1">
+                    <img src="../2025 content/Media/January/P1 January Visual Element 1 - 0164225001.jpg" alt="International Day of Education" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">1</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">A Language That Endures</h3>
+                        <p class="card-description">QF marked International Day of Education with a focus on the Arabic language, attended by Her Highness Sheikha Moza bint Nasser.</p>
+                        <div class="card-tags">
+                            <span class="card-tag education">Education</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 2 -->
+                <article class="chapter-card" data-chapter="2">
+                    <img src="../2025 content/Media/January/P2 January Visual Element 1 - HH Jadal Summit 2.jpg" alt="Jadal Summit" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">2</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Engagement Through Discourse</h3>
+                        <p class="card-description">Al-Mujadilah Center's inaugural Jadal summit gathered Muslim women scholars to explore participation in public life.</p>
+                        <div class="card-tags">
+                            <span class="card-tag social">Social Progress</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 3 -->
+                <article class="chapter-card" data-chapter="3">
+                    <img src="../2025 content/Media/January/P3 January Visual Element 1_His Majesty King Charles III and Her Excellency Sheikha Hind bint Hamad Al Thani (Center) with High-Level Delegates-min.jpg" alt="King's Foundation Partnership" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">3</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Learning from the Past</h3>
+                        <p class="card-description">QF's Earthna Center joined forces with The King's Foundation to harness traditional knowledge for sustainability.</p>
+                        <div class="card-tags">
+                            <span class="card-tag sustainability">Sustainability</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 4 -->
+                <article class="chapter-card" data-chapter="4">
+                    <div class="card-top">
+                        <span class="card-number">4</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Learning Without Limits</h3>
+                        <p class="card-description">Warif Academy – Qatar's first specialized academy for students with disabilities – was inaugurated.</p>
+                        <div class="card-tags">
+                            <span class="card-tag education">Education</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 5 -->
+                <article class="chapter-card" data-chapter="5">
+                    <div class="card-top">
+                        <span class="card-number">5</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">The Voices of Contribution</h3>
+                        <p class="card-description">QatarDebate reinforced the need for youth voices at Davos and the GCC Youth Summit.</p>
+                        <div class="card-tags">
+                            <span class="card-tag social">Social Progress</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 6 -->
+                <article class="chapter-card" data-chapter="6">
+                    <img src="../2025 content/Media/January/P6 January Visual Element 1 - Quantumimage00007.jpg" alt="Quantum Tech Conference" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">6</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Where Digital Meets Human</h3>
+                        <p class="card-description">The 'Ai or Nay?' exhibition and Quantum.Tech conference explored AI and quantum computing.</p>
+                        <div class="card-tags">
+                            <span class="card-tag ai">AI</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 7 -->
+                <article class="chapter-card" data-chapter="7">
+                    <img src="../2025 content/Media/January/P7 January Visual Element 1 - Sidra Medicine (4) (1).jpg" alt="Sidra Medicine Gene Therapy" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">7</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">At the Forefront of Healthcare</h3>
+                        <p class="card-description">Sidra Medicine opened its new Gene Therapy Center for innovative treatments.</p>
+                        <div class="card-tags">
+                            <span class="card-tag health">Health</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 8 -->
+                <article class="chapter-card" data-chapter="8">
+                    <img src="../2025 content/Media/January/P8 January Visual Element 4 - WCM-Q Alumni 2.jpg" alt="QBRI Research" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">8</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Illuminating Genetics</h3>
+                        <p class="card-description">QBRI published a major study on autism revealing 13 genes not previously associated.</p>
+                        <div class="card-tags">
+                            <span class="card-tag health">Health</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 9 -->
+                <article class="chapter-card" data-chapter="9">
+                    <img src="../2025 content/Media/January/P9 January Visual Element 2 - CMU-Q Start for Good.jpg" alt="CMU-Q Start for Good" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">9</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Innovation, Empowerment, Inclusivity</h3>
+                        <p class="card-description">CMU-Q debuted Start for Good while WISE launched an inclusive education action plan.</p>
+                        <div class="card-tags">
+                            <span class="card-tag social">Social</span>
+                            <span class="card-tag education">Education</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 10 -->
+                <article class="chapter-card" data-chapter="10">
+                    <img src="../2025 content/Media/January/P10 January Visual Element 1 - QF Ability Friendly Program's Swimming Competition 4.png" alt="Ability Friendly Swimming" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">10</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Taking the Plunge</h3>
+                        <p class="card-description">QF's Ability Friendly program hosted its first swimming competition for people with disabilities.</p>
+                        <div class="card-tags">
+                            <span class="card-tag social">Social Progress</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Qatar Foundation &bull; 2025 Year in Review</p>
+        <p style="margin-top: 10px;">&copy; 2025 Qatar Foundation. All rights reserved.</p>
+    </footer>
+
+    <!-- Drawer Overlay -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <!-- Drawer -->
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <div class="drawer-handle"></div>
+            <div class="drawer-header-inner">
+                <div class="drawer-chapter-indicator">
+                    <strong id="drawerChapterNum">Chapter 1</strong> of 10
+                </div>
+                <button class="drawer-close" id="drawerClose">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="drawer-content">
+            <div class="drawer-content-inner" id="drawerContent">
+                <!-- Content will be injected here -->
+            </div>
+        </div>
+        <div class="drawer-footer">
+            <div class="drawer-footer-inner">
+                <button class="drawer-nav-btn" id="prevChapter">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Previous
+                </button>
+                <button class="drawer-nav-btn" id="nextChapter">
+                    Next
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chapter Content Templates (hidden) -->
+    <div id="chapter-templates" style="display: none;">
+        <!-- Chapter 1 -->
+        <template id="template-1">
+            <img src="../2025 content/Media/January/P1 January Visual Element 1 - 0164225001.jpg" alt="Her Highness Sheikha Moza bint Nasser at International Day of Education" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge education">Progressive Education</span>
+            </div>
+            <h2 class="story-title">A Language That Endures</h2>
+            <div class="story-content">
+                <p>From its first day to the present day, education has been at the core of Qatar Foundation's (QF) mission, as it has nurtured change-makers and leaders, broadened minds, and shaped future paths within an ecosystem of knowledge like no other.</p>
+
+                <p>And so it was fitting that, as QF entered its 30th year, it played its part in marking International Day of Education: a global, United Nations-led celebration of the role of education in advancing peace and development.</p>
+
+                <p>Held under the theme 'Education is Everyone's Responsibility', <a href="https://www.qf.org.qa/stories/qf-marks-international-day-of-education-by-celebrating-arabic-language" target="_blank">QF's International Day of Education event</a> – attended by Her Highness Sheikha Moza bint Nasser, Chairperson of Qatar Foundation – placed a focus on the enduring importance of the Arabic language in preserving cultural and social identity: from innovative approaches to teaching Arabic, to ensuring children connect with and embrace the language and the values it carries.</p>
+
+                <div class="image-carousel-wrapper">
+                    <div class="image-carousel" data-carousel>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/January/P1 January Visual Element 2 - International Day of Education 1.jpg" alt="International Day of Education event at Qatar Foundation">
+                        </figure>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/January/P1 January Visual Element 5 - International Day of Education 6.jpg" alt="Spotlight on Qatar competition winners">
+                        </figure>
+                    </div>
+                    <div class="carousel-indicators">
+                        <button class="carousel-dot active" data-index="0"></button>
+                        <button class="carousel-dot" data-index="1"></button>
+                    </div>
+                </div>
+
+                <div class="stats-block">
+                    <div class="stat-item">
+                        <div class="stat-number">10</div>
+                        <div class="stat-label">innovations honored through 'Spotlight on Qatar' – a competition by QF and HundrED</div>
+                    </div>
+                </div>
+
+                <div class="quote-block">
+                    <div class="quote-text">"This is a step to promote Arabic not only as a means of communication, but also a bridge to science and knowledge, reflecting its civilizational and humanistic contributions."</div>
+                    <div class="quote-attribution">— Sheikha Noof Ahmed bin Saif Al Thani, Executive Director of Strategic Initiatives at QF's Pre-University Education</div>
+                </div>
+
+                <p>The event also announced the launch of a strategic partnership between the Ministry of Education and Higher Education and QF, aimed at supporting Arabic language education in international curricula through tools, programs, and resources, under <a href="https://www.qf.org.qa/education/rasekh" target="_blank">QF's Rasekh initiative</a>.</p>
+            </div>
+        </template>
+
+        <!-- Chapter 2 -->
+        <template id="template-2">
+            <img src="../2025 content/Media/January/P2 January Visual Element 1 - HH Jadal Summit 2.jpg" alt="Her Highness Sheikha Moza bint Nasser at Jadal Summit" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge social">Social Progress</span>
+            </div>
+            <h2 class="story-title">Engagement Through Discourse</h2>
+            <div class="story-content">
+                <p>The Arabic word 'jadal' means 'dialogue' or 'discourse' – and, in the context of the participation of Muslim women in public life, this is what QF's <a href="https://www.qf.org.qa/community/al-mujadilah-center-and-mosque-for-women" target="_blank">Al-Mujadilah Center and Mosque for Women</a> fostered across three days in January.</p>
+
+                <p>Its inaugural <a href="https://www.qf.org.qa/stories/inaugural-jadal-research-summit-explores-participation-of-muslim-women-in-public-life" target="_blank">Jadal research summit</a> gathered Muslim women scholars, researchers, and practitioners from the Global North and South to explore its central topic through three lenses: Muslim women and the law, women's lives and history, and the wellbeing and health of Muslim women.</p>
+
+                <div class="stats-block">
+                    <div class="stat-item">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">delegates from North America, Europe, Asia, Africa, and the Middle East</div>
+                    </div>
+                </div>
+
+                <div class="image-carousel-wrapper">
+                    <div class="image-carousel" data-carousel>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/January/P2 January Visual Element 2 - Jadal Summit-6.jpg" alt="Delegates at the Jadal research summit">
+                        </figure>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/January/P2 January Visual Element 4 - Jadal Summit-1.jpg" alt="Scholars presenting at the Jadal summit">
+                        </figure>
+                    </div>
+                    <div class="carousel-indicators">
+                        <button class="carousel-dot active" data-index="0"></button>
+                        <button class="carousel-dot" data-index="1"></button>
+                    </div>
+                </div>
+
+                <p>Speaking at the summit, Her Highness Sheikha Moza bint Nasser, Chairperson of Qatar Foundation, said: "Through Jadal, we honor the Qur'anic concept of jadal, as praised by Allah in Surat al-Mujadilah and embodied in the story of Khawla bint Tha'laba."</p>
+
+                <div class="quote-block">
+                    <div class="quote-text">"The participation of Muslim women in religious scholarship and scholarship on Islam is more important now than ever before."</div>
+                    <div class="quote-attribution">— Dr. Sohaira Z. Siddiqui, Executive Director, Al-Mujadilah</div>
+                </div>
+
+                <p>The story of Khawla bint Tha'laba (r.a.), who engaged in a dialogue with the Prophet Mohammed (PBUH), is the inspiration behind the name of Al-Mujadilah Center and Mosque for Women. The Jadal summit draws also from this legacy and aims to foster meaningful engagement.</p>
+
+                <p>Al-Mujadilah, established in 2024, aims to foster a Muslim society where all women are engaged, their participations and contributions are acknowledged and recognized, and their perspectives shape contemporary Muslim thought and discourse.</p>
+            </div>
+        </template>
+
+        <!-- Chapter 3 -->
+        <template id="template-3">
+            <img src="../2025 content/Media/January/P3 January Visual Element 1_His Majesty King Charles III and Her Excellency Sheikha Hind bint Hamad Al Thani (Center) with High-Level Delegates-min.jpg" alt="His Majesty King Charles III and Her Excellency Sheikha Hind bint Hamad Al Thani" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge sustainability">Sustainability</span>
+            </div>
+            <h2 class="story-title">Learning from the Past</h2>
+            <div class="story-content">
+                <p>Alongside international days and international gatherings, January was also a month of international partnerships – as QF's <a href="https://www.qf.org.qa/research/earthna-center-for-a-sustainable-future" target="_blank">Earthna Center for a Sustainable Future</a> joined forces with The King's Foundation to showcase how the lessons of yesterday can contribute to a more sustainable tomorrow.</p>
+
+                <p>The two-year collaboration with the UK charity – founded by His Majesty King Charles III – will establish four urban development pilot projects around the world that demonstrate the vital role of traditional knowledge and local cultural heritage in shaping 21st Century sustainable practices.</p>
+
+                <div class="info-list">
+                    <div class="info-list-title">The 4 pilot projects will take place in:</div>
+                    <ul>
+                        <li>India</li>
+                        <li>Guyana</li>
+                        <li>Sierra Leone</li>
+                        <li>Tanzania</li>
+                    </ul>
+                </div>
+
+                <p><a href="https://www.qf.org.qa/stories/qf-and-the-kings-foundation-join-forces-to-harness-traditional-knowledge-for-global-sustainability" target="_blank">Announced at The King's Foundation's headquarters in Dumfries House, Scotland</a>, the partnership has selected projects representing traditional forms of sustainability in different regions, with the insights they provide being shared with countries facing similar challenges – including Qatar.</p>
+
+                <div class="image-carousel-wrapper">
+                    <div class="image-carousel" data-carousel>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/January/P3 January Visual Element 2_Her Excellency Sheikha Hind bint Hamad Al Thani and His Majesty King Charles III (Left to Right, Front)-min.jpg" alt="Her Excellency Sheikha Hind bint Hamad Al Thani and His Majesty King Charles III">
+                        </figure>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/January/P3 January Visual Element 5 - Her Excellency Sheikha Hind bint Hamad Al Thani (Center)_1-min.JPG" alt="Her Excellency Sheikha Hind bint Hamad Al Thani">
+                        </figure>
+                    </div>
+                    <div class="carousel-indicators">
+                        <button class="carousel-dot active" data-index="0"></button>
+                        <button class="carousel-dot" data-index="1"></button>
+                    </div>
+                </div>
+
+                <p>"Our partnership with The King's Foundation stands on a shared belief: that the timeless wisdom of traditional knowledge, shaped by generations in harmony with nature, holds the key to building a sustainable future for our world," said Her Excellency Sheikha Hind bint Hamad Al Thani, Vice Chairperson of Qatar Foundation.</p>
+
+                <div class="quote-block">
+                    <div class="quote-text">"We are looking forward to bringing our work in building sustainable communities and transforming lives to this new partnership."</div>
+                    <div class="quote-attribution">— Kristina Murrin CBE, Chief Executive of The King's Foundation</div>
+                </div>
+
+                <p>"In safeguarding the cultural heritage of these four countries, we are also safeguarding invaluable knowledge and transforming it into a living resource for sustainable development."</p>
+            </div>
+        </template>
+
+        <!-- Chapter 4 -->
+        <template id="template-4">
+            <div class="story-hero"></div>
+            <div class="story-meta">
+                <span class="theme-badge education">Progressive Education</span>
+            </div>
+            <h2 class="story-title">Learning Without Limits</h2>
+            <div class="story-content">
+                <p>The power of partnership was also seen in the sphere of inclusive, accessible education in January, with the inauguration of <a href="https://www.qf.org.qa/education/warif-academy" target="_blank">Warif Academy</a> – the first specialized government academy of its kind in Qatar, specifically designed to ensure students with disabilities have the very best education.</p>
+
+                <div class="quote-block">
+                    <div class="quote-text">"Warif Academy goes beyond traditional education by offering specialized educational and therapeutic services meticulously designed to address the unique needs of students with disabilities."</div>
+                    <div class="quote-attribution">— Abeer Al Khalifa, President of Pre-University Education, QF</div>
+                </div>
+
+                <p>Established by the Ministry of Education and Higher Education, in partnership with QF, Warif Academy will ultimately cater for students aged 3-21 years – some of whom may not have had the opportunity to study before – through academic, behavioral, and therapeutic programs that empower as well as educate, and support services that address each student's individual needs.</p>
+
+                <div class="stats-block">
+                    <div class="stat-item">
+                        <div class="stat-number">25</div>
+                        <div class="stat-label">classrooms by 2028-29</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">150</div>
+                        <div class="stat-label">students capacity</div>
+                    </div>
+                </div>
+
+                <p>Speaking at Warif Academy's inauguration, Her Excellency Lolwah bint Rashid bin Mohammed Al Khater, Minister of Education and Higher Education, highlighted how its establishment marks a significant milestone in Qatar's ongoing commitment to fostering inclusivity and ensuring equality of opportunity, particularly for those with disabilities.</p>
+
+                <div class="info-list">
+                    <div class="info-list-title">The 'Exploration and Challenge' camp was organized by:</div>
+                    <ul>
+                        <li>QF's Pre-University Education</li>
+                        <li>The Internal Security Force (Lekhwiya)</li>
+                        <li>The Ministry of Endowments (Awqaf) and Islamic Affairs</li>
+                        <li>The Qatar Scouts and Guides Association</li>
+                        <li>Qatar Calendar House</li>
+                        <li>Qatar Red Crescent</li>
+                    </ul>
+                </div>
+
+                <p>And the spirit of collaboration also saw students from schools within and beyond QF come together in January to develop their leadership and decision-making skills – and strengthen their sense of Islamic identity and community values – at <a href="https://www.qf.org.qa/stories/qf-students-participate-in-educational-camp-to-develop-leadership-skills" target="_blank">the second 'Exploration and Challenge' camp</a>, which, through separate sessions, featured the participation of girls for the first time.</p>
+            </div>
+        </template>
+
+        <!-- Chapter 5 -->
+        <template id="template-5">
+            <div class="video-embed" style="margin-bottom: 32px;">
+                <iframe src="https://www.youtube.com/embed/NhMkOe69AN0" allowfullscreen></iframe>
+            </div>
+            <div class="story-meta">
+                <span class="theme-badge social">Social Progress</span>
+            </div>
+            <h2 class="story-title">The Voices of Contribution</h2>
+            <div class="story-content">
+                <p>At home and abroad, the need for the voice of youth to be heard in mapping the future of the Middle East and North Africa region was reinforced in January, by a QF-founded center dedicated to debate.</p>
+
+                <p>The World Economic Forum's Annual General Meeting 2025 in Davos, Switzerland, saw <a href="https://www.qf.org.qa/community/qatar-debate" target="_blank">QatarDebate</a> collaborate with Kurdistan House for <a href="https://www.qf.org.qa/stories/qatardebate-reinforces-need-for-youth-voice-in-shaping-middle-east-at-wef-2025" target="_blank">a panel discussion focusing on the role of young people in shaping policy and diplomacy in the Middle East</a>, and how regional partnerships are key to ensuring they have a seat at the table.</p>
+
+                <p>Meanwhile, in Doha, QatarDebate – together with the Ministry of Sports and Youth and Msheireb Museums – brought together youth and experts from across the Gulf for <a href="https://www.qf.org.qa/stories/gcc-youth-summit-2025-brings-together-next-generation-of-gulf-leaders" target="_blank">the GCC Youth Summit 2025</a>, where topics ranging from cultural heritage preservation and climate change to technological development and economic diversification were placed in the spotlight.</p>
+
+                <div class="quote-block">
+                    <div class="quote-text">"Through this summit, we hope that we will be able to develop effective strategies that contribute to empowering youth and enhancing their contribution to society."</div>
+                    <div class="quote-attribution">— His Excellency Yasser Al Jamal, Undersecretary of the Ministry of Sports and Youth</div>
+                </div>
+
+                <p>"In a rapidly changing world, the youth of the region are not only facing significant challenges, but also creating innovative solutions that impact both their societies and the global community," said Dr. Hayat Abdullah Marafi, Executive Director, QatarDebate.</p>
+
+                <p>"The GCC Youth Summit is an ideal platform for these young leaders to showcase their potential and contribute effectively to vital issues."</p>
+            </div>
+        </template>
+
+        <!-- Chapter 6 -->
+        <template id="template-6">
+            <img src="../2025 content/Media/January/P6 January Visual Element 1 - Quantumimage00007.jpg" alt="Quantum.Tech Conference at HBKU" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge ai">Artificial Intelligence</span>
+            </div>
+            <h2 class="story-title">Where Digital Meets Human</h2>
+            <div class="story-content">
+                <p>Within QF's Education City, the world's first university museum dedicated to media and communication can be found – and, in January, it was the venue for exploration of the continually evolving relationship between human creativity and machine learning.</p>
+
+                <p><a href="https://www.qf.org.qa/stories/exhibition-explores-intersections-boundaries-between-ai-and-human-creativity" target="_blank">The 'Ai or Nay? Artificial vs. Intelligent' exhibition</a> at QF partner university Northwestern University in Qatar's <a href="https://www.qatar.northwestern.edu/media-majlis/" target="_blank">Media Majlis Museum</a> examined the intersections, and the boundaries, between digital and human learning, and how the journalism of today and tomorrow can harness Artificial Intelligence while navigating its drawbacks.</p>
+
+                <div class="stats-block">
+                    <div class="stat-item">
+                        <div class="stat-number">20+</div>
+                        <div class="stat-label">works by regional and international artists</div>
+                    </div>
+                </div>
+
+                <div class="quote-block">
+                    <div class="quote-text">"The museum is shaping a new paradigm of cultural engagement in the region; one that centers community learning, interdisciplinary dialogue, and regional relevance."</div>
+                    <div class="quote-attribution">— Marwan M. Kraidy, Dean and CEO of Northwestern University in Qatar</div>
+                </div>
+
+                <p>And QF's <a href="https://www.hbku.edu.qa/" target="_blank">Hamad Bin Khalifa University (HBKU)</a> partnered with Quantum.Tech to bring <a href="https://www.qf.org.qa/stories/hbku-brings-middle-easts-first-quantum-tech-conference-to-qatar" target="_blank">its flagship quantum computing conference</a> to the Middle East for the first time, with thought leaders in the field and multinational companies such as Microsoft, Deutsche Bahn, JPMorgan Chase, and Rolls Royce among those attending.</p>
+
+                <div class="stats-block">
+                    <div class="stat-item">
+                        <div class="stat-number">200+</div>
+                        <div class="stat-label">experts attended the Quantum.Tech conference</div>
+                    </div>
+                </div>
+
+                <p>"HBKU and Quantum.Tech recognize that the Middle East is well-positioned to unlock the potential of quantum technologies and drive transformative impact for our economies and societies," said Dr. Saif Al-Kuwari, Director of HBKU's Qatar Center for Quantum Computing, as the three-day conference focused on topics including quantum innovations, commercialization, and adoption, as well as how cybersecurity can stave off quantum-powered attacks.</p>
+            </div>
+        </template>
+
+        <!-- Chapter 7 -->
+        <template id="template-7">
+            <img src="../2025 content/Media/January/P7 January Visual Element 1 - Sidra Medicine (4) (1).jpg" alt="Sidra Medicine Gene Therapy Center" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge health">Precision Health</span>
+            </div>
+            <h2 class="story-title">At the Forefront of Healthcare</h2>
+            <div class="story-content">
+                <p>Intended to address growing demand for innovative treatments for genetic diseases such as Spinal Muscular Atrophy and Duchenne Muscular Dystrophy, QF's <a href="https://www.sidra.org/" target="_blank">Sidra Medicine</a> – a leading women's and children's hospital and medical research hub – <a href="https://www.qf.org.qa/stories/sidra-medicine-opens-regions-first-dedicated-gene-therapy-center" target="_blank">opened its new Gene Therapy Center</a> as 2025 began.</p>
+
+                <div class="quote-block">
+                    <div class="quote-text">"As a Qatari institution, our goal is to create a regional center of excellence, where children from across the Arab world can access advanced therapies without the need to travel long distances, bringing world-class care closer to home."</div>
+                    <div class="quote-attribution">— Professor Tawfeq Ben-Omran, Division Chief of Genetic and Genomic Medicine, Sidra Medicine</div>
+                </div>
+
+                <p>Reinforcing Sidra Medicine's position at the regional vanguard of advanced care, which draws patients from across the Middle East and North Africa, the center – announced during the Arab Health 2025 conference – is earmarked to expand in the future to treat other rare and complex diseases.</p>
+
+                <div class="stats-block">
+                    <div class="stat-item">
+                        <div class="stat-number">45+</div>
+                        <div class="stat-label">children received gene therapies since 2022</div>
+                    </div>
+                </div>
+
+                <p>The center was unveiled as Sidra Medicine marked <a href="https://www.qf.org.qa/stories/sidra-medicine-marks-seven-years-of-pioneering-medical-education" target="_blank">seven years of offering pioneering medical education</a>, from residency and fellowship programs that nurture the clinicians of the future to some of the world's top conferences in this field.</p>
+
+                <div class="stats-block">
+                    <div class="stat-item">
+                        <div class="stat-number">400+</div>
+                        <div class="stat-label">medical trainees graduated from pediatric programs</div>
+                    </div>
+                </div>
+
+                <p>"When Sidra Medicine's medical education pillar was established, our mission was to be ranked among the top academic medical centers in the world," said Professor Ibrahim Janahi, Acting Chief Medical Officer and Chair of Medical Education at Sidra Medicine. "I am pleased to see how far we have come on this journey and the big strides we have taken to develop the next generation of healthcare and research professionals."</p>
+            </div>
+        </template>
+
+        <!-- Chapter 8 -->
+        <template id="template-8">
+            <img src="../2025 content/Media/January/P8 January Visual Element 4 - WCM-Q Alumni 2.jpg" alt="WCM-Q Alumni reunion in New York" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge health">Precision Health</span>
+            </div>
+            <h2 class="story-title">Illuminating Genetics</h2>
+            <div class="story-content">
+                <p>On the theme of health, <a href="https://www.qf.org.qa/stories/qbri-study-sheds-new-light-on-genetic-basis-of-autism-in-qatar" target="_blank">a major study on autism spectrum disorder among Qatar's population</a> was published by HBKU's <a href="https://www.hbku.edu.qa/en/qbri" target="_blank">Qatar Biomedical Research Institute (QBRI)</a>, shedding new light on the genetic basis of the condition.</p>
+
+                <div class="quote-block">
+                    <div class="quote-text">"These findings offer new insights into genetic factors affecting autism in Qatar, and may open new avenues for counseling and personalized treatment."</div>
+                    <div class="quote-attribution">— Dr. Omar Albagha, Acting Executive Director, QBRI</div>
+                </div>
+
+                <p>Working with QF's <a href="https://www.qf.org.qa/research/qatar-precision-health-institute" target="_blank">Qatar Precision Health Institute</a> and the Shafallah Center for Children with Disabilities, the research team used advanced computational tools to reveal 13 genes not previously associated with the risk of autism, laying the ground for further work on its genetic roots in the Arab world.</p>
+
+                <div class="stats-block">
+                    <div class="stat-item">
+                        <div class="stat-number">13</div>
+                        <div class="stat-label">new genes identified</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">50</div>
+                        <div class="stat-label">children enrolled in study</div>
+                    </div>
+                </div>
+
+                <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/QOwR01_QH0o" allowfullscreen></iframe>
+                </div>
+
+                <p>Meanwhile, the scientific expertise of a professor of physics at QF partner university <a href="https://qatar-weill.cornell.edu/" target="_blank">Weill Cornell Medicine-Qatar (WCM-Q)</a> helped a team of high school students from Qatar claim medals at <a href="https://www.qf.org.qa/stories/qatar-students-claim-medals-at-international-science-competition" target="_blank">a top international science competition</a> – just one example of how universities at QF support young people beyond their own ranks of students.</p>
+
+                <div class="stats-block">
+                    <div class="stat-item">
+                        <div class="stat-number">34</div>
+                        <div class="stat-label">WCM-Q alumni joined reunion in New York</div>
+                    </div>
+                </div>
+
+                <p>And many of the past beneficiaries of WCM-Q's world-class medical education <a href="https://www.qf.org.qa/stories/wcm-q-alumni-reunite-in-new-york" target="_blank">reunited in New York</a> to share their stories and expand their networks, at an event attended by alumni from each of the university's graduating classes from 2011 to 2024 who are now making their mark across the US medical world.</p>
+            </div>
+        </template>
+
+        <!-- Chapter 9 -->
+        <template id="template-9">
+            <img src="../2025 content/Media/January/P9 January Visual Element 2 - CMU-Q Start for Good.jpg" alt="CMU-Q Start for Good competition" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge social">Social Progress</span>
+                <span class="theme-badge education">Progressive Education</span>
+            </div>
+            <h2 class="story-title">Innovation, Empowerment, Inclusivity</h2>
+            <div class="story-content">
+                <p>Elsewhere within QF's partner universities, three weeks of inspiring students to create startups focused on social entrepreneurship came to a close at <a href="https://www.qatar.cmu.edu/" target="_blank">Carnegie Mellon University in Qatar (CMU-Q)</a>, which debuted its <a href="https://www.qf.org.qa/stories/cmu-q-inspires-students-to-tackle-social-challenges-with-start-for-good" target="_blank">Start for Good competition</a>.</p>
+
+                <div class="quote-block">
+                    <div class="quote-text">"We wanted to offer an educational experience that inspires and enriches students, and also generates ideas that can make a huge change in the world."</div>
+                    <div class="quote-attribution">— Maher Hakim, Distinguished Career Professor in Business Administration, CMU-Q</div>
+                </div>
+
+                <div class="info-list">
+                    <div class="info-list-title">The 3 winning startup ideas:</div>
+                    <ul>
+                        <li>An eco-friendly bike-sharing program</li>
+                        <li>A multisensory kit for accessibility challenges</li>
+                        <li>A digital humanitarian aid platform</li>
+                    </ul>
+                </div>
+
+                <p><a href="https://www.qatar.tamu.edu/" target="_blank">Texas A&M University at Qatar (TAMUQ)</a> equipped its student leaders with <a href="https://www.qf.org.qa/stories/tamuq-leadership-summit-equips-student-leaders-with-essential-skills" target="_blank">skills that can enhance the role they play in campus life</a>, while <a href="https://www.qatar.georgetown.edu/" target="_blank">Georgetown University in Qatar</a> welcomed <a href="https://www.qf.org.qa/stories/pulitzer-prize-winner-nathan-thrall-visits-guq" target="_blank">Pulitzer Prize-winning author Nathan Thrall</a> – who claimed the accolade for a book examining the plight of Palestinians – and <a href="https://www.hec.edu/en/campus/doha" target="_blank">HEC Paris, Doha</a> launched its <a href="https://www.qf.org.qa/stories/hec-paris-doha-launches-business-research-lab" target="_blank">Business Research Lab</a>.</p>
+
+                <div class="stats-block">
+                    <div class="stat-item">
+                        <div class="stat-number">70</div>
+                        <div class="stat-label">student leaders at TAMUQ Summit</div>
+                    </div>
+                </div>
+
+                <p>January also saw QF-founded <a href="https://www.qf.org.qa/community/qatar-career-development-center" target="_blank">Qatar Career Development Center</a> collaborate with the Ministry of Education and Higher Education to host key discussions on establishing a national career development ecosystem for Qatar.</p>
+
+                <p>And QF's global education thinktank <a href="https://www.wise-qatar.org/" target="_blank">WISE</a>, together with <a href="https://www.hbku.edu.qa/en/cpp" target="_blank">HBKU's College of Public Policy</a>, launched 'Action Plan for an Inclusive Education Policy for the State of Qatar' – <a href="https://www.qf.org.qa/stories/wise-and-cambridge-university-launch-inclusive-education-action-plan-for-qatar" target="_blank">a research report developed by WISE and the University of Cambridge</a>, highlighting national successes in supporting people with disabilities to access education, and the challenges that must still be addressed.</p>
+            </div>
+        </template>
+
+        <!-- Chapter 10 -->
+        <template id="template-10">
+            <img src="../2025 content/Media/January/P10 January Visual Element 1 - QF Ability Friendly Program's Swimming Competition 4.png" alt="QF Ability Friendly Program Swimming Competition" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge social">Social Progress</span>
+            </div>
+            <h2 class="story-title">Taking the Plunge</h2>
+            <div class="story-content">
+                <p>And QF's commitment to accessibility and inclusivity saw it really make a splash in January – as its <a href="https://www.qf.org.qa/community/ability-friendly-program" target="_blank">Ability Friendly program</a> teamed up with the Qatar Paralympic Committee to host <a href="https://www.qf.org.qa/stories/ability-friendly-program-hosts-first-swimming-competition" target="_blank">its first swimming competition for people with disabilities</a>.</p>
+
+                <p>Launched in 2018, the popular and growing program within QF's Pre-University Education provides tailored sports and developmental activities for children and adults with disabilities – with football programs and specialized camps alongside its regular swimming sessions.</p>
+
+                <div class="image-carousel-wrapper">
+                    <div class="image-carousel" data-carousel>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/January/P10 January Visual Element 2 - QF Ability Friendly Program's Swimming Competition 2.jpg" alt="Athletes at the Ability Friendly swimming competition">
+                        </figure>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/January/P10 January Visual Element 3 - QF Ability Friendly Program's Swimming Competition.png" alt="Participants celebrating">
+                        </figure>
+                    </div>
+                    <div class="carousel-indicators">
+                        <button class="carousel-dot active" data-index="0"></button>
+                        <button class="carousel-dot" data-index="1"></button>
+                    </div>
+                </div>
+
+                <p>It operates six days a week in Education City, and has branched out to also offer classes twice-weekly in Al Khor and Al Wakra, as well as enhancing educational programs for coaches and amassing a dedicated squad of vital volunteers.</p>
+
+                <p>"Participating in competitions not only enhances athletes' technical abilities and knowledge, but also contributes to their social development and personal growth," said Rodesa Comendador, sports coach with the Ability Friendly Program.</p>
+
+                <p>"The program's goal is to advance the accessibility movement across all sports. As we continue to grow, we are committed to creating more opportunities for individuals with disabilities to thrive in sports, both competitively and recreationally."</p>
+            </div>
+        </template>
+    </div>
+
+    <script>
+        // Drawer elements
+        const drawer = document.getElementById('drawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const drawerClose = document.getElementById('drawerClose');
+        const drawerContent = document.getElementById('drawerContent');
+        const drawerChapterNum = document.getElementById('drawerChapterNum');
+        const prevChapter = document.getElementById('prevChapter');
+        const nextChapter = document.getElementById('nextChapter');
+
+        // Cards
+        const cards = document.querySelectorAll('.chapter-card');
+
+        // Current chapter state
+        let currentChapter = 1;
+        const totalChapters = 10;
+
+        // Open drawer with specific chapter
+        function openDrawer(chapterNum) {
+            currentChapter = chapterNum;
+            updateDrawerContent();
+            drawer.classList.add('active');
+            drawerOverlay.classList.add('active');
+            document.body.classList.add('drawer-open');
+
+            // Update URL
+            history.pushState({ chapter: chapterNum }, '', `#chapter-${chapterNum}`);
+        }
+
+        // Close drawer
+        function closeDrawer() {
+            drawer.classList.remove('active');
+            drawerOverlay.classList.remove('active');
+            document.body.classList.remove('drawer-open');
+            history.pushState({}, '', window.location.pathname);
+        }
+
+        // Update drawer content
+        function updateDrawerContent() {
+            const template = document.getElementById(`template-${currentChapter}`);
+            if (template) {
+                drawerContent.innerHTML = template.innerHTML;
+                drawerChapterNum.textContent = `Chapter ${currentChapter}`;
+
+                // Update nav buttons
+                prevChapter.disabled = currentChapter === 1;
+                nextChapter.disabled = currentChapter === totalChapters;
+
+                // Scroll to top
+                drawerContent.scrollTop = 0;
+
+                // Initialize carousels in drawer
+                initCarousels();
+            }
+        }
+
+        // Initialize carousel functionality
+        function initCarousels() {
+            document.querySelectorAll('#drawerContent .image-carousel').forEach(carousel => {
+                const items = carousel.querySelectorAll('.image-carousel-item');
+                const wrapper = carousel.closest('.image-carousel-wrapper');
+                const dots = wrapper.querySelectorAll('.carousel-dot');
+
+                function updateDots() {
+                    const scrollLeft = carousel.scrollLeft;
+                    const itemWidth = items[0].offsetWidth + 12;
+                    const activeIndex = Math.round(scrollLeft / itemWidth);
+
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === activeIndex);
+                    });
+                }
+
+                carousel.addEventListener('scroll', () => {
+                    requestAnimationFrame(updateDots);
+                });
+
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        const itemWidth = items[0].offsetWidth + 12;
+                        carousel.scrollTo({
+                            left: index * itemWidth,
+                            behavior: 'smooth'
+                        });
+                    });
+                });
+            });
+        }
+
+        // Event listeners
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const chapterNum = parseInt(card.dataset.chapter);
+                openDrawer(chapterNum);
+            });
+        });
+
+        drawerClose.addEventListener('click', closeDrawer);
+        drawerOverlay.addEventListener('click', closeDrawer);
+
+        prevChapter.addEventListener('click', () => {
+            if (currentChapter > 1) {
+                currentChapter--;
+                updateDrawerContent();
+                history.replaceState({ chapter: currentChapter }, '', `#chapter-${currentChapter}`);
+            }
+        });
+
+        nextChapter.addEventListener('click', () => {
+            if (currentChapter < totalChapters) {
+                currentChapter++;
+                updateDrawerContent();
+                history.replaceState({ chapter: currentChapter }, '', `#chapter-${currentChapter}`);
+            }
+        });
+
+        // Handle initial hash
+        if (window.location.hash) {
+            const match = window.location.hash.match(/chapter-(\d+)/);
+            if (match) {
+                const chapterNum = parseInt(match[1]);
+                if (chapterNum >= 1 && chapterNum <= totalChapters) {
+                    setTimeout(() => openDrawer(chapterNum), 100);
+                }
+            }
+        }
+
+        // Handle back/forward navigation
+        window.addEventListener('popstate', (e) => {
+            if (e.state && e.state.chapter) {
+                currentChapter = e.state.chapter;
+                updateDrawerContent();
+                drawer.classList.add('active');
+                drawerOverlay.classList.add('active');
+                document.body.classList.add('drawer-open');
+            } else {
+                closeDrawer();
+            }
+        });
+
+        // Escape key to close drawer
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && drawer.classList.contains('active')) {
+                closeDrawer();
+            }
+            // Arrow key navigation
+            if (drawer.classList.contains('active')) {
+                if (e.key === 'ArrowLeft' && currentChapter > 1) {
+                    currentChapter--;
+                    updateDrawerContent();
+                    history.replaceState({ chapter: currentChapter }, '', `#chapter-${currentChapter}`);
+                }
+                if (e.key === 'ArrowRight' && currentChapter < totalChapters) {
+                    currentChapter++;
+                    updateDrawerContent();
+                    history.replaceState({ chapter: currentChapter }, '', `#chapter-${currentChapter}`);
+                }
+            }
+        });
+
+        // Make cards keyboard accessible
+        cards.forEach(card => {
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('role', 'button');
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && document.activeElement.classList.contains('chapter-card')) {
+                document.activeElement.click();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large media files
+*.mp4
+*.mp3
+*.wav
+*.m4a
+
+# PDFs and documents (not needed for web)
+*.pdf
+*.zip
+
+# Old content
+2024 content/
+
+# Reference materials
+references/
+
+# Editor files
+*.swp
+*.swo
+
+# Keep 2025 content media images
+!2025 content/Media/**/*.jpg
+!2025 content/Media/**/*.jpeg
+!2025 content/Media/**/*.png
+!2025 content/Media/**/*.gif
+!2025 content/Media/**/*.webp
+!2025 content/Media/**/*.JPG
+!2025 content/Media/**/*.JPEG
+!2025 content/Media/**/*.PNG
