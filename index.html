@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2024 Year in Review - Qatar Foundation</title>
+    <title>2025 Year in Review - Qatar Foundation</title>
     <style>
         * {
             margin: 0;
@@ -72,6 +72,22 @@
             position: relative;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .month-card.coming-soon {
+            cursor: default;
+            opacity: 0.5;
+        }
+
+        .month-card.coming-soon:hover .month-name {
+            color: #979797;
+            transform: none;
+        }
+
+        .month-card.coming-soon::after {
+            display: none;
         }
 
         .month-name {
@@ -233,19 +249,19 @@
 <body>
     <div class="header">
         <div class="logo">QF</div>
-        <h1>2024 Year in Review</h1>
+        <h1>2025 Year in Review</h1>
         <p class="subtitle">Explore Qatar Foundation's impact month by month across five themes: AI, Precision Health, Progressive Education, Sustainability, and Social Progress.</p>
         <p class="meta">Click any month to explore its stories</p>
     </div>
 
     <div class="stats-bar">
         <div class="stat-item">
-            <div class="stat-number">200</div>
-            <div class="stat-label">Total Stories</div>
+            <div class="stat-number">80</div>
+            <div class="stat-label">Stories So Far</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number">12</div>
-            <div class="stat-label">Months</div>
+            <div class="stat-number">8</div>
+            <div class="stat-label">Months Live</div>
         </div>
         <div class="stat-item">
             <div class="stat-number">5</div>
@@ -284,93 +300,73 @@
     </div>
 
     <div class="months-grid">
-        <div class="month-card" data-month="january" data-count="18">
+        <a href="months/january-option-a-modal.html" class="month-card" data-count="10">
             <div class="month-name">January</div>
-            <div class="month-badge">18 stories</div>
-        </div>
+            <div class="month-badge">10 stories</div>
+        </a>
 
-        <div class="month-card" data-month="february" data-count="16">
+        <a href="months/february-option-a-modal.html" class="month-card" data-count="10">
             <div class="month-name">February</div>
-            <div class="month-badge">16 stories</div>
-        </div>
+            <div class="month-badge">10 stories</div>
+        </a>
 
-        <div class="month-card" data-month="march" data-count="15">
+        <a href="months/march-option-a-modal.html" class="month-card" data-count="10">
             <div class="month-name">March</div>
-            <div class="month-badge">15 stories</div>
-        </div>
+            <div class="month-badge">10 stories</div>
+        </a>
 
-        <div class="month-card peak" data-month="april" data-count="20">
+        <a href="months/april-option-a-modal.html" class="month-card" data-count="10">
             <div class="month-name">April</div>
-            <div class="month-badge">20 stories</div>
-        </div>
+            <div class="month-badge">10 stories</div>
+        </a>
 
-        <div class="month-card peak" data-month="may" data-count="22">
+        <a href="months/may-option-a-modal.html" class="month-card" data-count="10">
             <div class="month-name">May</div>
-            <div class="month-badge">22 stories</div>
-        </div>
+            <div class="month-badge">10 stories</div>
+        </a>
 
-        <div class="month-card" data-month="june" data-count="14">
+        <a href="months/june-option-a-modal.html" class="month-card" data-count="10">
             <div class="month-name">June</div>
-            <div class="month-badge">14 stories</div>
-        </div>
+            <div class="month-badge">10 stories</div>
+        </a>
 
-        <div class="month-card" data-month="july" data-count="12">
-            <div class="month-name">July</div>
-            <div class="month-badge">12 stories</div>
-        </div>
+        <a href="months/july-august-option-a-modal.html" class="month-card" data-count="10">
+            <div class="month-name">July & August</div>
+            <div class="month-badge">10 stories</div>
+        </a>
 
-        <div class="month-card" data-month="august" data-count="12">
-            <div class="month-name">August</div>
-            <div class="month-badge">12 stories</div>
-        </div>
-
-        <div class="month-card" data-month="september" data-count="17">
+        <a href="months/september-option-a-modal.html" class="month-card" data-count="10">
             <div class="month-name">September</div>
-            <div class="month-badge">17 stories</div>
-        </div>
+            <div class="month-badge">10 stories</div>
+        </a>
 
-        <div class="month-card peak" data-month="october" data-count="19">
+        <div class="month-card coming-soon" data-count="10">
             <div class="month-name">October</div>
-            <div class="month-badge">19 stories</div>
+            <div class="month-badge">Coming soon</div>
         </div>
 
-        <div class="month-card peak" data-month="november" data-count="24">
+        <div class="month-card coming-soon" data-count="10">
             <div class="month-name">November</div>
-            <div class="month-badge">24 stories</div>
+            <div class="month-badge">Coming soon</div>
         </div>
 
-        <div class="month-card peak" data-month="december" data-count="21">
+        <div class="month-card coming-soon" data-count="10">
             <div class="month-name">December</div>
-            <div class="month-badge">21 stories</div>
+            <div class="month-badge">Coming soon</div>
         </div>
     </div>
 
     <footer>
-        <p>Qatar Foundation • 2024 Year in Review</p>
-        <p style="margin-top: 10px;">© 2024 Qatar Foundation. All rights reserved.</p>
+        <p>Qatar Foundation • 2025 Year in Review</p>
+        <p style="margin-top: 10px;">© 2025 Qatar Foundation. All rights reserved.</p>
     </footer>
 
     <script>
-        // Add click handlers to month cards
-        document.querySelectorAll('.month-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const month = card.dataset.month;
-                window.location.href = `months/${month}.html`;
-            });
-        });
-
-        // Add keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && document.activeElement.classList.contains('month-card')) {
-                document.activeElement.click();
-            }
-        });
-
-        // Make month cards keyboard accessible
-        document.querySelectorAll('.month-card').forEach(card => {
+        // Make non-link month cards keyboard accessible
+        document.querySelectorAll('.month-card:not(a)').forEach(card => {
             card.setAttribute('tabindex', '0');
             card.setAttribute('role', 'button');
-            card.setAttribute('aria-label', `View ${card.dataset.month} stories (${card.dataset.count} stories)`);
+            card.setAttribute('aria-label', `${card.querySelector('.month-name').textContent} - Coming soon`);
         });
     </script>
 </body>
