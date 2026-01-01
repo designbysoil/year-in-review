@@ -45,3 +45,5 @@ references/
 
 # Local Netlify folder
 .netlify
+# Large media files
+2025 content/Media/
