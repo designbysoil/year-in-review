@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>November 2025 - Year in Review - Qatar Foundation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #F4F0EB;
+            color: #2C2C2C;
+            line-height: 1.6;
+        }
+
+        body.drawer-open {
+            overflow: hidden;
+        }
+
+        /* Header */
+        .site-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #11362A;
+        }
+
+        .header-logo .logo {
+            width: 32px;
+            height: 22px;
+            background: #11362A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        .header-logo-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .header-nav a {
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .header-nav a:hover {
+            color: #11362A;
+        }
+
+        .header-nav a.active {
+            color: #11362A;
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px 80px;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 60px;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 56px;
+            font-weight: 500;
+            color: #11362A;
+            letter-spacing: -1.5px;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        .month-intro {
+            font-size: 18px;
+            color: #555;
+            max-width: 700px;
+            line-height: 1.7;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            margin-bottom: 24px;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        /* Chapter Card */
+        .chapter-card {
+            position: relative;
+            height: 400px;
+            border-radius: 24px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            background: linear-gradient(135deg, #4D7B6B 0%, #11362A 100%);
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(17, 54, 42, 0.2);
+        }
+
+        .chapter-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+            z-index: 1;
+        }
+
+        .card-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-top {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .card-number {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+            color: #F4F0EB;
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        .card-description {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.9;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .card-tag {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .card-tag.education { background: rgba(233, 30, 99, 0.85); }
+        .card-tag.social { background: rgba(255, 152, 0, 0.85); }
+        .card-tag.sustainability { background: rgba(67, 160, 71, 0.85); }
+        .card-tag.ai { background: rgba(33, 150, 243, 0.85); }
+        .card-tag.health { background: rgba(76, 175, 80, 0.85); }
+
+        /* Drawer Overlay */
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 500;
+        }
+
+        .drawer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Drawer */
+        .drawer {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 90vh;
+            background: #F4F0EB;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 600;
+            display: flex;
+            flex-direction: column;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .drawer.active {
+            transform: translateY(0);
+        }
+
+        /* Drawer Header */
+        .drawer-header {
+            background: white;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            flex-shrink: 0;
+            border-radius: 24px 24px 0 0;
+            padding-top: 20px;
+        }
+
+        .drawer-header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px 20px;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .drawer-handle {
+            width: 40px;
+            height: 4px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        .drawer-chapter-indicator {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .drawer-chapter-indicator strong {
+            color: #11362A;
+        }
+
+        .drawer-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: #F4F0EB;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .drawer-close:hover {
+            background: #e8e4df;
+        }
+
+        /* Drawer Content */
+        .drawer-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px 32px 100px;
+        }
+
+        .drawer-content-inner {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* Story Styles */
+        .story-hero {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            margin-bottom: 32px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #4D7B6B 0%, #11362A 100%);
+        }
+
+        .story-meta {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .theme-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .theme-badge.education { background: rgba(233, 30, 99, 0.15); color: #E91E63; }
+        .theme-badge.social { background: rgba(255, 152, 0, 0.15); color: #F57C00; }
+        .theme-badge.sustainability { background: rgba(67, 160, 71, 0.15); color: #43A047; }
+        .theme-badge.ai { background: rgba(33, 150, 243, 0.15); color: #1976D2; }
+        .theme-badge.health { background: rgba(76, 175, 80, 0.15); color: #388E3C; }
+
+        .story-title {
+            font-size: 36px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            line-height: 1.2;
+            color: #11362A;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        .story-content {
+            font-size: 17px;
+            line-height: 1.85;
+            color: #444;
+        }
+
+        .story-content p {
+            margin-bottom: 20px;
+        }
+
+        .story-content a {
+            color: #11362A;
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 2px;
+        }
+
+        .story-content h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #11362A;
+            margin: 32px 0 16px 0;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        /* Quote Block */
+        .quote-block {
+            background: white;
+            border-left: 4px solid #4D7B6B;
+            padding: 24px 28px;
+            margin: 28px 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .quote-text {
+            font-size: 18px;
+            font-style: italic;
+            line-height: 1.6;
+            color: #11362A;
+            margin-bottom: 12px;
+        }
+
+        .quote-attribution {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Stats Block */
+        .stats-block {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin: 28px 0;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #11362A;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Info List */
+        .info-list {
+            background: white;
+            padding: 20px 24px;
+            border-radius: 14px;
+            margin: 28px 0;
+        }
+
+        .info-list-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #4D7B6B;
+            margin-bottom: 14px;
+        }
+
+        .info-list ul {
+            list-style: none;
+        }
+
+        .info-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            font-size: 14px;
+            color: #444;
+        }
+
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Image Carousel */
+        .image-carousel-wrapper {
+            margin: 28px -32px;
+            position: relative;
+        }
+
+        .image-carousel {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: 0 32px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .image-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .image-carousel-item {
+            flex: 0 0 90%;
+            scroll-snap-align: start;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .image-carousel-item img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 14px;
+            padding: 0 32px;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(17, 54, 42, 0.2);
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .carousel-dot.active {
+            background: #11362A;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* Inline Image */
+        .inline-image {
+            width: 100%;
+            border-radius: 12px;
+            margin: 24px 0;
+        }
+
+        /* Video Embed */
+        .video-embed {
+            margin: 28px 0;
+            border-radius: 14px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+        }
+
+        .video-embed iframe,
+        .video-embed video {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Drawer Footer Navigation */
+        .drawer-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .drawer-footer-inner {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 32px;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .drawer-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: #F4F0EB;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #11362A;
+            transition: all 0.2s ease;
+        }
+
+        .drawer-nav-btn:hover:not(:disabled) {
+            background: #11362A;
+            color: white;
+        }
+
+        .drawer-nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .drawer-nav-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 40px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .chapter-card {
+                height: 360px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-inner {
+                padding: 14px 20px;
+            }
+            .header-nav {
+                display: none;
+            }
+            .main-container {
+                padding: 30px 20px 60px;
+            }
+            h1 {
+                font-size: 36px;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .chapter-card {
+                height: 320px;
+            }
+            .drawer {
+                height: 100vh;
+                border-radius: 0;
+            }
+            .drawer-content {
+                padding: 30px 20px 100px;
+            }
+            .drawer-header {
+                border-radius: 0;
+                padding-top: 16px;
+            }
+            .drawer-handle {
+                display: none;
+            }
+            .drawer-header-inner {
+                padding: 0 20px 16px;
+            }
+            .drawer-footer-inner {
+                padding: 16px 20px;
+            }
+            .story-title {
+                font-size: 28px;
+            }
+            .image-carousel-wrapper {
+                margin: 24px -20px;
+            }
+            .image-carousel {
+                padding: 0 20px;
+            }
+            .carousel-indicators {
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="../index.html" class="header-logo">
+                <div class="logo">QF</div>
+                <span class="header-logo-text">Year in Review</span>
+            </a>
+            <nav class="header-nav">
+                <a href="january-option-a-modal.html">January</a>
+                <a href="february-option-a-modal.html">February</a>
+                <a href="march-option-a-modal.html">March</a>
+                <a href="april-option-a-modal.html">April</a>
+                <a href="may-option-a-modal.html">May</a>
+                <a href="june-option-a-modal.html">June</a>
+                <a href="july-august-option-a-modal.html">Jul-Aug</a>
+                <a href="september-option-a-modal.html">September</a>
+                <a href="october-option-a-modal.html">October</a>
+                <a href="november-option-a-modal.html" class="active">November</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <p class="breadcrumb">
+                <a href="../index.html">Year in Review</a> / November
+            </p>
+            <h1>November 2025</h1>
+            <p class="month-intro">
+                QF unveiled a globally unique museum chronicling the life and work of a legendary artist, convened the education world to explore how to retain humanity at the heart of learning – and drove both local and global dialogue, and public engagement with sustainability.
+            </p>
+        </div>
+
+        <!-- Stories Section -->
+        <section>
+            <h2 class="section-title">10 Stories</h2>
+
+            <div class="cards-grid">
+                <article class="chapter-card" data-chapter="1">
+                    <img src="../2025 content/Media/November/P1 November Visual Element 1 - 0171825003.jpg" alt="An Artistic Landmark" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">1</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">An Artistic Landmark</h3>
+                        <p class="card-description">Her Highness Sheikha Moza bint Nasser inaugurated Lawh Wa Qalam: M. F. Husain Museum, a globally unique cultural landmark in Education City.</p>
+                        <div class="card-tags">
+                            <span class="card-tag social">Social Progress</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="chapter-card" data-chapter="2">
+                    <img src="../2025 content/Media/November/P2 November Visual Element 1 - 0170325004.jpg" alt="A Global Focus on Education" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">2</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">A Global Focus on Education</h3>
+                        <p class="card-description">The WISE 12 Summit explored how equity, empathy, and dignity can guide educational innovation in an AI-powered world.</p>
+                        <div class="card-tags">
+                            <span class="card-tag education">Education</span>
+                            <span class="card-tag ai">AI</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="chapter-card" data-chapter="3">
+                    <img src="../2025 content/Media/November/P3 November Visual Element 1 - HH Sheikha Moza and HE Sheikha Hind.jpg" alt="Commitment and Insight" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">3</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Commitment and Insight</h3>
+                        <p class="card-description">A national taskforce launched to safeguard digital wellbeing, while WISE 12 formed partnerships to advance global education dialogue.</p>
+                        <div class="card-tags">
+                            <span class="card-tag education">Education</span>
+                            <span class="card-tag ai">AI</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="chapter-card" data-chapter="4">
+                    <img src="../2025 content/Media/November/P4 November Visual Element 1 - UN Summit - HE Sheikha Hind bint Hamad Al Thani.jpeg" alt="Dedicated to Development" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">4</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Dedicated to Development</h3>
+                        <p class="card-description">Qatar staged the UN Second World Summit for Social Development 2025, with QF driving global collaboration on social progress.</p>
+                        <div class="card-tags">
+                            <span class="card-tag social">Social Progress</span>
+                            <span class="card-tag sustainability">Sustainability</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="chapter-card" data-chapter="5">
+                    <img src="../2025 content/Media/November/P5 November Visual Element 1 - QSW Photo 5.jpg" alt="A National Movement" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">5</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">A National Movement</h3>
+                        <p class="card-description">Qatar Sustainability Week 2025 marked 10 years of collective climate action with 700+ activations and thousands of participants.</p>
+                        <div class="card-tags">
+                            <span class="card-tag sustainability">Sustainability</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="chapter-card" data-chapter="6">
+                    <img src="../2025 content/Media/November/P6 November Visual Element 1 - HE Sheikha Hind - US Canada Alumni Forum 1.jpg" alt="Unity, Advancement, Innovation" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">6</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Unity, Advancement, Innovation</h3>
+                        <p class="card-description">The first QF Alumni Chapter Forum brought together US and Canada-based graduates, while students showcased sustainable innovations.</p>
+                        <div class="card-tags">
+                            <span class="card-tag education">Education</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="chapter-card" data-chapter="7">
+                    <img src="../2025 content/Media/November/P7 November Visual Element 1 - Rasekh - Panel 2.jpg" alt="Localizing Learning" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">7</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Localizing Learning</h3>
+                        <p class="card-description">QF's Rasekh initiative showcased how learning environments can reflect local culture, while empowering student leadership across the region.</p>
+                        <div class="card-tags">
+                            <span class="card-tag education">Education</span>
+                            <span class="card-tag social">Social Progress</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="chapter-card" data-chapter="8">
+                    <img src="../2025 content/Media/November/P8 November Visual Element 1 - HBKU - Professor Jeffrey Sachs_GISR.JPG" alt="Driving Dialogue and Discovery" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">8</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Driving Dialogue and Discovery</h3>
+                        <p class="card-description">Universities drove dialogue on digital security, Arabic literature, precision medicine, and regional research collaboration.</p>
+                        <div class="card-tags">
+                            <span class="card-tag education">Education</span>
+                            <span class="card-tag ai">AI</span>
+                            <span class="card-tag health">Health</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="chapter-card" data-chapter="9">
+                    <img src="../2025 content/Media/November/P9 November Visual Element 3 - Al-Mujadilah 1.jpg" alt="Advancements and Accolades" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">9</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Advancements and Accolades</h3>
+                        <p class="card-description">Sidra Medicine introduced groundbreaking treatments, while QNL and Al-Mujadilah received prestigious international recognition.</p>
+                        <div class="card-tags">
+                            <span class="card-tag health">Health</span>
+                            <span class="card-tag social">Social Progress</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="chapter-card" data-chapter="10">
+                    <img src="../2025 content/Media/November/P10 November Visual Element 1 - An intimate candlelit setting brought the beauty of Arabic Maqam to life at QF's &quot;Heart to Heart&quot;.jpg" alt="An Authentic Connection" class="card-image">
+                    <div class="card-top">
+                        <span class="card-number">10</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">An Authentic Connection</h3>
+                        <p class="card-description">QF launched 'Heart to Heart', a new platform for live Arabic maqam classical music in a truly authentic listening experience.</p>
+                        <div class="card-tags">
+                            <span class="card-tag social">Social Progress</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Qatar Foundation &bull; 2025 Year in Review</p>
+        <p style="margin-top: 10px;">&copy; 2025 Qatar Foundation. All rights reserved.</p>
+    </footer>
+
+    <!-- Drawer Overlay -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <!-- Drawer -->
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <div class="drawer-handle"></div>
+            <div class="drawer-header-inner">
+                <div class="drawer-chapter-indicator">
+                    <strong id="drawerChapterNum">Chapter 1</strong> of 10
+                </div>
+                <button class="drawer-close" id="drawerClose">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="drawer-content">
+            <div class="drawer-content-inner" id="drawerContent"></div>
+        </div>
+        <div class="drawer-footer">
+            <div class="drawer-footer-inner">
+                <button class="drawer-nav-btn" id="prevChapter">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Previous
+                </button>
+                <button class="drawer-nav-btn" id="nextChapter">
+                    Next
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chapter Content Templates -->
+    <div id="chapter-templates" style="display: none;">
+        <template id="template-1">
+            <img src="../2025 content/Media/November/P1 November Visual Element 1 - 0171825003.jpg" alt="M. F. Husain Museum Inauguration" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge social">Social Progress</span>
+            </div>
+            <h2 class="story-title">An Artistic Landmark</h2>
+            <div class="story-content">
+                <p>A new addition to the artistic landscape of Qatar and the region, it stands within QF's Education City as a living, vibrant testament to the legacy of a true pioneer of modern art – Maqbool Fida Husain.</p>
+                <p>And in November, Lawh Wa Qalam: M. F. Husain Museum – a space for learning, discovery, creativity, and dialogue that spans cultures, where visitors can embark on a journey through the life and work of the artist whose name it bears and on whose own sketch the design of the museum is based – was inaugurated by Her Highness Sheikha Moza bint Nasser, Chairperson of Qatar Foundation.</p>
+                <img src="../2025 content/Media/November/P1 November Visual Element 2 - 0171825007.jpg" alt="M. F. Husain Museum" class="inline-image">
+                <p>Through paintings, films, tapestry, and photography, the museum chronicles how Husain's long and diverse artistic career unfolded, with some of its works being publicly displayed for the first time alongside personal items from Husain's life and interviews and quotes that explain his vision and inspiration.</p>
+                <div class="quote-block">
+                    <div class="quote-text">"Maqbool Fida Husain is a legendary artist – a true master whose artistic works transcend borders and connect cultures, histories, and identities. I am delighted to fulfill the dream of this late, esteemed artist by inaugurating the museum, which will stand as a new landmark in Education City showcasing pages from his life and a collection of his works."</div>
+                    <div class="quote-attribution">— Her Highness Sheikha Moza bint Nasser, Chairperson of Qatar Foundation</div>
+                </div>
+                <div class="video-embed">
+                    <video controls poster="../2025 content/Media/November/P1 November Visual Element 1 - 0171825003.jpg">
+                        <source src="../2025 content/Media/November/P1 November Visual Element 3 - TFH_MF_Husain_90sec_Online_20251207.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="info-list">
+                    <div class="info-list-title">About Lawh Wa Qalam: M. F. Husain Museum:</div>
+                    <ul>
+                        <li>Features over 150 of Husain's original works and personal objects that are in the custody of QF</li>
+                        <li>Among its artworks are some of the 35 paintings inspired by Arab civilization that Husain completed before his death in 2011</li>
+                        <li>Seeroo fi al ardh – Husain's final masterpiece, opened by QF in 2019 – now forms part of the museum</li>
+                    </ul>
+                </div>
+                <div class="image-carousel-wrapper">
+                    <div class="image-carousel" data-carousel>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P1 November Visual Element 5 - Lawh Wa Qalam Inaguration_Show_5.jpg" alt="Museum Inauguration Ceremony">
+                        </figure>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P1 November Visual Element 6 - Lawh Wa Qalam Inaguration_Show_8.jpg" alt="Museum Inauguration Ceremony">
+                        </figure>
+                    </div>
+                    <div class="carousel-indicators">
+                        <button class="carousel-dot active" data-index="0"></button>
+                        <button class="carousel-dot" data-index="1"></button>
+                    </div>
+                </div>
+                <p>Speaking at the inauguration ceremony – where the audience included art collectors and experts from around the world – Her Highness Sheikha Moza bint Nasser fulfilled a vision to create a lasting cultural landmark celebrating one of the most influential modern artists of our time.</p>
+            </div>
+        </template>
+
+        <template id="template-2">
+            <img src="../2025 content/Media/November/P2 November Visual Element 1 - 0170325004.jpg" alt="WISE 12 Summit" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge education">Progressive Education</span>
+                <span class="theme-badge ai">Artificial Intelligence</span>
+            </div>
+            <h2 class="story-title">A Global Focus on Education</h2>
+            <div class="story-content">
+                <p>With its focus on how equity, empathy, and dignity can be the guiding principles of educational innovation in an AI-powered world, the WISE 12 Summit – the latest edition of QF's biennial international gathering of education expertise – gathered leaders, thinkers, and educators from around the world to explore the future of learning, and the systems that drive it.</p>
+                <p>Hosted by QF's global education initiative WISE under the theme 'Humanity.io; Human Values at the Heart of Education', over two days the summit advanced the worldwide conversation on education's purpose and role as it embraces new technologies – and how bold change must remain human-centered.</p>
+                <img src="../2025 content/Media/November/P2 November Visual Element 2 - WISE Opening 2.jpg" alt="WISE 12 Summit Opening" class="inline-image">
+                <div class="quote-block">
+                    <div class="quote-text">"By placing human values at the heart of the educational process, we embark on a restoration project, both for science and for humanity: for science, by ensuring it does not become a force for harm; and for humanity, by reclaiming the essence of our humanity and dignity. Our shared commitment is an education that strengthens the values of truth, justice, and beauty, and our ultimate goal is a science in service to humanity – science that liberates, not enslaves."</div>
+                    <div class="quote-attribution">— Her Highness Sheikha Moza bint Nasser, Chairperson of Qatar Foundation</div>
+                </div>
+                <p>During the summit, Her Highness Sheikha Moza bint Nasser awarded the 2024-25 WISE Prize for Education to three global changemakers who are helping to redefine education; and attended a global consultation on the WISE Education Index – a framework designed to rethink how the effectiveness of the world's education systems is measured.</p>
+                <img src="../2025 content/Media/November/P2 November Visual Element 4 - 0171625002.jpg" alt="WISE Prize Ceremony" class="inline-image">
+                <div class="quote-block">
+                    <div class="quote-text">"No matter how the world changes, the ability of nations to progress remains dependent on their ability to keep humanity at the heart of their vision and decisions."</div>
+                    <div class="quote-attribution">— Her Excellency Lolwah bint Rashid bin Mohammed Al Khater, Minister of Education and Higher Education, speaking at the opening of WISE 12</div>
+                </div>
+                <div class="info-list">
+                    <div class="info-list-title">The winners of the 2024-25 WISE Prize for Education were:</div>
+                    <ul>
+                        <li>1st: TUMO, from Armenia - reimagining after-school creative learning experiences</li>
+                        <li>2nd: Iqrali.jo, from Jordan - a parental platform supporting children's Arabic literacy development</li>
+                        <li>3rd: Darsel, from the US – providing AI-driven math tutoring in low-connectivity settings</li>
+                    </ul>
+                </div>
+                <p>The WISE 12 Summit reinforced QF's commitment to ensuring that as education evolves, it remains grounded in the values that define our shared humanity.</p>
+            </div>
+        </template>
+
+        <template id="template-3">
+            <img src="../2025 content/Media/November/P3 November Visual Element 1 - HH Sheikha Moza and HE Sheikha Hind.jpg" alt="Digital Wellbeing Roundtable" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge education">Progressive Education</span>
+                <span class="theme-badge ai">Artificial Intelligence</span>
+            </div>
+            <h2 class="story-title">Commitment and Insight</h2>
+            <div class="story-content">
+                <p>During the WISE 12 Summit, a national taskforce aimed at unifying Qatar's efforts to safeguard the digital wellbeing of the nation's youth was launched – reinforcing a national commitment to responding to the risks that technology can pose to young people, while ensuring they can continue to feel its benefits.</p>
+                <p>A high-level roundtable chaired by Her Excellency Sheikha Hind bint Hamad Al Thani, Vice Chairperson of Qatar Foundation, and attended by Her Highness Sheikha Moza bint Nasser saw representatives from sectors including education, health, youth, sports, and culture to discuss how to balance the possibilities of technology with ethical and responsible use.</p>
+                <div class="quote-block">
+                    <div class="quote-text">"Technology is neither merely a tool nor an enemy; it is both a burden and a blessing. We must ask: are we shaping technology, or is it shaping us, and at what cost?"</div>
+                    <div class="quote-attribution">— Her Excellency Sheikha Hind bint Hamad Al Thani, Vice Chairperson of Qatar Foundation, speaking at the WISE 12 high-level roundtable on youth digital wellbeing</div>
+                </div>
+                <p>The summit also saw QF form new partnerships of knowledge with the International Association of Student Affairs and Services, the International Labour Organization, George Mason University, and The Young People's Network International, while launching a new bilingual journal exploring and addressing global higher education challenges, and leading international dialogue on topics including educational mobility and the resilience of universities in polarized times.</p>
+                <div class="image-carousel-wrapper">
+                    <div class="image-carousel" data-carousel>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P3 November Visual Element 3 - WISE PUE D1-118.jpg" alt="WISE Summit Session">
+                        </figure>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P3 November Visual Element 4 - Universities in Polarized Times Reimagining Mission and Discourse.jpg" alt="Universities in Polarized Times">
+                        </figure>
+                    </div>
+                    <div class="carousel-indicators">
+                        <button class="carousel-dot active" data-index="0"></button>
+                        <button class="carousel-dot" data-index="1"></button>
+                    </div>
+                </div>
+                <p>QF's Pre-University Education announced a partnership with Edinburgh Science Foundation to enhance STEAM (Science, Technology, Engineering, Arts, and Mathematics) teaching in QF schools, and led sessions on issues such as the future of progressive schooling and AI's role in teaching and learning.</p>
+                <img src="../2025 content/Media/November/P3 November - Visual Element 6 - Mo Gawdat shares how personal experiences shaped his writing and perspective.jpg" alt="Mo Gawdat at Education City Speaker Series" class="inline-image">
+                <p>And alongside the summit, one of its speakers – Google X tech pioneer turned bestselling author Mo Gawdat – relived his journey and shared his perspectives on AI at QF's Education City Speaker Series.</p>
+            </div>
+        </template>
+
+        <template id="template-4">
+            <img src="../2025 content/Media/November/P4 November Visual Element 1 - UN Summit - HE Sheikha Hind bint Hamad Al Thani.jpeg" alt="UN Second World Summit for Social Development 2025" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge social">Social Progress</span>
+                <span class="theme-badge sustainability">Sustainability</span>
+            </div>
+            <h2 class="story-title">Dedicated to Development</h2>
+            <div class="story-content">
+                <p>The capacity of QF to drive global collaboration and dialogue was also showcased as Qatar staged the United Nations Second World Summit for Social Development 2025, where the international community renewed a commitment to social progress amid growing inequalities, demographic shifts, and the rapid rise of technology.</p>
+                <p>Her Excellency Sheikha Hind bint Hamad Al Thani launched a new partnership between QF's Earthna Center for a Sustainable Future and the Children's Investment Fund to accelerate sustainable development in dryland ecosystems. Its goal is to address the twin vulnerabilities of food system failure and heat stress, and explore how traditional practices and community-driven solutions can support land restoration and regeneration.</p>
+                <div class="video-embed">
+                    <video controls poster="../2025 content/Media/November/P4 November Visual Element 1 - UN Summit - HE Sheikha Hind bint Hamad Al Thani.jpeg">
+                        <source src="../2025 content/Media/November/P4 November Visual Element 2 - UN_DIFI SESSIONS.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <p>Meanwhile, sessions led by QF's Doha International Family Institute emphasized the pivotal role of the family in social development, while QF's Doha Debates and QF-founded QatarDebate amplified the voices of youth around the summit's core themes and purpose.</p>
+                <div class="image-carousel-wrapper">
+                    <div class="image-carousel" data-carousel>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P4 November Visual Element 3 - UN Summit - Pannel Featuring Dr. Sharifa Al Emadi Executive Director of Doha International Family Institute (DIFI).jpg" alt="UN Summit Panel">
+                        </figure>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P4 November Visual Element 4 - UN Summit - QF Booth Visitors.jpg" alt="QF Booth at UN Summit">
+                        </figure>
+                    </div>
+                    <div class="carousel-indicators">
+                        <button class="carousel-dot active" data-index="0"></button>
+                        <button class="carousel-dot" data-index="1"></button>
+                    </div>
+                </div>
+                <p>The month also saw QF, in partnership with the Reina Sofía School of Music, launch of the Chair of Arab Studies – an initiative aimed at deepening cultural and musical ties between the Arab world and Spain, by promoting and deepening appreciation of Arab music and culture through academic and artistic exchange.</p>
+                <img src="../2025 content/Media/November/P4 November Visual Element 6 - Reina Sofia 5.jpg" alt="Reina Sofía Partnership" class="inline-image">
+                <div class="quote-block">
+                    <div class="quote-text">"Through this partnership, we are opening new pathways for young musicians, students and scholars to create, connect, and carry forward a heritage that belongs to us all."</div>
+                    <div class="quote-attribution">— Zlatan Fazlić, Director of Qatar Music Academy</div>
+                </div>
+                <p>It represents part of QF's 10-year partnership – formed in 2023 – with the prestigious Spanish music school, whose Young Artists Summer Camp welcomed students from QF's Qatar Music Academy, where Reina Sofía professors have also held Doha-based masterclasses.</p>
+            </div>
+        </template>
+
+        <template id="template-5">
+            <img src="../2025 content/Media/November/P5 November Visual Element 1 - QSW Photo 5.jpg" alt="Qatar Sustainability Week 2025" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge sustainability">Sustainability</span>
+            </div>
+            <h2 class="story-title">A National Movement</h2>
+            <div class="story-content">
+                <p>700-plus activations, thousands of participants, and over a million people reached – the 10th edition of Qatar Sustainability Week, the nation's largest community sustainability initiative, reached new heights of engagement, awareness, and impact.</p>
+                <p>Organized by QF's Earthna in collaboration with the Ministry of Environment and Climate Change, its 2025 edition marked a decade of collective climate action, with organizations, businesses, schools, and members of the community uniting to promote responsibility toward the environment across the country.</p>
+                <div class="image-carousel-wrapper">
+                    <div class="image-carousel" data-carousel>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P5 November Visual Element 2 - PUE QSW7.jpg" alt="Qatar Sustainability Week Activities">
+                        </figure>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P5 November Visual Element 3 - QSW Photo 4.jpg" alt="Qatar Sustainability Week Community Engagement">
+                        </figure>
+                    </div>
+                    <div class="carousel-indicators">
+                        <button class="carousel-dot active" data-index="0"></button>
+                        <button class="carousel-dot" data-index="1"></button>
+                    </div>
+                </div>
+                <p>Campaigns and events ranged from beach and seabed clean-ups, recycling drives, sustainable craft markets, and tree-planting and food waste awareness activities, to elements blending sustainability with art, creativity, and cultural heritage. Within QF's schools, learning experiences – such as recycling workshops, sustainability experiments, and exhibitions – inspired students to be responsible citizens and ambassadors for sustainability.</p>
+                <p>Education City-based Green Island – Qatar's first community-centric recycling hub – staged interactive workshops and school visits to educate children and their families about the importance of environmental stewardship.</p>
+                <div class="quote-block">
+                    <div class="quote-text">"Qatar Sustainability Week 2025 stands as a testament to what can be achieved when a nation unites behind a shared goal."</div>
+                    <div class="quote-attribution">— Dr. Gonzalo Castro de la Mata, Executive Director of Earthna</div>
+                </div>
+                <div class="info-list">
+                    <div class="info-list-title">Across 10 years, Qatar Sustainability Week has:</div>
+                    <ul>
+                        <li>Engaged over 750,000 participants</li>
+                        <li>Supported 2,700 events</li>
+                        <li>Partnered with over 1,650 organizations</li>
+                    </ul>
+                </div>
+                <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/afyacwi_Nmc" allowfullscreen></iframe>
+                </div>
+                <p>And in keeping with this nationwide focus on sustainability, QF spotlighted the Education City Apiary – and how its bees are key allies in sustainable agriculture, restoring ecosystems, and preserving cultural heritage.</p>
+            </div>
+        </template>
+
+        <template id="template-6">
+            <img src="../2025 content/Media/November/P6 November Visual Element 1 - HE Sheikha Hind - US Canada Alumni Forum 1.jpg" alt="QF Alumni Chapter Forum: US & Canada" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge education">Progressive Education</span>
+            </div>
+            <h2 class="story-title">Unity, Advancement, Innovation</h2>
+            <div class="story-content">
+                <p>While North America is where they are advancing their studies and careers, Qatar – and QF – is where they learned to lead. And in November, US and Canada-based alumni of universities at QF were united at a milestone gathering designed to strengthen their connections to each other, and the environment that shaped and inspired them.</p>
+                <p>The first Qatar Foundation Alumni Chapter Forum: US & Canada – sponsored by Hamad Medical Corporation and the Qatar Cultural Attaché Office at the Embassy of the State of Qatar in Washington D.C. – brought together QF graduates working as doctors, lawyers, educators, artists, and in other roles, all guided by the values they absorbed during their time at Education City.</p>
+                <div class="stats-block">
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">QF alumni are now working and pursuing further studies in the US and Canada</div>
+                    </div>
+                </div>
+                <div class="quote-block">
+                    <div class="quote-text">"Maintaining close ties with QF alumni – and encouraging them to stay connected with one another – is essential to strengthening our global community. These connections foster collaboration, mentorship, and the exchange of ideas that not only benefit the alumni community, but also extend QF's mission of learning, innovation, and social progress well beyond Education City."</div>
+                    <div class="quote-attribution">— Francisco Marmolejo, President of Higher Education and Education Advisor, QF</div>
+                </div>
+                <p>And in Doha, the second edition of QF's Higher Education Innovation and Entrepreneurship Summit – sponsored by Snoonu, Al Sraiya Holding Group, and Qatar Research, Development and Innovation Council - showcased how students within universities at QF are driving sustainable impact through technology, with six teams presenting their innovations to investors and tech experts.</p>
+                <div class="image-carousel-wrapper">
+                    <div class="image-carousel" data-carousel>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P6 November Visual Element 3 - QF Higher Education Entrepreneurship & Innovation Summit - First Place Winner_Aiko.jpg" alt="Innovation Summit First Place Winner">
+                        </figure>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P6 November Visual Element 4 - QF Higher Education Entrepreneurship & Innovation Summit Image 5.jpg" alt="Innovation Summit">
+                        </figure>
+                    </div>
+                    <div class="carousel-indicators">
+                        <button class="carousel-dot active" data-index="0"></button>
+                        <button class="carousel-dot" data-index="1"></button>
+                    </div>
+                </div>
+                <div class="quote-block">
+                    <div class="quote-text">"Through our strategic partnership with Qatar Foundation, we are dedicated to fostering innovation and entrepreneurship by providing dynamic internship opportunities that nurture homegrown talent."</div>
+                    <div class="quote-attribution">— Hamad Mubarak Al-Hajri, Founder and CEO of Snoonu and an alumnus of QF partner university HEC Paris, Doha</div>
+                </div>
+                <div class="info-list">
+                    <div class="info-list-title">The 3 winning projects at QF's Higher Education Innovation and Entrepreneurship Summit were:</div>
+                    <ul>
+                        <li>Aiko – an AI mentor for children's digital safety, created by students from Texas A&M University at Qatar</li>
+                        <li>Portable Hyperbaric Oxygen Hood – a health innovation developed by students from Weill Cornell Medicine-Qatar</li>
+                        <li>HerBasira – a personalized AI solution for women's health, led by students from Carnegie Mellon University in Qatar</li>
+                    </ul>
+                </div>
+                <p>Through these initiatives, QF continues to unite its global alumni community while empowering the next generation of innovators and entrepreneurs.</p>
+            </div>
+        </template>
+
+        <template id="template-7">
+            <img src="../2025 content/Media/November/P7 November Visual Element 1 - Rasekh - Panel 2.jpg" alt="Rasekh Learning Community Gathering" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge education">Progressive Education</span>
+                <span class="theme-badge social">Social Progress</span>
+            </div>
+            <h2 class="story-title">Localizing Learning</h2>
+            <div class="story-content">
+                <p>In a month that saw QF's Rasekh initiative – which supports schools to deliver education rooted in their local culture – showcased to the world at the WISE 12 Summit, it illustrated to teachers and educators from across Qatar how learning environments can reflect the nation's values.</p>
+                <p>QF's Pre-University Education (PUE) and Msheireb Museums hosted the first Rasekh Learning Community Gathering, part of QF's efforts to localize education and promote cultural identity by connecting education to the communities it serves.</p>
+                <img src="../2025 content/Media/November/P7 November Visual Element 2 - Rasekh Multaqa3.jpeg" alt="Rasekh Gathering" class="inline-image">
+                <div class="quote-block">
+                    <div class="quote-text">"We look forward to a future in which international schools in Qatar and across the region adopt the Rasekh model, so that they can deliver education that is deeply rooted in a local context, yet open to the world."</div>
+                    <div class="quote-attribution">— Sheikha Noof Ahmed Al-Thani, Vice President of Strategic Educational Initiatives at QF's Pre-University Education</div>
+                </div>
+                <p>PUE's Qatar Leadership Conference – a region-wide initiative under the theme 'Bridging Worlds: Technology, Sustainability, and Social Change' - empowered hundreds of students to develop their leadership, diplomacy, innovation, and critical thinking skills; while QF's Awsaj Academy connected its students and Palestinians evacuated from Gaza at a cultural and humanitarian event marking the International Day of Solidarity with the Palestinian People.</p>
+                <div class="stats-block">
+                    <div class="stat-item">
+                        <div class="stat-number">328</div>
+                        <div class="stat-label">students of 47 nationalities, including 167 Qatari students, participated in the Qatar Leadership Conference</div>
+                    </div>
+                </div>
+                <div class="image-carousel-wrapper">
+                    <div class="image-carousel" data-carousel>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P7 November Visual Element 5 - PUE Solidarity 2.jpg" alt="International Day of Solidarity with the Palestinian People">
+                        </figure>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P7 November Visual Element 6 - PUE LIC 5.JPG" alt="Qatar Leadership Conference">
+                        </figure>
+                    </div>
+                    <div class="carousel-indicators">
+                        <button class="carousel-dot active" data-index="0"></button>
+                        <button class="carousel-dot" data-index="1"></button>
+                    </div>
+                </div>
+                <p>And Lusail International Circuit's collaboration with PUE saw students from QF's specialized schools – Renad Academy, Awsaj Academy, and Warif Academy – go behind the scenes at the Formula 1® Qatar Airways Qatar Grand Prix, and meet multiple world champion Lewis Hamilton. The circuit also unveiled two sensory rooms designed in collaboration with experts from these specialized schools.</p>
+            </div>
+        </template>
+
+        <template id="template-8">
+            <img src="../2025 content/Media/November/P8 November Visual Element 1 - HBKU - Professor Jeffrey Sachs_GISR.JPG" alt="Professor Jeffrey Sachs at HBKU" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge education">Progressive Education</span>
+                <span class="theme-badge ai">Artificial Intelligence</span>
+                <span class="theme-badge health">Precision Health</span>
+            </div>
+            <h2 class="story-title">Driving Dialogue and Discovery</h2>
+            <div class="story-content">
+                <p>A diverse and dynamic November across QF's university landscape saw renowned economist and policy expert Jeffrey Sachs join a talk examining the Gaza peace deal by Hamad Bin Khalifa University's (HBKU) Global Institute for Strategic Research, which also explored the critical role of digital archiving in preserving the truth about war.</p>
+                <div class="quote-block">
+                    <div class="quote-text">"One of the major themes of our world is the crucial strength of regionalism and regions coming together to solve challenges."</div>
+                    <div class="quote-attribution">— Jeffrey Sachs, speaking at a session titled 'Gaza Peace Deal and the Future of the Arab World', hosted by HBKU's Global Institute for Strategic Research</div>
+                </div>
+                <p>HBKU also launched the Qatar World Trade Organization Chair and was awarded a UNESCO Chair on Digital Technologies and Human Behavior, while driving dialogue on water security and – with QF's Qatar Precision Health Institute – precision medicine, showcasing student research from across the MENA region, and forming a partnership to advance industrial innovation through 3D printing.</p>
+                <div class="image-carousel-wrapper">
+                    <div class="image-carousel" data-carousel>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P8 November Visual Element 4 - HBKU Speakers at the Precision Medicine Conference.jpg" alt="Precision Medicine Conference">
+                        </figure>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P8 November Visual Element 5 - First MENA 3MT 1st place winner.JPG" alt="First MENA 3MT Winner">
+                        </figure>
+                    </div>
+                    <div class="carousel-indicators">
+                        <button class="carousel-dot active" data-index="0"></button>
+                        <button class="carousel-dot" data-index="1"></button>
+                    </div>
+                </div>
+                <p>Collaboration was also on the agenda at Carnegie Mellon University in Qatar – in the field of digital security – in a month that saw the university launch its Al Rawi initiative celebrating Arabic literature. And Virginia Commonwealth University School of the Arts in Qatar's 11th Hamad bin Khalifa Symposium on Islamic Art explored the visual arts of the Islamic world.</p>
+                <p>Meanwhile, both Georgetown University in Qatar and Northwestern University in Qatar celebrated graduates receiving prestigious Rhodes scholarships; Weill Cornell Medicine-Qatar promoted community health and wellbeing through Lifestyle Medicine Week, and challenged students to solve clinical challenges through innovation at its first AI Hackathon; and two Texas A&M University at Qatar alumni unveiled their QF-incubated startup that uses AI to improve sporting strategy.</p>
+                <div class="quote-block">
+                    <div class="quote-text">"My time here allowed me to explore stories that matter most to me—stories about culture, identity, and the power of media. Studying here has been a transformative journey."</div>
+                    <div class="quote-attribution">— In'utu Imbuwa, Northwestern University in Qatar graduate and 2026 Rhodes Scholar</div>
+                </div>
+                <p>Across Education City's universities, November demonstrated the breadth and depth of dialogue, discovery, and collaboration driving progress in education, research, and innovation.</p>
+            </div>
+        </template>
+
+        <template id="template-9">
+            <div class="stats-block" style="margin-bottom: 24px;">
+                <div class="stat-item">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label">high-school students graduated from Sidra Medicine's first Future Doctors Program</div>
+                </div>
+            </div>
+            <div class="story-meta">
+                <span class="theme-badge health">Precision Health</span>
+                <span class="theme-badge social">Social Progress</span>
+            </div>
+            <h2 class="story-title">Advancements and Accolades</h2>
+            <div class="story-content">
+                <p>Clinical, technological, and human healthcare advances were seen at QF's Sidra Medicine in November, as it introduced a nationally groundbreaking eye treatment, unveiled a new Artificial intelligence tool to support pediatric care, and honored the first graduates of its Future Doctors Program, which introduced students to the world of modern medicine.</p>
+                <div class="stats-block">
+                    <div class="stat-item">
+                        <div class="stat-number">94</div>
+                        <div class="stat-label">mentors and partners participated in Qatar National Library's Murshidi mentorship program</div>
+                    </div>
+                </div>
+                <p>There was also a celebratory mood at Qatar National Library (QNL), with the spotlight shining on the participants of its Murshidi mentorship program. Meanwhile, the month also saw QNL host a major conference on digital justice and a campaign aimed at raising awareness of inclusivity and the barriers that people with disabilities continue to face.</p>
+                <p>Qatar Foundation International supported teachers from UK schools to make Arabic language education more interactive and resonant to today's curious learners through an annual event focused on strengthening educational connections, while elevating the status of Arabic as a modern global language at an international convention in the US.</p>
+                <div class="image-carousel-wrapper">
+                    <div class="image-carousel" data-carousel>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P9 November Visual Element 3 - Al-Mujadilah 1.jpg" alt="Al-Mujadilah Center">
+                        </figure>
+                        <figure class="image-carousel-item">
+                            <img src="../2025 content/Media/November/P9 November Visual Element 4 - Al-Mujadilah RIBA Awards 1.jpg" alt="Al-Mujadilah RIBA Awards">
+                        </figure>
+                    </div>
+                    <div class="carousel-indicators">
+                        <button class="carousel-dot active" data-index="0"></button>
+                        <button class="carousel-dot" data-index="1"></button>
+                    </div>
+                </div>
+                <p>And as QF's Al-Mujadilah Center & Mosque for Women was named as the winner of the Middle East Awards 2025 by The Royal Institute of British Architects – recognizing excellence in design blended with sustainability, heritage, and community impact – Dr. Sohaira Siddiqui, Al-Mujadilah's Executive Director, was named among the world's 500 most influential Muslims by Jordan's Royal Islamic Strategic Studies Centre, placing her alongside such luminaries as United Nations Deputy Secretary-General Amina J. Mohammed.</p>
+                <div class="quote-block">
+                    <div class="quote-text">"Our work is driven by the belief that women's spaces of faith, learning, and leadership are essential to the flourishing of the Muslim Ummah. I hope this honor shines a light on the vital role women play in shaping the intellectual and spiritual life of our communities."</div>
+                    <div class="quote-attribution">— Dr. Sohaira Siddiqui, Executive Director, Al-Mujadilah Center & Mosque for Women</div>
+                </div>
+                <p>Through these advancements and accolades, QF continues to drive progress in healthcare, education, cultural heritage, and empowerment.</p>
+            </div>
+        </template>
+
+        <template id="template-10">
+            <img src="../2025 content/Media/November/P10 November Visual Element 1 - An intimate candlelit setting brought the beauty of Arabic Maqam to life at QF's &quot;Heart to Heart&quot;.jpg" alt="Heart to Heart Performance" class="story-hero">
+            <div class="story-meta">
+                <span class="theme-badge social">Social Progress</span>
+            </div>
+            <h2 class="story-title">An Authentic Connection</h2>
+            <div class="story-content">
+                <p>Arabic classical music holds a special and treasured place in Arab identity – and in November, QF launched a new platform for live musical performances that provide a truly authentic listening experience.</p>
+                <p>Under QF's Al Ghorrah for Literature and Arts – which celebrates the cultural heritage and arts of Arab Islamic civilizations – 'Heart to Heart' is devoted to ancient and contemporary maqam classical music: a melodic Arabic music technique. And it is brought to audiences in a setting completely free of amplified sound, illuminated screens, and mobile phones.</p>
+                <img src="../2025 content/Media/November/P10 November Visual Element 2 - H2H Image.jpg" alt="Heart to Heart Series" class="inline-image">
+                <p>The series is curated by musician, composer, researcher, and oud player Mustafa Said, founder of the Asil Ensemble, who performed on its opening night with Tawfiq Mirkhan, Ahmed Al-Kouri, Ibrahim Kadr, and Hani Al-Khatib – all teachers of the Arabic Department at QF's Qatar Music Academy – as the Doha Ensemble For Classical Maqam; and with Ali Hout from the Asil Ensemble.</p>
+                <div class="quote-block">
+                    <div class="quote-text">"Heart to Heart is intended to help restore people's clarity of communication with their senses, especially their sense of hearing, and take them on a unique journey spanning the eight centuries of maqam – from the past, to the present, to the anticipation of the future. Through these performances, we are also seeking to highlight maqam to listeners and music lovers, producing a new and contemporary melody that, if we nurture it, will help to ensure this aspect of Arab civilization has its rightful standing in the world."</div>
+                    <div class="quote-attribution">— Mustafa Said, musician, composer, and curator of Heart to Heart</div>
+                </div>
+                <img src="../2025 content/Media/November/P10 November Visual Element 4 - Attendees enjoying the authentic sounds of Maqam in a screen-free, pure acoustic experience..jpg" alt="Audience at Heart to Heart" class="inline-image">
+                <div class="video-embed">
+                    <video controls poster="../2025 content/Media/November/P10 November Visual Element 1 - An intimate candlelit setting brought the beauty of Arabic Maqam to life at QF's &quot;Heart to Heart&quot;.jpg">
+                        <source src="../2025 content/Media/November/P10 November Visual Element 5 - Heart to Heart full -  v03.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <p>Through 'Heart to Heart', QF continues to preserve and celebrate the rich cultural heritage of Arab classical music, offering audiences a unique opportunity to connect with centuries of artistic tradition in an environment designed for pure, authentic listening.</p>
+            </div>
+        </template>
+    </div>
+
+    <script>
+        const drawer = document.getElementById('drawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const drawerClose = document.getElementById('drawerClose');
+        const drawerContent = document.getElementById('drawerContent');
+        const drawerChapterNum = document.getElementById('drawerChapterNum');
+        const prevChapter = document.getElementById('prevChapter');
+        const nextChapter = document.getElementById('nextChapter');
+        const cards = document.querySelectorAll('.chapter-card');
+
+        let currentChapter = 1;
+        const totalChapters = 10;
+
+        function openDrawer(chapterNum) {
+            currentChapter = chapterNum;
+            updateDrawerContent();
+            drawer.classList.add('active');
+            drawerOverlay.classList.add('active');
+            document.body.classList.add('drawer-open');
+            history.pushState({ chapter: chapterNum }, '', `#chapter-${chapterNum}`);
+        }
+
+        function closeDrawer() {
+            drawer.classList.remove('active');
+            drawerOverlay.classList.remove('active');
+            document.body.classList.remove('drawer-open');
+            history.pushState({}, '', window.location.pathname);
+        }
+
+        function updateDrawerContent() {
+            const template = document.getElementById(`template-${currentChapter}`);
+            if (template) {
+                drawerContent.innerHTML = template.innerHTML;
+                drawerChapterNum.textContent = `Chapter ${currentChapter}`;
+                prevChapter.disabled = currentChapter === 1;
+                nextChapter.disabled = currentChapter === totalChapters;
+                drawerContent.scrollTop = 0;
+                initCarousels();
+            }
+        }
+
+        function initCarousels() {
+            document.querySelectorAll('#drawerContent .image-carousel').forEach(carousel => {
+                const items = carousel.querySelectorAll('.image-carousel-item');
+                const wrapper = carousel.closest('.image-carousel-wrapper');
+                const dots = wrapper.querySelectorAll('.carousel-dot');
+
+                function updateDots() {
+                    const scrollLeft = carousel.scrollLeft;
+                    const itemWidth = items[0].offsetWidth + 12;
+                    const activeIndex = Math.round(scrollLeft / itemWidth);
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === activeIndex);
+                    });
+                }
+
+                carousel.addEventListener('scroll', () => requestAnimationFrame(updateDots));
+
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        const itemWidth = items[0].offsetWidth + 12;
+                        carousel.scrollTo({ left: index * itemWidth, behavior: 'smooth' });
+                    });
+                });
+            });
+        }
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => openDrawer(parseInt(card.dataset.chapter)));
+        });
+
+        drawerClose.addEventListener('click', closeDrawer);
+        drawerOverlay.addEventListener('click', closeDrawer);
+
+        prevChapter.addEventListener('click', () => {
+            if (currentChapter > 1) {
+                currentChapter--;
+                updateDrawerContent();
+                history.replaceState({ chapter: currentChapter }, '', `#chapter-${currentChapter}`);
+            }
+        });
+
+        nextChapter.addEventListener('click', () => {
+            if (currentChapter < totalChapters) {
+                currentChapter++;
+                updateDrawerContent();
+                history.replaceState({ chapter: currentChapter }, '', `#chapter-${currentChapter}`);
+            }
+        });
+
+        if (window.location.hash) {
+            const match = window.location.hash.match(/chapter-(\d+)/);
+            if (match) {
+                const chapterNum = parseInt(match[1]);
+                if (chapterNum >= 1 && chapterNum <= totalChapters) {
+                    setTimeout(() => openDrawer(chapterNum), 100);
+                }
+            }
+        }
+
+        window.addEventListener('popstate', (e) => {
+            if (e.state && e.state.chapter) {
+                currentChapter = e.state.chapter;
+                updateDrawerContent();
+                drawer.classList.add('active');
+                drawerOverlay.classList.add('active');
+                document.body.classList.add('drawer-open');
+            } else {
+                closeDrawer();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && drawer.classList.contains('active')) closeDrawer();
+            if (drawer.classList.contains('active')) {
+                if (e.key === 'ArrowLeft' && currentChapter > 1) {
+                    currentChapter--;
+                    updateDrawerContent();
+                    history.replaceState({ chapter: currentChapter }, '', `#chapter-${currentChapter}`);
+                }
+                if (e.key === 'ArrowRight' && currentChapter < totalChapters) {
+                    currentChapter++;
+                    updateDrawerContent();
+                    history.replaceState({ chapter: currentChapter }, '', `#chapter-${currentChapter}`);
+                }
+            }
+        });
+
+        cards.forEach(card => {
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('role', 'button');
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && document.activeElement.classList.contains('chapter-card')) {
+                document.activeElement.click();
+            }
+        });
+    </script>
+</body>
+</html>

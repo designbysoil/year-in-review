@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is the 2025 Year in Review website for Qatar Foundation, showcasing monthly stories across five thematic areas. The project uses a card-based browse interface with in-page anchor navigation (Shopify Editions style) for optimal exploration and shareability.
+This is the 2025 Year in Review website for Qatar Foundation, showcasing monthly stories across five thematic areas. The project uses a card-based browse interface with drawer/modal navigation for immersive story reading.
 
 ## Content Source
 
@@ -31,18 +31,20 @@ year-in-review/
 ├── index.html                    # Main browse by month page
 ├── CLAUDE.md                     # This project memory file
 ├── months/
-│   ├── january.html              # ✅ COMPLETE - Full detail view
-│   ├── february.html             # Old 2024 version (needs update)
-│   ├── march.html                # Old 2024 version (needs update)
-│   ├── april.html                # Old 2024 version (needs update)
-│   ├── may.html                  # Old 2024 version (needs update)
-│   ├── june.html                 # Old 2024 version (needs update)
-│   ├── july.html                 # Old 2024 version (needs update)
-│   ├── august.html               # Old 2024 version (needs update)
-│   ├── september.html            # Old 2024 version (needs update)
-│   ├── october.html              # Old 2024 version (needs update)
-│   ├── november.html             # Old 2024 version (needs update)
-│   └── december.html             # Old 2024 version (needs update)
+│   ├── january-option-a-modal.html     # ✅ COMPLETE - Modal/drawer layout (PREFERRED)
+│   ├── february-option-a-modal.html    # ✅ COMPLETE - Modal/drawer layout
+│   ├── march-option-a-modal.html       # ✅ COMPLETE - Modal/drawer layout
+│   ├── april-option-a-modal.html       # ✅ COMPLETE - Modal/drawer layout
+│   ├── may-option-a-modal.html         # ✅ COMPLETE - Modal/drawer layout
+│   ├── june-option-a-modal.html        # ✅ COMPLETE - Modal/drawer layout
+│   ├── july-august-option-a-modal.html # ✅ COMPLETE - Modal/drawer layout (combined)
+│   ├── september-option-a-modal.html   # ✅ COMPLETE - Modal/drawer layout
+│   ├── october-option-a-modal.html     # ✅ COMPLETE - Modal/drawer layout
+│   ├── november-option-a-modal.html    # 📋 TO DO - needs content
+│   ├── december-option-a-modal.html    # 📋 TO DO - needs content
+│   ├── january.html                    # BACKUP - Sidebar layout (Option B)
+│   ├── january-option-b-anchors.html   # BACKUP - Sidebar layout (Option B)
+│   └── [month].html                    # Old 2024 placeholders (deprecated)
 └── 2025 content/
     ├── Year in Review Content English - 2025.docx
     ├── Year in Review Content English - 2025.pdf
@@ -54,7 +56,10 @@ year-in-review/
         ├── May/                  # 32 files
         ├── June/                 # 28 files
         ├── July & August/        # 27 files (combined month)
-        └── September/            # 20 files
+        ├── September/            # 20 files
+        ├── October/              # 29 files
+        ├── November/             # (pending)
+        └── December/             # (pending)
 ```
 
 ## Media File Naming Convention
@@ -69,113 +74,169 @@ Examples:
 - `P2 January Visual Element 1 - HH Jadal Summit 2.jpg`
 - `P10 January Visual Element 3 - QF Ability Friendly Program's Swimming Competition.png`
 
-## Implementation Pattern (January as Reference)
+## Implementation Pattern (Modal/Drawer - PREFERRED)
 
-### UX Pattern: Sidebar Navigation (Anthropic Economic Index style)
-The layout uses a fixed left sidebar with chapter navigation:
-- **Left Sidebar**: Fixed navigation showing chapter numbers and titles
-- **Beige Top Bar**: Sticky bar showing month title and story count
-- **Card Grid as TOC**: Visual cards at top that scroll to chapter sections
-- **Shareable URLs**: Each chapter has unique URL (`january.html#chapter-3`)
-- **Scroll-Spy**: Sidebar highlights current chapter on scroll
+### UX Pattern: Card Grid + Drawer Modal
+The layout uses a card grid for browsing with a slide-up drawer for reading:
+- **Header**: Sticky header with logo and month navigation
+- **Card Grid**: 3-column grid of chapter cards with images and theme tags
+- **Drawer Modal**: Slide-up panel (90vh) for reading full chapter content
+- **Shareable URLs**: Each chapter has unique URL (`february-option-a-modal.html#chapter-3`)
+- **Keyboard Navigation**: Arrow keys, Escape to close
 
 ### Page Structure
 ```html
-<!-- Left Sidebar (fixed, 280px wide) -->
-<aside class="sidebar">
-    <div class="sidebar-header">
-        <a href="../index.html" class="sidebar-logo">
+<!-- Header -->
+<header class="site-header">
+    <div class="header-inner">
+        <a href="../index.html" class="header-logo">
             <div class="logo">QF</div>
-            <span class="sidebar-logo-text">Year in Review</span>
+            <span class="header-logo-text">Year in Review</span>
         </a>
+        <nav class="header-nav">
+            <a href="january-option-a-modal.html">January</a>
+            <a href="february-option-a-modal.html" class="active">February</a>
+            <!-- ... other months -->
+        </nav>
     </div>
-    <nav class="sidebar-nav">
-        <div class="sidebar-section-label">Chapters</div>
-        <a href="#chapter-1" class="sidebar-nav-item active" data-chapter="1">
-            <span class="sidebar-nav-number">1</span>
-            <span class="sidebar-nav-title">A Language That Endures</span>
-        </a>
-        <!-- Repeat for chapters 2-10 -->
-    </nav>
-    <div class="sidebar-card">
-        <!-- Callout card with link -->
-    </div>
-</aside>
+</header>
 
-<!-- Main Content (margin-left: 280px) -->
-<main class="main-content">
-    <!-- Beige Top Bar -->
-    <div class="top-bar">
-        <span class="top-bar-title">January 2025</span>
-        <span class="top-bar-subtitle">10 stories</span>
+<!-- Main Container -->
+<main class="main-container">
+    <div class="page-header">
+        <p class="breadcrumb"><a href="../index.html">Year in Review</a> / February</p>
+        <h1>February 2025</h1>
+        <p class="month-intro">Intro paragraph...</p>
     </div>
 
-    <!-- Header, Cards Section, Chapter Sections -->
+    <section>
+        <h2 class="section-title">10 Stories</h2>
+        <div class="cards-grid">
+            <!-- Chapter cards here -->
+        </div>
+    </section>
 </main>
+
+<!-- Drawer Overlay -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
+<!-- Drawer -->
+<div class="drawer" id="drawer">
+    <div class="drawer-header">
+        <div class="drawer-handle"></div>
+        <div class="drawer-header-inner">
+            <div class="drawer-chapter-indicator">
+                <strong id="drawerChapterNum">Chapter 1</strong> of 10
+            </div>
+            <button class="drawer-close" id="drawerClose">×</button>
+        </div>
+    </div>
+    <div class="drawer-content">
+        <div class="drawer-content-inner" id="drawerContent">
+            <!-- Content injected from templates -->
+        </div>
+    </div>
+    <div class="drawer-footer">
+        <button class="drawer-nav-btn" id="prevChapter">← Previous</button>
+        <button class="drawer-nav-btn" id="nextChapter">Next →</button>
+    </div>
+</div>
+
+<!-- Chapter Content Templates (hidden) -->
+<div id="chapter-templates" style="display: none;">
+    <template id="template-1">
+        <!-- Full chapter HTML here -->
+    </template>
+    <!-- ... templates 2-10 -->
+</div>
 ```
 
-### Key CSS for Sidebar Layout
+### Key CSS for Drawer Layout
 ```css
-.sidebar {
+.drawer {
     position: fixed;
     left: 0;
-    top: 0;
+    right: 0;
     bottom: 0;
-    width: 280px;
-    background: white;
-    border-right: 1px solid rgba(0,0,0,0.08);
-}
-
-.main-content {
-    margin-left: 280px;
-}
-
-.top-bar {
-    position: sticky;
-    top: 0;
+    height: 90vh;
     background: #F4F0EB;
-    padding: 16px 40px;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 600;
+    border-radius: 24px 24px 0 0;
 }
 
-.sidebar-nav-item.active {
-    background: rgba(17, 54, 42, 0.06);
-    border-left: 3px solid #11362A;
+.drawer.active {
+    transform: translateY(0);
 }
 
-/* Responsive: hide sidebar on mobile */
-@media (max-width: 768px) {
-    .sidebar { display: none; }
-    .main-content { margin-left: 0; }
+.drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    z-index: 500;
+}
+
+.drawer-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.chapter-card {
+    height: 400px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chapter-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(17, 54, 42, 0.2);
 }
 ```
 
-### JavaScript: Scroll-Spy for Sidebar
+### JavaScript: Drawer Control
 ```javascript
-const chapterSections = document.querySelectorAll('.chapter-section');
-const sidebarNavItems = document.querySelectorAll('.sidebar-nav-item');
-
-function updateActiveChapter() {
-    let currentChapter = null;
-    chapterSections.forEach((section, index) => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top <= 150 && rect.bottom > 150) {
-            currentChapter = index + 1;
-        }
-    });
-
-    if (currentChapter) {
-        sidebarNavItems.forEach(item => {
-            const itemChapter = parseInt(item.dataset.chapter);
-            item.classList.toggle('active', itemChapter === currentChapter);
-        });
-        history.replaceState(null, null, '#chapter-' + currentChapter);
-    }
+function openDrawer(chapterNum) {
+    currentChapter = chapterNum;
+    updateDrawerContent();
+    drawer.classList.add('active');
+    drawerOverlay.classList.add('active');
+    document.body.classList.add('drawer-open');
+    history.pushState({ chapter: chapterNum }, '', `#chapter-${chapterNum}`);
 }
 
-window.addEventListener('scroll', () => {
-    requestAnimationFrame(updateActiveChapter);
+function closeDrawer() {
+    drawer.classList.remove('active');
+    drawerOverlay.classList.remove('active');
+    document.body.classList.remove('drawer-open');
+    history.pushState({}, '', window.location.pathname);
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDrawer();
+    if (e.key === 'ArrowLeft') prevChapter();
+    if (e.key === 'ArrowRight') nextChapter();
 });
 ```
+
+---
+
+## BACKUP: Sidebar Navigation Pattern (Option B)
+
+The sidebar layout is preserved in `january.html` and `january-option-b-anchors.html` as a backup.
+- Uses fixed left sidebar with scroll-spy navigation
+- All content visible on single page with anchor links
+- Reference: Anthropic Economic Index, Shopify Editions
 
 ### Chapter Content Components
 - **Hero Image** (`.story-hero`): 16:9 aspect ratio, full width with border-radius
@@ -212,33 +273,33 @@ window.addEventListener('scroll', () => {
 
 ## Progress Tracker
 
-### Completed ✅
-- [x] January 2025 - All 10 chapters with full content, quotes, stats, media
+### Completed ✅ (Modal/Drawer Layout)
+- [x] January 2025 - All 10 chapters with full content
+- [x] February 2025 - 30th Anniversary, National Sport Day, Web Summit
+- [x] March 2025 - All 10 chapters
+- [x] April 2025 - Earthna Summit, Idris Elba, Akhlaquna Awards
+- [x] May 2025 - Convocation, Excellence Awards
+- [x] June 2025 - Leadership change (Yousif Al-Naama as CEO)
+- [x] July & August 2025 (combined) - Summer camps
+- [x] September 2025 - Back to school
+- [x] October 2025 - All chapters
 
 ### To Do 📋
-- [ ] February 2025 (10 chapters) - 30th Anniversary, National Sport Day, Web Summit
-- [ ] March 2025 (10 chapters)
-- [ ] April 2025 (10 chapters) - Earthna Summit, Idris Elba, Akhlaquna Awards
-- [ ] May 2025 (10 chapters) - Convocation, Excellence Awards
-- [ ] June 2025 (10 chapters) - Leadership change (Yousif Al-Naama as CEO)
-- [ ] July & August 2025 (combined) - Summer camps
-- [ ] September 2025 (10 chapters) - Back to school
-- [ ] October 2025 (10 chapters)
-- [ ] November 2025 (10 chapters)
-- [ ] December 2025 (10 chapters)
+- [ ] November 2025 (10 chapters) - awaiting content/media
+- [ ] December 2025 (10 chapters) - awaiting content/media
 
 ## How to Add a New Month
 
 ### Step 1: Gather Source Content
-- Read the PDF for that month (e.g., `2025 content/February 2025.pdf`)
+- Read the PDF for that month from `2025 content/Year in Review Content English - 2025.pdf`
 - List media files: `ls -la "2025 content/Media/[Month]/"`
 
-### Step 2: Copy January Template
-- Copy `months/january.html` as the new month file
-- Update: month name in title, header, breadcrumb, top bar
-- Update: sidebar navigation with new chapter titles
-- Update: card grid with chapter cards
-- Update: `chapterTitles` array in JavaScript
+### Step 2: Copy Template
+- Copy an existing modal file (e.g., `months/october-option-a-modal.html`) as the new month file
+- Update: month name in title, header, breadcrumb, page-header
+- Update: header-nav links and active state
+- Update: month intro paragraph
+- Update: totalChapters in JavaScript if different from 10
 
 ### Step 3: Process Each Chapter
 For each chapter, extract from the source PDF:
@@ -246,6 +307,11 @@ For each chapter, extract from the source PDF:
 - Theme tag(s)
 - Content paragraphs (with hyperlinks)
 - Visual elements (images, videos, quotes, stats)
+
+### Step 4: Build the Page
+1. Create card grid entries (`.chapter-card`) with images and theme tags
+2. Create corresponding templates (`<template id="template-N">`) with full content
+3. Ensure each chapter ends with a text paragraph (see Editorial Rules)
 
 ---
 
@@ -421,7 +487,10 @@ When given a month's PDF content:
 
 1. **Read the PDF** to understand all chapters
 2. **Create todo list** for tracking each chapter
-3. **For each chapter:**
+3. **For each chapter card:**
+   - Add card with hero image, title, description, and theme tags
+   - Set `data-chapter` attribute for drawer linking
+4. **For each chapter template:**
    - Start with hero image (Visual Element 1)
    - Add theme badge(s)
    - Add title
@@ -432,9 +501,8 @@ When given a month's PDF content:
      - Images/carousels at narrative break points
      - Videos near related content
    - **Ensure chapter ends with a text paragraph**
-4. **Update sidebar navigation** with chapter titles
-5. **Update card grid** with chapter cards
-6. **Update JavaScript** chapterTitles array
+5. **Update header navigation** with correct links and active state
+6. **Update JavaScript** totalChapters if needed
 
 ## Figma Reference
 
@@ -455,22 +523,22 @@ Key design elements:
 
 ## UX Decisions
 
-### 1. Anchor-Links vs Modals
-**Decision:** Use anchor-link navigation instead of modals.
+### 1. Modal/Drawer vs Anchor-Links
+**Decision:** Use modal/drawer navigation (Option A) as the preferred pattern.
 
 **Rationale:**
-- **Shareability essential**: Each chapter has unique URL (`#chapter-3`)
-- **Casual exploration**: Continuous scroll reduces friction vs opening/closing modals
-- **SEO-friendly**: All content visible and crawlable
+- **Immersive reading**: Full-screen drawer creates focused reading experience
+- **Visual browsing**: Card grid with images makes content discovery engaging
+- **Mobile-friendly**: Drawer pattern works naturally on touch devices
+- **Shareability preserved**: Each chapter still has unique URL (`#chapter-3`)
 
-### 2. Sidebar Navigation (Anthropic Economic Index style)
-**Decision:** Replace sticky top navigation with fixed left sidebar.
+### 2. Sidebar Navigation (BACKUP - Option B)
+**Alternative:** Fixed left sidebar with scroll-spy navigation (preserved in january.html).
 
-**Rationale:**
-- **Chapter titles visible**: Users see full chapter names, not just numbers
-- **Persistent navigation**: Always visible without scrolling
-- **Professional appearance**: Matches dashboard/documentation patterns
-- **Better hierarchy**: Clear visual structure with sidebar card for callouts
+**When to consider:**
+- If SEO becomes critical (all content visible to crawlers)
+- If users prefer seeing all content at once
+- Documentation-style use cases
 
 **References:**
 - Anthropic Economic Index (https://www.anthropic.com/research/anthropic-economic-index)
