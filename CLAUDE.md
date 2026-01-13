@@ -30,6 +30,9 @@ This is the 2025 Year in Review website for Qatar Foundation, showcasing monthly
 year-in-review/
 ├── index.html                    # Main browse by month page
 ├── CLAUDE.md                     # This project memory file
+├── gradient-generator/           # Standalone gradient generator tool
+│   ├── CLAUDE.md                 # Gradient generator project context
+│   └── gradient-generator.html   # Main tool (React + Tailwind, single file)
 ├── months/
 │   ├── january-option-a-modal.html     # ✅ COMPLETE - Modal/drawer layout (PREFERRED)
 │   ├── february-option-a-modal.html    # ✅ COMPLETE - Modal/drawer layout
@@ -513,6 +516,80 @@ Key design elements:
 - "Browse by Month" section
 - "Dive Deeper" category filters
 - Gradient backgrounds with soft blend modes
+
+---
+
+## Gradient Generator Tool
+
+Located in `/gradient-generator/` — a standalone tool for generating theme-specific gradients.
+
+**File:** `gradient-generator/gradient-generator.html`
+
+### Purpose
+Extracts dominant colors from theme card images and generates a two-layer gradient system for thematic landing pages. Part of the "Living Archive" digital transformation.
+
+### Gradient System Architecture
+
+**Three-Layer System:**
+1. **Base layer**: Solid #FFE9D2 (peachy cream) — constant across all themes
+2. **Primary gradient layer**: Linear vertical gradient with theme colors
+3. **Top gradient layer**: Linear vertical gradient with Soft Light blend mode
+
+**Edge Treatment:**
+- Color stops at 0% and 100%: 0% opacity (transparent)
+- Heavy offset positioning (-50% on all sides)
+- 20px blur applied to gradient layers
+- Creates infinite/atmospheric feel
+
+### Color Extraction Process
+1. Input: 6-10 card images per theme
+2. Extract top 3-4 dominant colors per image (excluding near-black <30, near-white >225)
+3. Cluster similar colors across full image set using k-means
+4. Output: 2-3 most frequent color clusters
+5. Classify as "warm" (hue 0-60° or 300-360°) or "cool" (hue 90-270°)
+
+### Gradient Construction
+
+**Primary Layer:**
+```css
+linear-gradient(180deg,
+  rgba(249, 249, 247, 0) 0%,      /* transparent edge */
+  [COOL_COLOR] 15%,               /* cool tone higher */
+  [WARM_COLOR] 58%,               /* warm tone lower */
+  rgba(217, 217, 217, 0) 100%     /* transparent edge */
+)
+```
+
+**Soft Light Layer:**
+```css
+linear-gradient(180deg,
+  rgba(249, 249, 247, 0) 0%,
+  [ACCENT_COLOR] 29%,             /* most saturated color */
+  rgba(217, 217, 217, 0) 100%
+)
+mix-blend-mode: soft-light;
+```
+
+### Theme Color Reference
+
+| Theme | Primary Tones | Feeling |
+|-------|---------------|---------|
+| AI | Teal/Sidra green + Blue | Tech, digital, cool |
+| Precision Health | Magenta/Pink + Purple | Medical, caring, innovative |
+| Progressive Education | Teal + Warm sand | Growth, grounded wisdom |
+| Social Progress | Deep purple + Warm peach | Community, warmth |
+| Sustainability | Golden amber + Olive/green | Earth, nature, energy |
+
+### Output Formats
+- **CSS** — Pseudo-element approach with ::before and ::after
+- **Figma** — Exact gradient stop values for manual recreation
+
+### Design System Tokens (QF)
+- Colors: Sidra green (#11362A), Sage (#889A68), neutrals (#F5F5F3, #E8E8E5, #D6D6D2)
+- Typography: Text sizes xs/sm, muted secondary text (#9AB3A9, #4A7561)
+- Components: Rounded corners (rounded-lg), subtle borders (border-[#E8E8E5])
+
+---
 
 ## Notes
 
