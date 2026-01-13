@@ -32,7 +32,13 @@ year-in-review/
 ├── CLAUDE.md                     # This project memory file
 ├── gradient-generator/           # Standalone gradient generator tool
 │   ├── CLAUDE.md                 # Gradient generator project context
-│   └── gradient-generator.html   # Main tool (React + Tailwind, single file)
+│   ├── gradient-generator.html   # Main tool (React + Tailwind, single file)
+│   └── themes/                   # Theme images for gradient extraction
+│       ├── ai/                   # 6 images (Quantum, Web Summit, AI Ethics, etc.)
+│       ├── education/            # 6 images (Convocation, PUE, Reyada, etc.)
+│       ├── social-progress/      # 6 images (Jadal, Ability Friendly, BilAraby, etc.)
+│       ├── sustainability/       # 6 images (Earthna Summit, Mangroves, etc.)
+│       └── precision-health/     # 6 images (Sidra, WCM-Q, WISH, etc.)
 ├── months/
 │   ├── january-option-a-modal.html     # ✅ COMPLETE - Modal/drawer layout (PREFERRED)
 │   ├── february-option-a-modal.html    # ✅ COMPLETE - Modal/drawer layout
@@ -523,7 +529,20 @@ Key design elements:
 
 Located in `/gradient-generator/` — a standalone tool for generating theme-specific gradients.
 
-**File:** `gradient-generator/gradient-generator.html`
+**Files:**
+- `gradient-generator/gradient-generator.html` — Main tool (React + Tailwind, single file)
+- `gradient-generator/themes/` — Curated images for each theme (6 per theme, 30 total)
+
+### Theme Image Sources
+Images selected from 2025 content based on chapter-theme mappings:
+
+| Theme | Sample Sources |
+|-------|----------------|
+| `ai/` | Quantum Computing (Jan), Web Summit (Feb), AI Ethics (Sep), WCM-Q AI Conference (Oct) |
+| `education/` | International Day of Education (Jan), Convocation (May), PUE Graduation, QF Reyada |
+| `social-progress/` | Jadal Summit (Jan), Ability Friendly Program, BilAraby (Apr), Herfah (Jun) |
+| `sustainability/` | Earthna Summit (Apr), Idris Elba, Mangroves (Jul-Aug), King Charles (Jan) |
+| `precision-health/` | Sidra Medicine (Jan), WCM-Q Students, WISH-UTokyo (Sep), Precision Medicine (Nov) |
 
 ### Purpose
 Extracts dominant colors from theme card images and generates a two-layer gradient system for thematic landing pages. Part of the "Living Archive" digital transformation.
