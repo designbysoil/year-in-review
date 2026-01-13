@@ -589,11 +589,47 @@ linear-gradient(180deg,
 mix-blend-mode: soft-light;
 ```
 
+### Gradient Variation Strategies
+
+The generator produces 6 distinct gradient strategies:
+
+| # | Strategy | Description |
+|---|----------|-------------|
+| 0 | Warm + Cool | Orange/earthy primary + blue/teal secondary |
+| 1 | Cool + Warm | Reversed order of above |
+| 2 | Dual Cool | Blue + teal/purple combination |
+| 3 | Most Vibrant | Two highest saturation colors |
+| 4 | **Cool + Earthy** | Muted dark teal + brown/taupe (ideal for AI theme) |
+| 5 | Magenta + Teal | Vibrant contrast pairing |
+
+### Signature Palette
+
+**Muted Teals** (for Cool + Earthy, based on Figma AI theme):
+| Hex | Name |
+|-----|------|
+| `#11362A` | sidra-dark |
+| `#1E4D3D` | forest-teal |
+| `#2D4A44` | muted-teal |
+| `#3A5248` | dusty-teal |
+| `#419B7E` | sage-muted |
+| `#4A6B5E` | moss |
+
+**Earthy Browns**:
+| Hex | Name |
+|-----|------|
+| `#8B7355` | taupe |
+| `#A67B5B` | warm-brown |
+| `#C4A77D` | sand |
+| `#6B5344` | cocoa |
+| `#8E7C68` | driftwood |
+
+**Other Palettes**: purples, teals, oranges, blues, magentas
+
 ### Theme Color Reference
 
 | Theme | Primary Tones | Feeling |
 |-------|---------------|---------|
-| AI | Teal/Sidra green + Blue | Tech, digital, cool |
+| AI | Muted dark teal (#11362A, #419B7E) + Earthy brown | Tech, grounded, sophisticated |
 | Precision Health | Magenta/Pink + Purple | Medical, caring, innovative |
 | Progressive Education | Teal + Warm sand | Growth, grounded wisdom |
 | Social Progress | Deep purple + Warm peach | Community, warmth |
