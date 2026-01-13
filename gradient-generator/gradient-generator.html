@@ -73,6 +73,15 @@
         { hex: '#2D6A5D', name: 'deep-teal' },
         { hex: '#5BA3A3', name: 'cyan-teal' }
       ],
+      // Muted/dark teals for Cool+Earthy strategy (from Figma AI theme)
+      mutedTeals: [
+        { hex: '#11362A', name: 'sidra-dark' },
+        { hex: '#1E4D3D', name: 'forest-teal' },
+        { hex: '#2D4A44', name: 'muted-teal' },
+        { hex: '#3A5248', name: 'dusty-teal' },
+        { hex: '#419B7E', name: 'sage-muted' },
+        { hex: '#4A6B5E', name: 'moss' }
+      ],
       oranges: [
         { hex: '#FF6B35', name: 'bright-orange' },
         { hex: '#F23A10', name: 'orange-red' },
@@ -184,6 +193,7 @@
       const allPaletteColors = [
         ...SIGNATURE_PALETTE.purples,
         ...SIGNATURE_PALETTE.teals,
+        ...SIGNATURE_PALETTE.mutedTeals,
         ...SIGNATURE_PALETTE.oranges,
         ...SIGNATURE_PALETTE.blues,
         ...SIGNATURE_PALETTE.earthy,
@@ -589,16 +599,24 @@ Effects:
           primaryColor1 = sortedByVibrance[(variationIndex * 2) % sortedByVibrance.length];
           primaryColor2 = sortedByVibrance[(variationIndex * 2 + 1) % sortedByVibrance.length];
           break;
-        case 4: // Cool + Earthy (teal/blue + brown/taupe) - great for AI theme
+        case 4: // Cool + Earthy (muted dark teal + brown/taupe) - great for AI theme
           {
-            const coolForEarthy = [...teals, ...blues];
+            // Use muted, darker teals (from Figma AI theme: #11362A, #419B7E)
+            const mutedTeals = colors.filter(c =>
+              SIGNATURE_PALETTE.mutedTeals.some(m => m.hex === c.hex)
+            );
+            // Fallback to curated muted teals if none extracted
+            const mutedCoolColors = mutedTeals.length > 0 ? mutedTeals : [
+              { hex: '#11362A', name: 'sidra-dark', rgb: hexToRgb('#11362A'), hsl: rgbToHsl(...Object.values(hexToRgb('#11362A'))) },
+              { hex: '#2D4A44', name: 'muted-teal', rgb: hexToRgb('#2D4A44'), hsl: rgbToHsl(...Object.values(hexToRgb('#2D4A44'))) },
+              { hex: '#419B7E', name: 'sage-muted', rgb: hexToRgb('#419B7E'), hsl: rgbToHsl(...Object.values(hexToRgb('#419B7E'))) }
+            ];
             const earthyOnly = earthy.length > 0 ? earthy : [
               { hex: '#8B7355', name: 'taupe', rgb: hexToRgb('#8B7355'), hsl: rgbToHsl(...Object.values(hexToRgb('#8B7355'))) },
-              { hex: '#A67B5B', name: 'warm-brown', rgb: hexToRgb('#A67B5B'), hsl: rgbToHsl(...Object.values(hexToRgb('#A67B5B'))) }
+              { hex: '#A67B5B', name: 'warm-brown', rgb: hexToRgb('#A67B5B'), hsl: rgbToHsl(...Object.values(hexToRgb('#A67B5B'))) },
+              { hex: '#6B5344', name: 'cocoa', rgb: hexToRgb('#6B5344'), hsl: rgbToHsl(...Object.values(hexToRgb('#6B5344'))) }
             ];
-            primaryColor1 = coolForEarthy[Math.floor(variationIndex / 6) % Math.max(coolForEarthy.length, 1)] || teals[0] || {
-              hex: '#4D7B6B', name: 'teal-sage', rgb: hexToRgb('#4D7B6B'), hsl: rgbToHsl(...Object.values(hexToRgb('#4D7B6B')))
-            };
+            primaryColor1 = mutedCoolColors[Math.floor(variationIndex / 6) % mutedCoolColors.length];
             primaryColor2 = earthyOnly[Math.floor(variationIndex / 6) % earthyOnly.length];
           }
           break;
