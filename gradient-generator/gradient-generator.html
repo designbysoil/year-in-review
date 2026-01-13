@@ -71,6 +71,8 @@
         { hex: '#88CC90', name: 'sage-green' }
       ],
       oranges: [
+        { hex: '#FF6B35', name: 'bright-orange' },
+        { hex: '#F23A10', name: 'orange-red' },
         { hex: '#E09B1B', name: 'golden-orange' },
         { hex: '#C38F46', name: 'warm-tan' }
       ],
@@ -259,13 +261,16 @@
     // COLOR CLUSTERING ACROSS IMAGES
     // ─────────────────────────────────────────────────────────────────────────────
 
-    const clusterAllColors = (allColors, numClusters = 5) => {
+    const clusterAllColors = (allColors, numClusters = 3) => {
       if (allColors.length === 0) return [];
 
-      // Step 1: Deduplicate similar colors
+      // Step 1: Prioritize high-saturation colors
+      const sortedBySaturation = [...allColors].sort((a, b) => b.hsl.s - a.hsl.s);
+
+      // Step 2: Deduplicate similar colors, keeping high-saturation ones
       const uniqueColors = [];
-      allColors.forEach(color => {
-        const isDuplicate = uniqueColors.some(uc => colorDistance(uc.rgb, color.rgb) < 30);
+      sortedBySaturation.forEach(color => {
+        const isDuplicate = uniqueColors.some(uc => colorDistance(uc.rgb, color.rgb) < 40);
         if (!isDuplicate) {
           uniqueColors.push(color);
         }
@@ -276,7 +281,8 @@
         return mapToSignaturePalette(uniqueColors);
       }
 
-      // Step 2: K-means to get 5 dominant colors (more than before for better coverage)
+      // Step 3: K-means to get 3 distinct dominant colors
+      // Initialize with most saturated colors to preserve vibrant tones
       let centroids = uniqueColors.slice(0, numClusters);
 
       for (let iter = 0; iter < 15; iter++) {
@@ -297,11 +303,25 @@
 
         centroids = clusters.map((cluster, idx) => {
           if (cluster.length === 0) return centroids[idx];
+
+          // Weight by saturation to preserve vibrant colors
+          let totalWeight = 0;
+          const weightedRgb = { r: 0, g: 0, b: 0 };
+
+          cluster.forEach(c => {
+            const weight = c.hsl.s / 100; // Saturation as weight (0-1)
+            totalWeight += weight;
+            weightedRgb.r += c.rgb.r * weight;
+            weightedRgb.g += c.rgb.g * weight;
+            weightedRgb.b += c.rgb.b * weight;
+          });
+
           const avgRgb = {
-            r: cluster.reduce((sum, c) => sum + c.rgb.r, 0) / cluster.length,
-            g: cluster.reduce((sum, c) => sum + c.rgb.g, 0) / cluster.length,
-            b: cluster.reduce((sum, c) => sum + c.rgb.b, 0) / cluster.length
+            r: weightedRgb.r / totalWeight,
+            g: weightedRgb.g / totalWeight,
+            b: weightedRgb.b / totalWeight
           };
+
           return {
             hex: rgbToHex(avgRgb.r, avgRgb.g, avgRgb.b),
             rgb: avgRgb,
@@ -311,11 +331,15 @@
         });
       }
 
-      // Step 3: Map k-means results to signature palette
+      // Step 4: Map k-means results to signature palette
       const mapped = mapToSignaturePalette(centroids);
 
-      // Step 4: Sort by frequency (most frequent first)
-      return mapped.sort((a, b) => (b.count || 0) - (a.count || 0));
+      // Step 5: Sort by saturation first, then frequency
+      return mapped.sort((a, b) => {
+        const satDiff = b.hsl.s - a.hsl.s;
+        if (Math.abs(satDiff) > 10) return satDiff;
+        return (b.count || 0) - (a.count || 0);
+      });
     };
 
     // ─────────────────────────────────────────────────────────────────────────────
@@ -494,6 +518,198 @@ Effects:
       };
     };
 
+    const generateGradientVariation = (colors, variationIndex = 0) => {
+      if (colors.length === 0) return null;
+
+      // Sort by saturation to prioritize bold colors
+      const sortedByVibrance = [...colors].sort((a, b) => b.hsl.s - a.hsl.s);
+
+      // Separate by color family for intelligent pairing
+      const purples = colors.filter(c =>
+        SIGNATURE_PALETTE.purples.some(p => p.hex === c.hex)
+      );
+      const teals = colors.filter(c =>
+        SIGNATURE_PALETTE.teals.some(t => t.hex === c.hex)
+      );
+      const oranges = colors.filter(c =>
+        SIGNATURE_PALETTE.oranges.some(o => o.hex === c.hex)
+      );
+      const blues = colors.filter(c =>
+        SIGNATURE_PALETTE.blues.some(b => b.hex === c.hex)
+      );
+      const earthy = colors.filter(c =>
+        SIGNATURE_PALETTE.earthy.some(e => e.hex === c.hex)
+      );
+
+      const warmCandidates = [...oranges, ...earthy];
+      const coolCandidates = [...blues, ...teals, ...purples];
+
+      // Create diverse variations by picking from different color groups
+      let primaryColor1, primaryColor2;
+
+      // Strategy: Create high-contrast combinations
+      const strategy = variationIndex % 4;
+
+      switch(strategy) {
+        case 0: // Warm + Cool
+          primaryColor1 = warmCandidates[Math.floor(variationIndex / 4) % Math.max(warmCandidates.length, 1)] || sortedByVibrance[0];
+          primaryColor2 = coolCandidates[Math.floor(variationIndex / 4) % Math.max(coolCandidates.length, 1)] || sortedByVibrance[1];
+          break;
+        case 1: // Cool + Warm (reversed)
+          primaryColor1 = coolCandidates[Math.floor(variationIndex / 4) % Math.max(coolCandidates.length, 1)] || sortedByVibrance[0];
+          primaryColor2 = warmCandidates[Math.floor(variationIndex / 4) % Math.max(warmCandidates.length, 1)] || sortedByVibrance[1];
+          break;
+        case 2: // Two different cools (blue + teal/purple)
+          primaryColor1 = blues[Math.floor(variationIndex / 4) % Math.max(blues.length, 1)] || coolCandidates[0] || sortedByVibrance[0];
+          primaryColor2 = [...teals, ...purples][Math.floor(variationIndex / 4) % Math.max([...teals, ...purples].length, 1)] || sortedByVibrance[1];
+          break;
+        case 3: // Two most saturated (regardless of family)
+          primaryColor1 = sortedByVibrance[(variationIndex * 2) % sortedByVibrance.length];
+          primaryColor2 = sortedByVibrance[(variationIndex * 2 + 1) % sortedByVibrance.length];
+          break;
+      }
+
+      // Soft light: ALWAYS purple (brand consistency) + diverse complementary
+      const purpleIndex = Math.floor(variationIndex / 2) % SIGNATURE_PALETTE.purples.length;
+      const softColor1 = purples[0] || {
+        hex: SIGNATURE_PALETTE.purples[purpleIndex].hex,
+        name: SIGNATURE_PALETTE.purples[purpleIndex].name,
+        rgb: hexToRgb(SIGNATURE_PALETTE.purples[purpleIndex].hex),
+        hsl: rgbToHsl(...Object.values(hexToRgb(SIGNATURE_PALETTE.purples[purpleIndex].hex)))
+      };
+
+      // Tertiary: Pick from remaining saturated colors
+      const remainingColors = sortedByVibrance.filter(c =>
+        c.hex !== primaryColor1.hex && c.hex !== primaryColor2.hex
+      );
+      const softColor2 = remainingColors[variationIndex % remainingColors.length] || primaryColor2;
+
+      // Opacity variations: 43%, 56%, 62%, 73%, 77%
+      const opacityVariations = [0.43, 0.56, 0.62, 0.73, 0.77];
+      const primaryOpacity = opacityVariations[variationIndex % opacityVariations.length];
+
+      // Primary gradient - adjusted stops for better contrast with base layer
+      const primaryGradient = `linear-gradient(180deg,
+        rgba(249, 249, 247, 0) 0%,
+        ${primaryColor1.hex} 40%,
+        rgba(${hexToRgb(primaryColor2.hex).r}, ${hexToRgb(primaryColor2.hex).g}, ${hexToRgb(primaryColor2.hex).b}, ${primaryOpacity}) 65%,
+        rgba(217, 217, 217, 0) 100%
+      )`;
+
+      // Soft light gradient - push color stops higher for less base layer interference
+      const softLightGradient = `linear-gradient(180deg,
+        rgba(249, 249, 247, 0) 0%,
+        ${softColor1.hex} 12%,
+        ${softColor2.hex} 35%,
+        rgba(217, 217, 217, 0) 100%
+      )`;
+
+      // CSS output
+      const cssOutput = `/* YIR Theme Gradient - Three Layer System */
+.theme-gradient {
+  position: relative;
+  background-color: ${BASE_COLOR};
+  overflow: hidden;
+}
+
+.theme-gradient::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  filter: blur(20px);
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(249, 249, 247, 0) 0%,
+    ${primaryColor1.hex} 40%,
+    rgba(${hexToRgb(primaryColor2.hex).r}, ${hexToRgb(primaryColor2.hex).g}, ${hexToRgb(primaryColor2.hex).b}, ${primaryOpacity}) 65%,
+    rgba(217, 217, 217, 0) 100%
+  );
+}
+
+.theme-gradient::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  top: -20%;
+  filter: blur(20px);
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(249, 249, 247, 0) 0%,
+    ${softColor1.hex} 12%,
+    ${softColor2.hex} 35%,
+    rgba(217, 217, 217, 0) 100%
+  );
+  mix-blend-mode: soft-light;
+}
+
+.theme-gradient-layer-3 {
+  position: absolute;
+  inset: -50%;
+  filter: blur(20px);
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(249, 249, 247, 0) 0%,
+    ${softColor1.hex} 12%,
+    ${softColor2.hex} 35%,
+    rgba(217, 217, 217, 0) 100%
+  );
+  mix-blend-mode: soft-light;
+}`;
+
+      // Figma output
+      const rgb1 = hexToRgb(primaryColor1.hex);
+      const rgb2 = hexToRgb(primaryColor2.hex);
+      const srgb1 = hexToRgb(softColor1.hex);
+      const srgb2 = hexToRgb(softColor2.hex);
+
+      const figmaOutput = `FIGMA GRADIENT VALUES - THREE LAYER SYSTEM
+
+Base Layer:
+  Fill: ${BASE_COLOR} (100%)
+
+Layer 1 - Primary Gradient:
+  Type: Linear (vertical, 180°)
+  Stop 1: F9F9F7 at 0% (0% opacity)
+  Stop 2: rgb(${rgb1.r}, ${rgb1.g}, ${rgb1.b}) at 40% (100% opacity)
+  Stop 3: rgba(${rgb2.r}, ${rgb2.g}, ${rgb2.b}, ${primaryOpacity}) at 65% (${Math.round(primaryOpacity * 100)}% opacity)
+  Stop 4: D9D9D9 at 100% (0% opacity)
+
+Layer 2 - Soft Light (Higher offset):
+  Type: Linear (vertical, 180°)
+  Blend Mode: Soft Light
+  Position: Offset top -20% (asymmetric)
+  Stop 1: F9F9F7 at 0% (0% opacity)
+  Stop 2: rgb(${srgb1.r}, ${srgb1.g}, ${srgb1.b}) at 12% (100% opacity)
+  Stop 3: rgb(${srgb2.r}, ${srgb2.g}, ${srgb2.b}) at 35% (100% opacity)
+  Stop 4: D9D9D9 at 100% (0% opacity)
+
+Layer 3 - Soft Light (Standard offset):
+  Type: Linear (vertical, 180°)
+  Blend Mode: Soft Light
+  Position: Standard -50% positioning
+  Stop 1-4: Same as Layer 2
+
+Effects:
+  Layer Blur: 20px on all gradient layers
+  Base offset: -50% on all sides (inset positioning)`;
+
+      return {
+        id: `gradient-${Date.now()}-${variationIndex}`,
+        primaryGradient,
+        softLightGradient1: softLightGradient,
+        softLightGradient2: softLightGradient,
+        primaryColor1,
+        primaryColor2,
+        softColor1,
+        softColor2,
+        primaryOpacity,
+        cssOutput,
+        figmaOutput,
+        isExpanded: false,
+        activeTab: 'css'
+      };
+    };
+
     // ─────────────────────────────────────────────────────────────────────────────
     // COMPONENTS
     // ─────────────────────────────────────────────────────────────────────────────
@@ -530,6 +746,95 @@ Effects:
       );
     };
 
+    const GradientCard = ({ gradient, onToggleExport, onDelete, onTabChange }) => {
+      return (
+        <div className="border border-[#E8E8E5] rounded-lg bg-white overflow-hidden">
+          {/* Gradient Preview */}
+          <div
+            className="gradient-preview aspect-[4/3]"
+            style={{ backgroundColor: BASE_COLOR }}
+          >
+            <div className="gradient-layer" style={{ background: gradient.primaryGradient }} />
+            <div className="gradient-layer gradient-layer-soft-light-1" style={{ background: gradient.softLightGradient1 }} />
+            <div className="gradient-layer gradient-layer-soft-light-2" style={{ background: gradient.softLightGradient2 }} />
+          </div>
+
+          {/* Color Info */}
+          <div className="p-4 space-y-2">
+            <p className="text-xs text-[#9AB3A9]">Layer 1: Primary</p>
+            <div className="grid grid-cols-2 gap-2">
+              <ColorChip color={gradient.primaryColor1} label={gradient.primaryColor1.name} />
+              <ColorChip color={gradient.primaryColor2} label={gradient.primaryColor2.name} />
+            </div>
+            <p className="text-xs text-[#9AB3A9] pt-2">Layers 2 & 3: Soft Light</p>
+            <div className="grid grid-cols-2 gap-2">
+              <ColorChip color={gradient.softColor1} label={gradient.softColor1.name} />
+              <ColorChip color={gradient.softColor2} label={gradient.softColor2.name} />
+            </div>
+          </div>
+
+          {/* Collapsible Export Toggle */}
+          <button
+            onClick={() => onToggleExport(gradient.id)}
+            className="w-full px-4 py-2 flex items-center justify-between bg-[#F5F5F3] hover:bg-[#E8E8E5] transition-colors text-xs text-[#4A7561]"
+          >
+            <span>View Export Code</span>
+            <span>{gradient.isExpanded ? '▼' : '▶'}</span>
+          </button>
+
+          {/* Collapsible Export Section */}
+          {gradient.isExpanded && (
+            <div className="p-4 border-t border-[#E8E8E5] space-y-3">
+              {/* Tabs */}
+              <div className="flex gap-4 border-b border-[#E8E8E5]">
+                <button
+                  onClick={() => onTabChange(gradient.id, 'css')}
+                  className={`text-xs pb-2 border-b-2 transition-colors ${
+                    gradient.activeTab === 'css'
+                      ? 'border-[#11362A] text-[#0B241C]'
+                      : 'border-transparent text-[#9AB3A9] hover:text-[#4A7561]'
+                  }`}
+                >
+                  CSS
+                </button>
+                <button
+                  onClick={() => onTabChange(gradient.id, 'figma')}
+                  className={`text-xs pb-2 border-b-2 transition-colors ${
+                    gradient.activeTab === 'figma'
+                      ? 'border-[#11362A] text-[#0B241C]'
+                      : 'border-transparent text-[#9AB3A9] hover:text-[#4A7561]'
+                  }`}
+                >
+                  Figma
+                </button>
+              </div>
+
+              {/* Code Block */}
+              <div className="relative">
+                <pre className="bg-[#F5F5F3] border border-[#E8E8E5] rounded-lg p-3 text-xs font-mono text-[#4A7561] overflow-x-auto max-h-48 overflow-y-auto">
+                  {gradient.activeTab === 'css' ? gradient.cssOutput : gradient.figmaOutput}
+                </pre>
+                <div className="absolute top-2 right-2">
+                  <CopyButton
+                    text={gradient.activeTab === 'css' ? gradient.cssOutput : gradient.figmaOutput}
+                    label="Copy"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Delete Button */}
+          <button
+            onClick={() => onDelete(gradient.id)}
+            className="w-full px-4 py-2 text-xs text-[#9AB3A9] hover:text-[#4A7561] transition-colors"
+          >
+            Remove variation
+          </button>
+        </div>
+      );
+    };
+
     // ─────────────────────────────────────────────────────────────────────────────
     // MAIN APP
     // ─────────────────────────────────────────────────────────────────────────────
@@ -538,8 +843,7 @@ Effects:
       const [images, setImages] = useState([]);
       const [extractedColors, setExtractedColors] = useState([]);
       const [clusteredColors, setClusteredColors] = useState([]);
-      const [gradient, setGradient] = useState(null);
-      const [activeTab, setActiveTab] = useState('css');
+      const [gradients, setGradients] = useState([]);
       const [isDragging, setIsDragging] = useState(false);
       const canvasRef = useRef(null);
       const fileInputRef = useRef(null);
@@ -549,7 +853,7 @@ Effects:
         if (images.length === 0) {
           setExtractedColors([]);
           setClusteredColors([]);
-          setGradient(null);
+          setGradients([]);
           return;
         }
 
@@ -567,17 +871,24 @@ Effects:
             canvas.width = img.width * scale;
             canvas.height = img.height * scale;
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            
+
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const colors = extractColorsFromImage(imageData, 4);
+            // Extract more colors per image to capture blues, purples, greens
+            const colors = extractColorsFromImage(imageData, 6);
             allColors.push(...colors);
-            
+
             processed++;
             if (processed === images.length) {
               setExtractedColors(allColors);
-              const clustered = clusterAllColors(allColors, 3);
+              // Keep more colors for variation diversity (6-8 colors)
+              const clustered = clusterAllColors(allColors, 8);
               setClusteredColors(clustered);
-              setGradient(generateGradient(clustered));
+
+              // Generate 3 initial variations
+              const initialVariations = [0, 1, 2].map(i =>
+                generateGradientVariation(clustered, i)
+              ).filter(g => g !== null);
+              setGradients(initialVariations);
             }
           };
           img.src = imgSrc;
@@ -629,6 +940,30 @@ Effects:
         setImages([]);
       };
 
+      const generateMoreVariations = () => {
+        const currentCount = gradients.length;
+        const newVariations = [0, 1].map(i =>
+          generateGradientVariation(clusteredColors, currentCount + i)
+        ).filter(g => g !== null);
+        setGradients(prev => [...prev, ...newVariations]);
+      };
+
+      const toggleExport = (gradientId) => {
+        setGradients(prev => prev.map(g =>
+          g.id === gradientId ? { ...g, isExpanded: !g.isExpanded } : g
+        ));
+      };
+
+      const deleteVariation = (gradientId) => {
+        setGradients(prev => prev.filter(g => g.id !== gradientId));
+      };
+
+      const updateActiveTab = (gradientId, tab) => {
+        setGradients(prev => prev.map(g =>
+          g.id === gradientId ? { ...g, activeTab: tab } : g
+        ));
+      };
+
       return (
         <div className="min-h-screen">
           {/* Hidden canvas for color extraction */}
@@ -652,170 +987,96 @@ Effects:
             </div>
           </header>
 
-          <main className="max-w-6xl mx-auto px-6 py-8">
-            <div className="grid lg:grid-cols-2 gap-8">
-              
-              {/* Left Column: Input */}
-              <div className="space-y-6">
-                
-                {/* Drop Zone */}
-                <div
-                  className={`drop-zone border-2 border-dashed border-[#E8E8E5] rounded-lg p-8 text-center cursor-pointer transition-all ${isDragging ? 'dragging' : ''}`}
-                  onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-                  onDragLeave={() => setIsDragging(false)}
-                  onDrop={handleDrop}
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleFileSelect}
-                  />
-                  <p className="text-sm text-[#4A7561]">
-                    {images.length === 0 
-                      ? 'Drop theme card images here' 
-                      : `${images.length}/10 images`}
-                  </p>
-                  <p className="text-xs text-[#9AB3A9] mt-1">6-10 images recommended</p>
-                </div>
+          <main className="max-w-7xl mx-auto px-6 py-8">
+            {/* Input Section - Full Width */}
+            <div className="space-y-6 mb-8">
+              {/* Drop Zone */}
+              <div
+                className={`drop-zone border-2 border-dashed border-[#E8E8E5] rounded-lg p-8 text-center cursor-pointer transition-all ${isDragging ? 'dragging' : ''}`}
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileSelect}
+                />
+                <p className="text-sm text-[#4A7561]">
+                  {images.length === 0
+                    ? 'Drop theme card images here'
+                    : `${images.length}/10 images`}
+                </p>
+                <p className="text-xs text-[#9AB3A9] mt-1">6-10 images recommended</p>
+              </div>
 
-                {/* Image Thumbnails */}
-                {images.length > 0 && (
-                  <div className="grid grid-cols-5 gap-2">
-                    {images.map((src, idx) => (
-                      <div key={idx} className="relative group aspect-square">
-                        <img 
-                          src={src} 
-                          className="w-full h-full object-cover rounded"
-                          alt={`Card ${idx + 1}`}
-                        />
-                        <button
-                          onClick={() => removeImage(idx)}
-                          className="absolute top-1 right-1 w-5 h-5 bg-black/50 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          ×
-                        </button>
-                      </div>
+              {/* Image Thumbnails */}
+              {images.length > 0 && (
+                <div className="grid grid-cols-10 gap-2">
+                  {images.map((src, idx) => (
+                    <div key={idx} className="relative group aspect-square">
+                      <img
+                        src={src}
+                        className="w-full h-full object-cover rounded"
+                        alt={`Card ${idx + 1}`}
+                      />
+                      <button
+                        onClick={() => removeImage(idx)}
+                        className="absolute top-1 right-1 w-5 h-5 bg-black/50 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Extracted Colors */}
+              {clusteredColors.length > 0 && (
+                <div className="space-y-3">
+                  <p className="text-xs text-[#9AB3A9] uppercase tracking-wide">Extracted Palette</p>
+                  <div className="flex gap-2">
+                    {clusteredColors.map((color, idx) => (
+                      <div
+                        key={idx}
+                        className="w-12 h-12 rounded border border-black/10"
+                        style={{ backgroundColor: color.hex }}
+                        title={`${color.name || color.hex}`}
+                      />
                     ))}
                   </div>
-                )}
-
-                {/* Extracted Colors */}
-                {clusteredColors.length > 0 && (
-                  <div className="space-y-3">
-                    <p className="text-xs text-[#9AB3A9] uppercase tracking-wide">Extracted Palette</p>
-                    <div className="flex gap-2">
-                      {clusteredColors.map((color, idx) => (
-                        <div 
-                          key={idx}
-                          className="w-12 h-12 rounded border border-black/10"
-                          style={{ backgroundColor: color.hex }}
-                          title={color.hex}
-                        />
-                      ))}
-                    </div>
-                    
-                    {gradient && (
-                      <div className="space-y-2 pt-2">
-                        <p className="text-xs text-[#9AB3A9]">Layer 1: Primary</p>
-                        <div className="grid grid-cols-2 gap-3">
-                          <ColorChip color={gradient.primaryColor1} label={`${gradient.primaryColor1.name || 'custom'} (45%)`} />
-                          <ColorChip color={gradient.primaryColor2} label={`${gradient.primaryColor2.name || 'custom'} (58%, ${Math.round(gradient.primaryOpacity * 100)}%)`} />
-                        </div>
-                        <p className="text-xs text-[#9AB3A9] pt-2">Layers 2 & 3: Soft Light</p>
-                        <div className="grid grid-cols-2 gap-3">
-                          <ColorChip color={gradient.softColor1} label={`${gradient.softColor1.name || 'custom'} (15%)`} />
-                          <ColorChip color={gradient.softColor2} label={`${gradient.softColor2.name || 'custom'} (29%)`} />
-                        </div>
-                        <p className="text-xs text-[#4A7561] pt-1">Signature palette • Three-layer system</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Right Column: Output */}
-              <div className="space-y-6">
-                
-                {/* Gradient Preview */}
-                <div
-                  className="gradient-preview aspect-[4/3] rounded-lg border border-[#E8E8E5]"
-                  style={{ backgroundColor: BASE_COLOR }}
-                >
-                  {gradient && (
-                    <>
-                      {/* Layer 1: Primary gradient */}
-                      <div
-                        className="gradient-layer"
-                        style={{ background: gradient.primaryGradient }}
-                      />
-                      {/* Layer 2: Soft light - higher offset */}
-                      <div
-                        className="gradient-layer gradient-layer-soft-light-1"
-                        style={{ background: gradient.softLightGradient1 }}
-                      />
-                      {/* Layer 3: Soft light - standard offset */}
-                      <div
-                        className="gradient-layer gradient-layer-soft-light-2"
-                        style={{ background: gradient.softLightGradient2 }}
-                      />
-                    </>
-                  )}
-
-                  {/* Preview content overlay */}
-                  <div className="relative z-10 h-full flex items-center justify-center">
-                    {!gradient && (
-                      <p className="text-sm text-[#9AB3A9]">Preview</p>
-                    )}
-                  </div>
                 </div>
+              )}
 
-                {/* Code Output */}
-                {gradient && (
-                  <div className="space-y-3">
-                    {/* Tabs */}
-                    <div className="flex gap-4 border-b border-[#E8E8E5]">
-                      <button
-                        onClick={() => setActiveTab('css')}
-                        className={`text-xs pb-2 border-b-2 transition-colors ${
-                          activeTab === 'css' 
-                            ? 'border-[#11362A] text-[#0B241C]' 
-                            : 'border-transparent text-[#9AB3A9] hover:text-[#4A7561]'
-                        }`}
-                      >
-                        CSS
-                      </button>
-                      <button
-                        onClick={() => setActiveTab('figma')}
-                        className={`text-xs pb-2 border-b-2 transition-colors ${
-                          activeTab === 'figma' 
-                            ? 'border-[#11362A] text-[#0B241C]' 
-                            : 'border-transparent text-[#9AB3A9] hover:text-[#4A7561]'
-                        }`}
-                      >
-                        Figma
-                      </button>
-                    </div>
-
-                    {/* Code Block */}
-                    <div className="relative">
-                      <pre className="bg-[#F5F5F3] border border-[#E8E8E5] rounded-lg p-4 text-xs font-mono text-[#4A7561] overflow-x-auto max-h-64 overflow-y-auto">
-                        {activeTab === 'css' ? gradient.cssOutput : gradient.figmaOutput}
-                      </pre>
-                      <div className="absolute top-2 right-2">
-                        <CopyButton 
-                          text={activeTab === 'css' ? gradient.cssOutput : gradient.figmaOutput}
-                          label="Copy"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+              {/* Generate More Button */}
+              {gradients.length > 0 && (
+                <button
+                  onClick={generateMoreVariations}
+                  className="w-full px-4 py-3 bg-[#11362A] text-white rounded-lg hover:bg-[#1a4a3a] transition-colors text-sm font-medium"
+                >
+                  Generate More Variations
+                </button>
+              )}
             </div>
+
+            {/* Gradient Cards Grid */}
+            {gradients.length > 0 && (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {gradients.map(gradient => (
+                  <GradientCard
+                    key={gradient.id}
+                    gradient={gradient}
+                    onToggleExport={toggleExport}
+                    onDelete={deleteVariation}
+                    onTabChange={updateActiveTab}
+                  />
+                ))}
+              </div>
+            )}
           </main>
         </div>
       );
