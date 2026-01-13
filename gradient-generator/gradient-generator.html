@@ -68,7 +68,10 @@
       ],
       teals: [
         { hex: '#4D7B6B', name: 'teal-sage' },
-        { hex: '#88CC90', name: 'sage-green' }
+        { hex: '#88CC90', name: 'sage-green' },
+        { hex: '#11362A', name: 'sidra-green' },
+        { hex: '#2D6A5D', name: 'deep-teal' },
+        { hex: '#5BA3A3', name: 'cyan-teal' }
       ],
       oranges: [
         { hex: '#FF6B35', name: 'bright-orange' },
@@ -78,11 +81,23 @@
       ],
       blues: [
         { hex: '#1B8EE0', name: 'bright-blue' },
-        { hex: '#357AAF', name: 'ocean-blue' }
+        { hex: '#357AAF', name: 'ocean-blue' },
+        { hex: '#1A5276', name: 'deep-blue' },
+        { hex: '#5DADE2', name: 'sky-blue' }
       ],
       earthy: [
         { hex: '#5E5722', name: 'olive-brown' },
-        { hex: '#797B4D', name: 'olive-sage' }
+        { hex: '#797B4D', name: 'olive-sage' },
+        { hex: '#8B7355', name: 'taupe' },
+        { hex: '#A67B5B', name: 'warm-brown' },
+        { hex: '#C4A77D', name: 'sand' },
+        { hex: '#6B5344', name: 'cocoa' },
+        { hex: '#8E7C68', name: 'driftwood' }
+      ],
+      magentas: [
+        { hex: '#E91E63', name: 'magenta' },
+        { hex: '#C2185B', name: 'deep-magenta' },
+        { hex: '#F48FB1', name: 'soft-pink' }
       ]
     };
 
@@ -171,7 +186,8 @@
         ...SIGNATURE_PALETTE.teals,
         ...SIGNATURE_PALETTE.oranges,
         ...SIGNATURE_PALETTE.blues,
-        ...SIGNATURE_PALETTE.earthy
+        ...SIGNATURE_PALETTE.earthy,
+        ...SIGNATURE_PALETTE.magentas
       ];
 
       // Map each extracted color to nearest palette color
@@ -375,9 +391,12 @@
       const earthy = colors.filter(c =>
         SIGNATURE_PALETTE.earthy.some(e => e.hex === c.hex)
       );
+      const magentas = colors.filter(c =>
+        SIGNATURE_PALETTE.magentas.some(m => m.hex === c.hex)
+      );
 
       // Primary layer: Select warm + cool with high contrast
-      const warmCandidates = [...oranges, ...earthy];
+      const warmCandidates = [...oranges, ...earthy, ...magentas];
       const coolCandidates = [...blues, ...teals];
 
       const primaryColor1 = warmCandidates[0] || coolCandidates[0] || colors[0];
@@ -540,32 +559,60 @@ Effects:
       const earthy = colors.filter(c =>
         SIGNATURE_PALETTE.earthy.some(e => e.hex === c.hex)
       );
+      const magentas = colors.filter(c =>
+        SIGNATURE_PALETTE.magentas.some(m => m.hex === c.hex)
+      );
 
-      const warmCandidates = [...oranges, ...earthy];
+      const warmCandidates = [...oranges, ...earthy, ...magentas];
       const coolCandidates = [...blues, ...teals, ...purples];
 
       // Create diverse variations by picking from different color groups
       let primaryColor1, primaryColor2;
 
-      // Strategy: Create high-contrast combinations
-      const strategy = variationIndex % 4;
+      // Strategy: Create high-contrast combinations (6 strategies for more diversity)
+      const strategy = variationIndex % 6;
 
       switch(strategy) {
         case 0: // Warm + Cool
-          primaryColor1 = warmCandidates[Math.floor(variationIndex / 4) % Math.max(warmCandidates.length, 1)] || sortedByVibrance[0];
-          primaryColor2 = coolCandidates[Math.floor(variationIndex / 4) % Math.max(coolCandidates.length, 1)] || sortedByVibrance[1];
+          primaryColor1 = warmCandidates[Math.floor(variationIndex / 6) % Math.max(warmCandidates.length, 1)] || sortedByVibrance[0];
+          primaryColor2 = coolCandidates[Math.floor(variationIndex / 6) % Math.max(coolCandidates.length, 1)] || sortedByVibrance[1];
           break;
         case 1: // Cool + Warm (reversed)
-          primaryColor1 = coolCandidates[Math.floor(variationIndex / 4) % Math.max(coolCandidates.length, 1)] || sortedByVibrance[0];
-          primaryColor2 = warmCandidates[Math.floor(variationIndex / 4) % Math.max(warmCandidates.length, 1)] || sortedByVibrance[1];
+          primaryColor1 = coolCandidates[Math.floor(variationIndex / 6) % Math.max(coolCandidates.length, 1)] || sortedByVibrance[0];
+          primaryColor2 = warmCandidates[Math.floor(variationIndex / 6) % Math.max(warmCandidates.length, 1)] || sortedByVibrance[1];
           break;
         case 2: // Two different cools (blue + teal/purple)
-          primaryColor1 = blues[Math.floor(variationIndex / 4) % Math.max(blues.length, 1)] || coolCandidates[0] || sortedByVibrance[0];
-          primaryColor2 = [...teals, ...purples][Math.floor(variationIndex / 4) % Math.max([...teals, ...purples].length, 1)] || sortedByVibrance[1];
+          primaryColor1 = blues[Math.floor(variationIndex / 6) % Math.max(blues.length, 1)] || coolCandidates[0] || sortedByVibrance[0];
+          primaryColor2 = [...teals, ...purples][Math.floor(variationIndex / 6) % Math.max([...teals, ...purples].length, 1)] || sortedByVibrance[1];
           break;
         case 3: // Two most saturated (regardless of family)
           primaryColor1 = sortedByVibrance[(variationIndex * 2) % sortedByVibrance.length];
           primaryColor2 = sortedByVibrance[(variationIndex * 2 + 1) % sortedByVibrance.length];
+          break;
+        case 4: // Cool + Earthy (teal/blue + brown/taupe) - great for AI theme
+          {
+            const coolForEarthy = [...teals, ...blues];
+            const earthyOnly = earthy.length > 0 ? earthy : [
+              { hex: '#8B7355', name: 'taupe', rgb: hexToRgb('#8B7355'), hsl: rgbToHsl(...Object.values(hexToRgb('#8B7355'))) },
+              { hex: '#A67B5B', name: 'warm-brown', rgb: hexToRgb('#A67B5B'), hsl: rgbToHsl(...Object.values(hexToRgb('#A67B5B'))) }
+            ];
+            primaryColor1 = coolForEarthy[Math.floor(variationIndex / 6) % Math.max(coolForEarthy.length, 1)] || teals[0] || {
+              hex: '#4D7B6B', name: 'teal-sage', rgb: hexToRgb('#4D7B6B'), hsl: rgbToHsl(...Object.values(hexToRgb('#4D7B6B')))
+            };
+            primaryColor2 = earthyOnly[Math.floor(variationIndex / 6) % earthyOnly.length];
+          }
+          break;
+        case 5: // Magenta/Pink + Teal (vibrant contrast)
+          {
+            const magentaOrPurple = [...magentas, ...purples];
+            const tealOrBlue = [...teals, ...blues];
+            primaryColor1 = magentaOrPurple[Math.floor(variationIndex / 6) % Math.max(magentaOrPurple.length, 1)] || {
+              hex: '#E91E63', name: 'magenta', rgb: hexToRgb('#E91E63'), hsl: rgbToHsl(...Object.values(hexToRgb('#E91E63')))
+            };
+            primaryColor2 = tealOrBlue[Math.floor(variationIndex / 6) % Math.max(tealOrBlue.length, 1)] || {
+              hex: '#4D7B6B', name: 'teal-sage', rgb: hexToRgb('#4D7B6B'), hsl: rgbToHsl(...Object.values(hexToRgb('#4D7B6B')))
+            };
+          }
           break;
       }
 
@@ -693,8 +740,19 @@ Effects:
   Layer Blur: 20px on all gradient layers
   Base offset: -50% on all sides (inset positioning)`;
 
+      // Strategy labels for UI
+      const strategyLabels = [
+        'Warm + Cool',
+        'Cool + Warm',
+        'Dual Cool',
+        'Most Vibrant',
+        'Cool + Earthy',
+        'Magenta + Teal'
+      ];
+
       return {
         id: `gradient-${Date.now()}-${variationIndex}`,
+        strategyLabel: strategyLabels[strategy],
         primaryGradient,
         softLightGradient1: softLightGradient,
         softLightGradient2: softLightGradient,
@@ -749,6 +807,13 @@ Effects:
     const GradientCard = ({ gradient, onToggleExport, onDelete, onTabChange }) => {
       return (
         <div className="border border-[#E8E8E5] rounded-lg bg-white overflow-hidden">
+          {/* Strategy Label */}
+          {gradient.strategyLabel && (
+            <div className="px-4 py-2 bg-[#F5F5F3] border-b border-[#E8E8E5]">
+              <span className="text-xs font-medium text-[#11362A]">{gradient.strategyLabel}</span>
+            </div>
+          )}
+
           {/* Gradient Preview */}
           <div
             className="gradient-preview aspect-[4/3]"
@@ -884,8 +949,8 @@ Effects:
               const clustered = clusterAllColors(allColors, 8);
               setClusteredColors(clustered);
 
-              // Generate 3 initial variations
-              const initialVariations = [0, 1, 2].map(i =>
+              // Generate 6 initial variations (one for each strategy)
+              const initialVariations = [0, 1, 2, 3, 4, 5].map(i =>
                 generateGradientVariation(clustered, i)
               ).filter(g => g !== null);
               setGradients(initialVariations);
