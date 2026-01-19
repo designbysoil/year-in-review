@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QF Animated Gradient v2 - Multi-Layer</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #EEE9DE;
+      color: white;
+      overflow: hidden;
+    }
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      z-index: 10;
+      padding: 0 20%;
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      z-index: 20;
+    }
+    .logo { font-size: 14px; opacity: 0.85; font-weight: 500; }
+    .subtitle { font-size: 11px; opacity: 0.5; letter-spacing: 2px; text-transform: uppercase; }
+    .theme-label {
+      font-size: 11px;
+      opacity: 0.6;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .theme-name {
+      font-size: clamp(36px, 7vw, 72px);
+      font-weight: 300;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.15);
+    }
+    .year {
+      font-size: clamp(52px, 10vw, 100px);
+      font-weight: 200;
+      opacity: 0.15;
+      letter-spacing: -3px;
+    }
+    .controls {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 20;
+    }
+    .btn {
+      padding: 12px 24px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.75);
+      cursor: pointer;
+      border-radius: 6px;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.4);
+    }
+    .btn.active {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.6);
+      color: white;
+    }
+    .info {
+      position: fixed;
+      bottom: 88px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      opacity: 0.35;
+      z-index: 20;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <div class="header">
+    <span class="logo">Qatar Foundation</span>
+    <span class="subtitle">2025 Year in Review</span>
+  </div>
+
+  <div class="overlay">
+    <span class="theme-label">Theme</span>
+    <h1 class="theme-name" id="themeName">Artificial Intelligence</h1>
+    <span class="year">2025</span>
+  </div>
+
+  <div class="info">WebGL Multi-Layer Gradient · Soft-Light Blending</div>
+
+  <div class="controls">
+    <button class="btn active" data-theme="ai">AI</button>
+    <button class="btn" data-theme="precisionHealth">Health</button>
+    <button class="btn" data-theme="progressiveEducation">Education</button>
+    <button class="btn" data-theme="socialProgress">Social</button>
+    <button class="btn" data-theme="sustainability">Sustainability</button>
+  </div>
+
+  <script>
+    // =====================================================
+    // THEME CONFIGURATIONS - Matching Figma Design
+    // =====================================================
+    // Colors are normalized RGB (0-1)
+    // Layer 1: Primary gradient (dark -> mid -> transparent edge)
+    // Layer 2: Soft-light overlay (accent colors)
+    // Base: Cream background #EEE9DE
+
+    const THEMES = {
+      ai: {
+        name: 'Artificial Intelligence',
+        // Figma: #11362A -> #419B7E -> transparent
+        // Deep teal to sage - sophisticated tech feel
+        layer1: {
+          top: [0.067, 0.212, 0.165],      // #11362A - sidra dark teal
+          mid: [0.255, 0.608, 0.494],      // #419B7E - sage green
+          bottom: [0.933, 0.914, 0.871],   // #EEE9DE - cream (fade out)
+        },
+        layer2: {
+          // Soft-light accent layer - subtle purple/blue cast
+          color1: [0.180, 0.302, 0.267],   // Muted teal-gray
+          color2: [0.290, 0.412, 0.357],   // Forest teal
+        },
+        baseColor: [0.933, 0.914, 0.871],  // #EEE9DE
+      },
+
+      precisionHealth: {
+        name: 'Precision Health',
+        // Magenta/pink to purple - medical innovation
+        layer1: {
+          top: [0.557, 0.267, 0.416],      // Deep magenta
+          mid: [0.729, 0.459, 0.557],      // Dusty rose
+          bottom: [0.933, 0.914, 0.871],   // Cream fade
+        },
+        layer2: {
+          color1: [0.459, 0.318, 0.498],   // Purple accent
+          color2: [0.576, 0.396, 0.482],   // Mauve
+        },
+        baseColor: [0.933, 0.914, 0.871],
+      },
+
+      progressiveEducation: {
+        name: 'Progressive Education',
+        // Teal to warm sand - growth and wisdom
+        layer1: {
+          top: [0.180, 0.380, 0.329],      // Deep teal
+          mid: [0.349, 0.506, 0.427],      // Sage
+          bottom: [0.933, 0.914, 0.871],   // Cream fade
+        },
+        layer2: {
+          color1: [0.769, 0.655, 0.490],   // Warm sand
+          color2: [0.545, 0.490, 0.380],   // Taupe
+        },
+        baseColor: [0.933, 0.914, 0.871],
+      },
+
+      socialProgress: {
+        name: 'Social Progress',
+        // Deep purple to warm peach - community warmth
+        layer1: {
+          top: [0.247, 0.200, 0.318],      // Deep purple
+          mid: [0.412, 0.349, 0.455],      // Mid purple
+          bottom: [0.933, 0.914, 0.871],   // Cream fade
+        },
+        layer2: {
+          color1: [0.808, 0.627, 0.510],   // Warm peach
+          color2: [0.678, 0.533, 0.459],   // Terracotta
+        },
+        baseColor: [0.933, 0.914, 0.871],
+      },
+
+      sustainability: {
+        name: 'Sustainability',
+        // Golden amber to olive green - earth and energy
+        layer1: {
+          top: [0.298, 0.400, 0.329],      // Forest green
+          mid: [0.420, 0.502, 0.380],      // Olive
+          bottom: [0.933, 0.914, 0.871],   // Cream fade
+        },
+        layer2: {
+          color1: [0.808, 0.667, 0.420],   // Golden amber
+          color2: [0.627, 0.549, 0.376],   // Bronze
+        },
+        baseColor: [0.933, 0.914, 0.871],
+      },
+    };
+
+    // =====================================================
+    // SHADERS
+    // =====================================================
+
+    const vertexShader = `
+      attribute vec2 a_position;
+      varying vec2 v_uv;
+      void main() {
+        v_uv = a_position * 0.5 + 0.5;
+        gl_Position = vec4(a_position, 0.0, 1.0);
+      }
+    `;
+
+    const fragmentShader = `
+      precision highp float;
+      varying vec2 v_uv;
+
+      uniform float u_time;
+      uniform vec2 u_resolution;
+
+      // Layer 1: Primary gradient colors
+      uniform vec3 u_layer1_top;
+      uniform vec3 u_layer1_mid;
+      uniform vec3 u_layer1_bottom;
+
+      // Layer 2: Soft-light overlay colors
+      uniform vec3 u_layer2_color1;
+      uniform vec3 u_layer2_color2;
+
+      // Base background
+      uniform vec3 u_baseColor;
+
+      // ===========================================
+      // TUNABLE PARAMETERS
+      // ===========================================
+      #define NOISE_SCALE 0.6          // Blob size (lower = bigger)
+      #define SPEED 0.18               // Animation speed (increased for anticipation)
+      #define NOISE_BLEND 0.55         // Noise vs gradient mix
+      #define LAYER2_OPACITY 0.35      // Soft-light layer intensity
+      #define EDGE_FADE_TOP 0.15       // Top edge fade distance
+      #define EDGE_FADE_BOTTOM 0.25    // Bottom edge fade distance
+      #define BREATHING_AMOUNT 0.08    // Subtle pulsing effect
+      #define BREATHING_SPEED 0.3      // Pulse speed
+
+      // ===========================================
+      // SIMPLEX 3D NOISE
+      // ===========================================
+      vec4 permute(vec4 x) {
+        return mod(((x * 34.0) + 1.0) * x, 289.0);
+      }
+
+      vec4 taylorInvSqrt(vec4 r) {
+        return 1.79284291400159 - 0.85373472095314 * r;
+      }
+
+      float snoise(vec3 v) {
+        const vec2 C = vec2(1.0 / 6.0, 1.0 / 3.0);
+        const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+
+        vec3 i = floor(v + dot(v, C.yyy));
+        vec3 x0 = v - i + dot(i, C.xxx);
+
+        vec3 g = step(x0.yzx, x0.xyz);
+        vec3 l = 1.0 - g;
+        vec3 i1 = min(g.xyz, l.zxy);
+        vec3 i2 = max(g.xyz, l.zxy);
+
+        vec3 x1 = x0 - i1 + C.xxx;
+        vec3 x2 = x0 - i2 + C.yyy;
+        vec3 x3 = x0 - D.yyy;
+
+        i = mod(i, 289.0);
+        vec4 p = permute(permute(permute(
+            i.z + vec4(0.0, i1.z, i2.z, 1.0))
+          + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+          + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+
+        float n_ = 1.0 / 7.0;
+        vec3 ns = n_ * D.wyz - D.xzx;
+
+        vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+
+        vec4 x_ = floor(j * ns.z);
+        vec4 y_ = floor(j - 7.0 * x_);
+
+        vec4 x = x_ * ns.x + ns.yyyy;
+        vec4 y = y_ * ns.x + ns.yyyy;
+        vec4 h = 1.0 - abs(x) - abs(y);
+
+        vec4 b0 = vec4(x.xy, y.xy);
+        vec4 b1 = vec4(x.zw, y.zw);
+
+        vec4 s0 = floor(b0) * 2.0 + 1.0;
+        vec4 s1 = floor(b1) * 2.0 + 1.0;
+        vec4 sh = -step(h, vec4(0.0));
+
+        vec4 a0 = b0.xzyw + s0.xzyw * sh.xxyy;
+        vec4 a1 = b1.xzyw + s1.xzyw * sh.zzww;
+
+        vec3 p0 = vec3(a0.xy, h.x);
+        vec3 p1 = vec3(a0.zw, h.y);
+        vec3 p2 = vec3(a1.xy, h.z);
+        vec3 p3 = vec3(a1.zw, h.w);
+
+        vec4 norm = taylorInvSqrt(vec4(dot(p0, p0), dot(p1, p1), dot(p2, p2), dot(p3, p3)));
+        p0 *= norm.x;
+        p1 *= norm.y;
+        p2 *= norm.z;
+        p3 *= norm.w;
+
+        vec4 m = max(0.6 - vec4(dot(x0, x0), dot(x1, x1), dot(x2, x2), dot(x3, x3)), 0.0);
+        m = m * m;
+        return 42.0 * dot(m * m, vec4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3)));
+      }
+
+      // ===========================================
+      // FRACTAL BROWNIAN MOTION
+      // ===========================================
+      float fbm(vec3 p, int octaves) {
+        float value = 0.0;
+        float amplitude = 0.5;
+        float frequency = 1.0;
+
+        for (int i = 0; i < 4; i++) {
+          if (i >= octaves) break;
+          value += amplitude * snoise(p * frequency);
+          amplitude *= 0.5;
+          frequency *= 2.0;
+        }
+        return value;
+      }
+
+      // ===========================================
+      // SOFT-LIGHT BLEND MODE
+      // ===========================================
+      vec3 softLight(vec3 base, vec3 blend, float opacity) {
+        vec3 result;
+        for (int i = 0; i < 3; i++) {
+          float b = base[i];
+          float s = blend[i];
+          if (s < 0.5) {
+            result[i] = b - (1.0 - 2.0 * s) * b * (1.0 - b);
+          } else {
+            float d = (b < 0.25) ? ((16.0 * b - 12.0) * b + 4.0) * b : sqrt(b);
+            result[i] = b + (2.0 * s - 1.0) * (d - b);
+          }
+        }
+        return mix(base, result, opacity);
+      }
+
+      // ===========================================
+      // MAIN
+      // ===========================================
+      void main() {
+        vec2 uv = v_uv;
+        float aspect = u_resolution.x / u_resolution.y;
+        vec2 coord = vec2(uv.x * aspect, uv.y);
+
+        // Time with breathing effect
+        float t = u_time * SPEED;
+        float breathe = sin(u_time * BREATHING_SPEED) * BREATHING_AMOUNT;
+
+        // =========================================
+        // LAYER 1: Primary Gradient with Noise
+        // =========================================
+
+        // Multi-layer noise for organic movement
+        float noise1 = fbm(vec3(coord * NOISE_SCALE, t * 0.5), 3);
+        float noise2 = fbm(vec3(coord * NOISE_SCALE * 1.3 + 50.0, t * 0.7 + 100.0), 3);
+        float noise3 = fbm(vec3(coord * NOISE_SCALE * 0.7 + 25.0, t * 0.3 + 50.0), 2);
+
+        // Combine with different weights for richness
+        float combinedNoise = noise1 * 0.5 + noise2 * 0.35 + noise3 * 0.15;
+        combinedNoise = combinedNoise * 0.5 + 0.5; // Map to 0-1
+        combinedNoise = smoothstep(0.25, 0.75, combinedNoise);
+
+        // Vertical gradient with noise displacement
+        float verticalPos = uv.y;
+        float blendFactor = mix(verticalPos, combinedNoise, NOISE_BLEND + breathe * 0.5);
+
+        // Three-stop gradient for Layer 1
+        vec3 layer1Color;
+        if (blendFactor < 0.4) {
+          // Top to mid
+          float t = smoothstep(0.0, 0.4, blendFactor);
+          layer1Color = mix(u_layer1_top, u_layer1_mid, t);
+        } else {
+          // Mid to bottom
+          float t = smoothstep(0.4, 1.0, blendFactor);
+          layer1Color = mix(u_layer1_mid, u_layer1_bottom, t);
+        }
+
+        // =========================================
+        // LAYER 2: Soft-Light Overlay
+        // =========================================
+
+        // Different noise pattern for layer 2
+        float noise2_1 = fbm(vec3(coord * NOISE_SCALE * 0.8 + 200.0, t * 0.4 + 300.0), 2);
+        float noise2_2 = fbm(vec3(coord * NOISE_SCALE * 1.2 + 150.0, t * 0.6 + 250.0), 2);
+
+        float layer2Noise = noise2_1 * 0.6 + noise2_2 * 0.4;
+        layer2Noise = layer2Noise * 0.5 + 0.5;
+        layer2Noise = smoothstep(0.3, 0.7, layer2Noise);
+
+        // Layer 2 gradient
+        vec3 layer2Color = mix(u_layer2_color1, u_layer2_color2, layer2Noise);
+
+        // =========================================
+        // COMPOSITING
+        // =========================================
+
+        // Start with base color
+        vec3 finalColor = u_baseColor;
+
+        // Apply layer 1 (primary gradient)
+        // Calculate opacity based on position (transparent at edges)
+        float layer1Alpha = 1.0;
+
+        // Top edge fade
+        layer1Alpha *= smoothstep(0.0, EDGE_FADE_TOP, uv.y);
+
+        // Bottom edge fade (more gradual)
+        layer1Alpha *= 1.0 - smoothstep(1.0 - EDGE_FADE_BOTTOM, 1.0, uv.y);
+
+        // Apply layer 1
+        finalColor = mix(finalColor, layer1Color, layer1Alpha * 0.95);
+
+        // Apply layer 2 with soft-light blend
+        float layer2Alpha = layer1Alpha * LAYER2_OPACITY;
+        finalColor = softLight(finalColor, layer2Color, layer2Alpha);
+
+        // =========================================
+        // FINAL ADJUSTMENTS
+        // =========================================
+
+        // Subtle depth variation
+        float depthNoise = noise1 * 0.08 + breathe * 0.3;
+        finalColor *= (1.0 + depthNoise);
+
+        // Very subtle vignette
+        float vignette = 1.0 - length((uv - 0.5) * vec2(0.3, 0.25));
+        vignette = smoothstep(0.0, 1.0, vignette);
+        finalColor = mix(finalColor * 0.97, finalColor, vignette);
+
+        gl_FragColor = vec4(finalColor, 1.0);
+      }
+    `;
+
+    // =====================================================
+    // WEBGL SETUP
+    // =====================================================
+
+    const canvas = document.getElementById('canvas');
+    const gl = canvas.getContext('webgl', { alpha: false, antialias: true, preserveDrawingBuffer: false });
+
+    function createShader(type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+        return null;
+      }
+      return shader;
+    }
+
+    const vs = createShader(gl.VERTEX_SHADER, vertexShader);
+    const fs = createShader(gl.FRAGMENT_SHADER, fragmentShader);
+
+    const program = gl.createProgram();
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error('Program link error:', gl.getProgramInfoLog(program));
+    }
+
+    gl.useProgram(program);
+
+    // Fullscreen quad
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+
+    const posLoc = gl.getAttribLocation(program, 'a_position');
+    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+    // Uniform locations
+    const uniforms = {
+      time: gl.getUniformLocation(program, 'u_time'),
+      resolution: gl.getUniformLocation(program, 'u_resolution'),
+      layer1_top: gl.getUniformLocation(program, 'u_layer1_top'),
+      layer1_mid: gl.getUniformLocation(program, 'u_layer1_mid'),
+      layer1_bottom: gl.getUniformLocation(program, 'u_layer1_bottom'),
+      layer2_color1: gl.getUniformLocation(program, 'u_layer2_color1'),
+      layer2_color2: gl.getUniformLocation(program, 'u_layer2_color2'),
+      baseColor: gl.getUniformLocation(program, 'u_baseColor'),
+    };
+
+    // =====================================================
+    // COLOR INTERPOLATION & THEME MANAGEMENT
+    // =====================================================
+
+    let currentTheme = 'ai';
+
+    // Current interpolated colors
+    let current = {
+      layer1_top: [...THEMES.ai.layer1.top],
+      layer1_mid: [...THEMES.ai.layer1.mid],
+      layer1_bottom: [...THEMES.ai.layer1.bottom],
+      layer2_color1: [...THEMES.ai.layer2.color1],
+      layer2_color2: [...THEMES.ai.layer2.color2],
+      baseColor: [...THEMES.ai.baseColor],
+    };
+
+    // Target colors (for smooth transitions)
+    let target = JSON.parse(JSON.stringify(current));
+
+    function setTheme(name) {
+      currentTheme = name;
+      const theme = THEMES[name];
+
+      target.layer1_top = [...theme.layer1.top];
+      target.layer1_mid = [...theme.layer1.mid];
+      target.layer1_bottom = [...theme.layer1.bottom];
+      target.layer2_color1 = [...theme.layer2.color1];
+      target.layer2_color2 = [...theme.layer2.color2];
+      target.baseColor = [...theme.baseColor];
+
+      document.getElementById('themeName').textContent = theme.name;
+      document.querySelectorAll('.btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.theme === name)
+      );
+    }
+
+    function lerpColor(current, target, factor) {
+      for (let i = 0; i < 3; i++) {
+        current[i] += (target[i] - current[i]) * factor;
+      }
+    }
+
+    // =====================================================
+    // RESIZE HANDLER
+    // =====================================================
+
+    function resize() {
+      const dpr = Math.min(devicePixelRatio, 2);
+      canvas.width = innerWidth * dpr;
+      canvas.height = innerHeight * dpr;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform2f(uniforms.resolution, canvas.width, canvas.height);
+    }
+
+    resize();
+    addEventListener('resize', resize);
+
+    // Button handlers
+    document.querySelectorAll('.btn').forEach(b =>
+      b.addEventListener('click', () => setTheme(b.dataset.theme))
+    );
+
+    // =====================================================
+    // RENDER LOOP
+    // =====================================================
+
+    const startTime = performance.now();
+    const LERP_FACTOR = 0.04; // Smooth color transitions
+
+    function render(now) {
+      // Interpolate colors toward targets
+      lerpColor(current.layer1_top, target.layer1_top, LERP_FACTOR);
+      lerpColor(current.layer1_mid, target.layer1_mid, LERP_FACTOR);
+      lerpColor(current.layer1_bottom, target.layer1_bottom, LERP_FACTOR);
+      lerpColor(current.layer2_color1, target.layer2_color1, LERP_FACTOR);
+      lerpColor(current.layer2_color2, target.layer2_color2, LERP_FACTOR);
+      lerpColor(current.baseColor, target.baseColor, LERP_FACTOR);
+
+      // Update uniforms
+      gl.uniform1f(uniforms.time, (now - startTime) / 1000);
+      gl.uniform3fv(uniforms.layer1_top, current.layer1_top);
+      gl.uniform3fv(uniforms.layer1_mid, current.layer1_mid);
+      gl.uniform3fv(uniforms.layer1_bottom, current.layer1_bottom);
+      gl.uniform3fv(uniforms.layer2_color1, current.layer2_color1);
+      gl.uniform3fv(uniforms.layer2_color2, current.layer2_color2);
+      gl.uniform3fv(uniforms.baseColor, current.baseColor);
+
+      // Draw
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>

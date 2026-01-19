@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QF Gradient - AI Theme (Figma Colors)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #FFE9D2;
+      color: white;
+      overflow: hidden;
+    }
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      z-index: 10;
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      z-index: 20;
+    }
+    .logo { font-size: 14px; opacity: 0.85; font-weight: 500; }
+    .subtitle { font-size: 11px; opacity: 0.5; letter-spacing: 2px; text-transform: uppercase; }
+    .theme-label { font-size: 11px; opacity: 0.4; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
+    .theme-name { font-size: clamp(36px, 7vw, 72px); font-weight: 300; letter-spacing: -1px; margin-bottom: 20px; }
+    .year { font-size: clamp(52px, 10vw, 100px); font-weight: 200; opacity: 0.2; letter-spacing: -3px; }
+    .info {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      opacity: 0.35;
+      z-index: 20;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <div class="header">
+    <span class="logo">Qatar Foundation</span>
+    <span class="subtitle">2025 Year in Review</span>
+  </div>
+
+  <div class="overlay">
+    <span class="theme-label">Theme</span>
+    <h1 class="theme-name">Artificial Intelligence</h1>
+    <span class="year">2025</span>
+  </div>
+
+  <div class="info">AI Theme - Figma Colors (Blue + Khaki + Purple soft-light)</div>
+
+  <script>
+    // =====================================================
+    // AI THEME - EXACT FIGMA COLORS
+    // =====================================================
+    //
+    // From Figma layers:
+    //
+    // Layer 1 (Base): #FFE9D2 (peachy cream)
+    //
+    // Layer 2 (Primary gradient):
+    //   - transparent 0%
+    //   - #1B8EE0 (blue) 44.79%
+    //   - rgba(121,123,77,0.77) (khaki) 57.81%
+    //   - transparent 100%
+    //
+    // Layer 3 (Soft-light blend):
+    //   - transparent 0%
+    //   - #B09CF6 (purple) 14.9%
+    //   - #4D7B6B (sage) 28.85%
+    //   - transparent 100%
+
+    const vertexShader = `
+      attribute vec2 a_position;
+      varying vec2 v_uv;
+      void main() {
+        v_uv = a_position * 0.5 + 0.5;
+        gl_Position = vec4(a_position, 0.0, 1.0);
+      }
+    `;
+
+    const fragmentShader = `
+      precision highp float;
+      varying vec2 v_uv;
+      uniform float u_time;
+      uniform vec2 u_resolution;
+
+      // ===========================================
+      // FIGMA COLORS (normalized 0-1)
+      // ===========================================
+
+      // Base
+      const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);  // #FFE9D2
+
+      // Primary gradient layer
+      const vec3 PRIMARY_BLUE = vec3(0.106, 0.557, 0.880);   // #1B8EE0
+      const vec3 PRIMARY_KHAKI = vec3(0.475, 0.482, 0.302);  // #797B4D
+      const float KHAKI_OPACITY = 0.77;
+
+      // Soft-light layer
+      const vec3 SOFTLIGHT_PURPLE = vec3(0.690, 0.612, 0.965);  // #B09CF6
+      const vec3 SOFTLIGHT_SAGE = vec3(0.302, 0.482, 0.420);    // #4D7B6B
+
+      // ===========================================
+      // PARAMETERS
+      // ===========================================
+      #define NOISE_SCALE 0.5        // Blob size
+      #define SPEED 0.12             // Animation speed
+      #define SOFTLIGHT_STRENGTH 0.6 // Soft-light layer intensity
+
+      // ===========================================
+      // SIMPLEX 3D NOISE
+      // ===========================================
+      vec4 permute(vec4 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+      vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+      float snoise(vec3 v) {
+        const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+        const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+        vec3 i = floor(v + dot(v, C.yyy));
+        vec3 x0 = v - i + dot(i, C.xxx);
+        vec3 g = step(x0.yzx, x0.xyz);
+        vec3 l = 1.0 - g;
+        vec3 i1 = min(g.xyz, l.zxy);
+        vec3 i2 = max(g.xyz, l.zxy);
+        vec3 x1 = x0 - i1 + C.xxx;
+        vec3 x2 = x0 - i2 + C.yyy;
+        vec3 x3 = x0 - D.yyy;
+        i = mod(i, 289.0);
+        vec4 p = permute(permute(permute(i.z + vec4(0.0, i1.z, i2.z, 1.0)) + i.y + vec4(0.0, i1.y, i2.y, 1.0)) + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+        float n_ = 1.0/7.0;
+        vec3 ns = n_ * D.wyz - D.xzx;
+        vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+        vec4 x_ = floor(j * ns.z);
+        vec4 y_ = floor(j - 7.0 * x_);
+        vec4 x = x_ * ns.x + ns.yyyy;
+        vec4 y = y_ * ns.x + ns.yyyy;
+        vec4 h = 1.0 - abs(x) - abs(y);
+        vec4 b0 = vec4(x.xy, y.xy);
+        vec4 b1 = vec4(x.zw, y.zw);
+        vec4 s0 = floor(b0)*2.0 + 1.0;
+        vec4 s1 = floor(b1)*2.0 + 1.0;
+        vec4 sh = -step(h, vec4(0.0));
+        vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+        vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+        vec3 p0 = vec3(a0.xy, h.x);
+        vec3 p1 = vec3(a0.zw, h.y);
+        vec3 p2 = vec3(a1.xy, h.z);
+        vec3 p3 = vec3(a1.zw, h.w);
+        vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+        p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+        vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+        m = m * m;
+        return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+      }
+
+      float fbm(vec3 p, int octaves) {
+        float value = 0.0;
+        float amplitude = 0.5;
+        float frequency = 1.0;
+        for (int i = 0; i < 4; i++) {
+          if (i >= octaves) break;
+          value += amplitude * snoise(p * frequency);
+          amplitude *= 0.5;
+          frequency *= 2.0;
+        }
+        return value;
+      }
+
+      // ===========================================
+      // SOFT-LIGHT BLEND MODE
+      // ===========================================
+      vec3 softLight(vec3 base, vec3 blend) {
+        vec3 result;
+        for (int i = 0; i < 3; i++) {
+          float b = base[i];
+          float s = blend[i];
+          if (s < 0.5) {
+            result[i] = b - (1.0 - 2.0 * s) * b * (1.0 - b);
+          } else {
+            float d = (b < 0.25) ? ((16.0 * b - 12.0) * b + 4.0) * b : sqrt(b);
+            result[i] = b + (2.0 * s - 1.0) * (d - b);
+          }
+        }
+        return result;
+      }
+
+      void main() {
+        vec2 uv = v_uv;
+        float aspect = u_resolution.x / u_resolution.y;
+        vec2 coord = vec2(uv.x * aspect, uv.y);
+        float t = u_time * SPEED;
+
+        // ===========================================
+        // NOISE LAYERS FOR ORGANIC MOVEMENT
+        // ===========================================
+
+        // Primary layer noise (for blue-khaki gradient)
+        float noise1 = fbm(vec3(coord * NOISE_SCALE, t * 0.4), 3);
+        float noise2 = fbm(vec3(coord * NOISE_SCALE * 0.7 + 30.0, t * 0.3 + 50.0), 3);
+        float primaryNoise = noise1 * 0.6 + noise2 * 0.4;
+        primaryNoise = primaryNoise * 0.5 + 0.5;
+
+        // Soft-light layer noise (different pattern)
+        float noise3 = fbm(vec3(coord * NOISE_SCALE * 0.8 + 100.0, t * 0.35 + 100.0), 2);
+        float noise4 = fbm(vec3(coord * NOISE_SCALE * 1.2 + 150.0, t * 0.25 + 200.0), 2);
+        float softlightNoise = noise3 * 0.55 + noise4 * 0.45;
+        softlightNoise = softlightNoise * 0.5 + 0.5;
+
+        // ===========================================
+        // LAYER 2: PRIMARY GRADIENT (Blue → Khaki)
+        // ===========================================
+        // Figma stops: transparent 0%, blue 44.79%, khaki 57.81%, transparent 100%
+
+        // Vertical position with noise displacement
+        float primaryPos = 1.0 - uv.y; // Invert so 0 is top
+        primaryPos += primaryNoise * 0.25 - 0.125; // Add noise wobble
+
+        // Calculate primary gradient color
+        vec3 primaryColor;
+        float primaryAlpha;
+
+        if (primaryPos < 0.15) {
+          // Top transparent region (0% - ~15%)
+          primaryAlpha = smoothstep(0.0, 0.15, primaryPos);
+          primaryColor = PRIMARY_BLUE;
+        }
+        else if (primaryPos < 0.45) {
+          // Blue region (peaking around 44.79%)
+          primaryAlpha = 1.0;
+          float blueBlend = smoothstep(0.15, 0.45, primaryPos);
+          primaryColor = PRIMARY_BLUE;
+        }
+        else if (primaryPos < 0.58) {
+          // Transition blue → khaki
+          float t = smoothstep(0.45, 0.58, primaryPos);
+          primaryColor = mix(PRIMARY_BLUE, PRIMARY_KHAKI, t);
+          primaryAlpha = mix(1.0, KHAKI_OPACITY, t);
+        }
+        else if (primaryPos < 0.85) {
+          // Khaki region fading out
+          primaryColor = PRIMARY_KHAKI;
+          primaryAlpha = KHAKI_OPACITY * (1.0 - smoothstep(0.58, 0.85, primaryPos));
+        }
+        else {
+          // Bottom transparent
+          primaryColor = PRIMARY_KHAKI;
+          primaryAlpha = 0.0;
+        }
+
+        // ===========================================
+        // LAYER 3: SOFT-LIGHT (Purple → Sage)
+        // ===========================================
+        // Figma stops: transparent 0%, purple 14.9%, sage 28.85%, transparent 100%
+
+        float softlightPos = 1.0 - uv.y;
+        softlightPos += softlightNoise * 0.2 - 0.1;
+
+        vec3 softlightColor;
+        float softlightAlpha;
+
+        if (softlightPos < 0.05) {
+          // Top transparent
+          softlightAlpha = smoothstep(0.0, 0.05, softlightPos);
+          softlightColor = SOFTLIGHT_PURPLE;
+        }
+        else if (softlightPos < 0.15) {
+          // Purple region (peaking around 14.9%)
+          softlightAlpha = 1.0;
+          softlightColor = SOFTLIGHT_PURPLE;
+        }
+        else if (softlightPos < 0.29) {
+          // Transition purple → sage
+          float t = smoothstep(0.15, 0.29, softlightPos);
+          softlightColor = mix(SOFTLIGHT_PURPLE, SOFTLIGHT_SAGE, t);
+          softlightAlpha = 1.0;
+        }
+        else if (softlightPos < 0.6) {
+          // Sage fading out
+          softlightColor = SOFTLIGHT_SAGE;
+          softlightAlpha = 1.0 - smoothstep(0.29, 0.6, softlightPos);
+        }
+        else {
+          softlightColor = SOFTLIGHT_SAGE;
+          softlightAlpha = 0.0;
+        }
+
+        // ===========================================
+        // COMPOSITE LAYERS
+        // ===========================================
+
+        // Start with base
+        vec3 color = BASE_COLOR;
+
+        // Apply primary gradient layer
+        color = mix(color, primaryColor, primaryAlpha);
+
+        // Apply soft-light layer
+        vec3 softlightResult = softLight(color, softlightColor);
+        color = mix(color, softlightResult, softlightAlpha * SOFTLIGHT_STRENGTH);
+
+        // ===========================================
+        // FINAL TOUCHES
+        // ===========================================
+
+        // Subtle brightness variation
+        float brightness = 1.0 + noise1 * 0.08;
+        color *= brightness;
+
+        // Very subtle vignette
+        float vignette = 1.0 - length((uv - 0.5) * 0.3);
+        vignette = smoothstep(0.0, 1.0, vignette);
+        color = mix(color * 0.96, color, vignette);
+
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `;
+
+    // =====================================================
+    // WEBGL SETUP
+    // =====================================================
+    const canvas = document.getElementById('canvas');
+    const gl = canvas.getContext('webgl', { alpha: false, antialias: true });
+
+    function createShader(type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error(gl.getShaderInfoLog(shader));
+      }
+      return shader;
+    }
+
+    const vs = createShader(gl.VERTEX_SHADER, vertexShader);
+    const fs = createShader(gl.FRAGMENT_SHADER, fragmentShader);
+    const program = gl.createProgram();
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+
+    const posLoc = gl.getAttribLocation(program, 'a_position');
+    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+    const uniforms = {
+      time: gl.getUniformLocation(program, 'u_time'),
+      resolution: gl.getUniformLocation(program, 'u_resolution'),
+    };
+
+    function resize() {
+      const dpr = Math.min(devicePixelRatio, 2);
+      canvas.width = innerWidth * dpr;
+      canvas.height = innerHeight * dpr;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform2f(uniforms.resolution, canvas.width, canvas.height);
+    }
+
+    resize();
+    addEventListener('resize', resize);
+
+    const startTime = performance.now();
+
+    function render(now) {
+      gl.uniform1f(uniforms.time, (now - startTime) / 1000);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>
