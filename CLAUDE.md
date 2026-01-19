@@ -4,6 +4,19 @@
 
 This is the 2025 Year in Review website for Qatar Foundation, showcasing monthly stories across five thematic areas. The project uses a card-based browse interface with drawer/modal navigation for immersive story reading.
 
+## Deployment
+
+**Hosting:** Netlify
+**Production URL:** https://qf-year-in-review-2025.netlify.app
+**Admin:** https://app.netlify.com/projects/qf-year-in-review-2025
+
+**Deploy command:**
+```bash
+netlify deploy --prod
+```
+
+Always use Netlify for deployments. The site is already linked to the project.
+
 ## Content Source
 
 **Primary content file:** `2025 content/Year in Review Content English - 2025.docx`
