@@ -151,29 +151,18 @@
         return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
       }
 
+      // Optimized FBM: 2 octaves instead of 3 (33% less noise calls)
       float fbm(vec3 p) {
         float value = 0.0;
-        float amplitude = 0.5;
-        value += amplitude * snoise(p); amplitude *= 0.5;
-        value += amplitude * snoise(p * 2.0); amplitude *= 0.5;
-        value += amplitude * snoise(p * 4.0);
+        value += 0.667 * snoise(p);
+        value += 0.333 * snoise(p * 2.0);
         return value;
       }
 
-      // Soft-light blend
+      // Optimized soft-light blend (unrolled, no conditionals)
+      // Uses simplified Pegtop formula: (1-2*blend)*base^2 + 2*blend*base
       vec3 softLight(vec3 base, vec3 blend) {
-        vec3 result;
-        for (int i = 0; i < 3; i++) {
-          float b = base[i];
-          float s = blend[i];
-          if (s < 0.5) {
-            result[i] = b - (1.0 - 2.0 * s) * b * (1.0 - b);
-          } else {
-            float d = (b < 0.25) ? ((16.0 * b - 12.0) * b + 4.0) * b : sqrt(b);
-            result[i] = b + (2.0 * s - 1.0) * (d - b);
-          }
-        }
-        return result;
+        return (1.0 - 2.0 * blend) * base * base + 2.0 * blend * base;
       }
 
       void main() {
@@ -183,15 +172,17 @@
         float t = u_time * SPEED;
 
         // ===========================================
-        // BLOB NOISE
+        // BLOB NOISE (Optimized: simplified blob2 and blob3)
         // ===========================================
         float blob1 = fbm(vec3(coord * BLOB_SCALE, t * 0.3));
         blob1 = blob1 * 0.5 + 0.5;
 
-        float blob2 = fbm(vec3(coord * BLOB_SCALE * 0.8 + 50.0, t * 0.25 + 100.0));
+        // Simplified: single snoise for soft-light layer variation
+        float blob2 = snoise(vec3(coord * BLOB_SCALE * 0.8 + 50.0, t * 0.25 + 100.0));
         blob2 = blob2 * 0.5 + 0.5;
 
-        float blob3 = fbm(vec3(coord * BLOB_SCALE * 0.6 + 100.0, t * 0.2 + 50.0));
+        // Simplified depth noise: single snoise instead of fbm
+        float blob3 = snoise(vec3(coord * BLOB_SCALE * 0.6 + 100.0, t * 0.2 + 50.0));
         blob3 = blob3 * 0.5 + 0.5;
 
         // Vertical position with blob influence
@@ -266,6 +257,15 @@
     `;
 
     // =====================================================
+    // PERFORMANCE CONFIG
+    // =====================================================
+    const PERF_CONFIG = {
+      maxDPR: 1.5,           // Was 2.0 - reduces pixel count by 44%
+      targetFPS: 30,         // Was 60 - halves render calls
+      pauseWhenHidden: true  // Stop rendering when tab not visible
+    };
+
+    // =====================================================
     // WEBGL SETUP
     // =====================================================
     const canvas = document.getElementById('canvas');
@@ -303,7 +303,7 @@
     };
 
     function resize() {
-      const dpr = Math.min(devicePixelRatio, 2);
+      const dpr = Math.min(devicePixelRatio, PERF_CONFIG.maxDPR);
       canvas.width = innerWidth * dpr;
       canvas.height = innerHeight * dpr;
       gl.viewport(0, 0, canvas.width, canvas.height);
@@ -313,15 +313,48 @@
     resize();
     addEventListener('resize', resize);
 
+    // =====================================================
+    // ANIMATION LOOP WITH PERFORMANCE OPTIMIZATIONS
+    // =====================================================
     const startTime = performance.now();
+    const frameInterval = 1000 / PERF_CONFIG.targetFPS;
+    let lastFrameTime = 0;
+    let isRunning = true;
+    let animationId = null;
 
     function render(now) {
+      if (!isRunning) return;
+
+      // Frame rate throttling
+      if (now - lastFrameTime < frameInterval) {
+        animationId = requestAnimationFrame(render);
+        return;
+      }
+      lastFrameTime = now;
+
       gl.uniform1f(uniforms.time, (now - startTime) / 1000);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      requestAnimationFrame(render);
+      animationId = requestAnimationFrame(render);
     }
 
-    requestAnimationFrame(render);
+    // Page Visibility API - pause when tab is hidden
+    if (PERF_CONFIG.pauseWhenHidden) {
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          isRunning = false;
+          if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+          }
+        } else {
+          isRunning = true;
+          lastFrameTime = performance.now();
+          animationId = requestAnimationFrame(render);
+        }
+      });
+    }
+
+    animationId = requestAnimationFrame(render);
   </script>
 </body>
 </html>

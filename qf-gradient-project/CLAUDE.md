@@ -174,23 +174,64 @@ const vec3 PURPLE = vec3(0.480, 0.300, 0.620);
 
 ## Quality Standards
 
-### Performance
-- Target 60fps on mid-range devices
-- Use `devicePixelRatio` capped at 2
-- FBM with 3 octaves (good balance)
+### Performance (Optimized January 2026)
+
+Performance optimizations applied to reduce CPU/GPU load on older devices:
+
+| Setting | Before | After | Impact |
+|---------|--------|-------|--------|
+| `maxDPR` | 2.0 | 1.5 | 44% fewer pixels |
+| `targetFPS` | 60 | 30 | 50% fewer renders |
+| FBM octaves | 3 | 2 | 33% fewer noise calls |
+| Blob evaluations | 3 fbm() | 1 fbm() + 2 snoise() | ~50% fewer noise calls |
+| Visibility API | No | Yes | 0% GPU when hidden |
+
+**JavaScript Performance Config:**
+```javascript
+const PERF_CONFIG = {
+  maxDPR: 1.5,           // Was 2.0 - reduces pixel count by 44%
+  targetFPS: 30,         // Was 60 - halves render calls
+  pauseWhenHidden: true  // Stop rendering when tab not visible
+};
+```
+
+**Optimized FBM (2 octaves):**
+```glsl
+float fbm(vec3 p) {
+  float value = 0.0;
+  value += 0.667 * snoise(p);
+  value += 0.333 * snoise(p * 2.0);
+  return value;
+}
+```
+
+**Optimized Soft-Light (AI theme only):**
+```glsl
+// Pegtop formula - no loops or conditionals
+vec3 softLight(vec3 base, vec3 blend) {
+  return (1.0 - 2.0 * blend) * base * base + 2.0 * blend * base;
+}
+```
+
+**Total Impact Estimate:**
+- Before: ~500M shader ops/sec on Retina display
+- After: ~80M shader ops/sec (84% reduction)
+- Fans should stay silent on older MacBooks
 
 ### Visual Quality
 - No visible banding in gradients
-- Smooth, continuous animation
+- Smooth, continuous animation at 30fps (imperceptible given slow SPEED)
 - Colors match Figma reference
 - Warm beige always visible at bottom
+- Slightly softer edges on Retina (acceptable for blurry gradients)
 
 ## TODO
 
 - [ ] Progressive Education theme
 - [ ] Social Progress theme
 - [ ] Sustainability theme
-- [ ] Add reduced-motion media query support
+- [x] Performance optimization for older MacBooks (January 2026)
+- [ ] Add `prefers-reduced-motion` media query support
 - [ ] Create production component version
 - [ ] Export as video loop option
 
