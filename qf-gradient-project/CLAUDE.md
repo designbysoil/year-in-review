@@ -113,7 +113,7 @@ const VARIED_THEME_COLORS = {
   'ai': ['1B8EE0', '797B4D', 'FFE9D2'],              // Blue → Khaki → Cream (3 colors)
   'precision-health': ['E06B51', 'DB7A8F', '9B7BB8', 'FFE9D2'], // Coral → Rose Pink → Lavender → Cream (4 colors)
   'education': ['4F1BE0', '357AAF', '1E4D3D', '4D7B6B', 'FFE9D2'], // Violet → Blue → Dark Teal → Light Teal → Cream (5 colors)
-  'social-progress': ['7642BA', 'C38F46', 'FFE9D2'], // Purple → Gold → Cream (3 colors)
+  'social-progress': ['5B2D91', '7642BA', '9B6B9E', 'C38F46', 'FFE9D2'], // Deep Purple → Purple → Mauve → Gold → Cream (5 colors)
   'sustainability': ['E09B1B', '4D7B6B', 'FFE9D2']  // Amber → Teal → Cream (3 colors)
 };
 ```
