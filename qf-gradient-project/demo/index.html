@@ -30,7 +30,7 @@
       border-bottom: 1px solid #E8E8E5;
     }
 
-    .header h1 {
+    .header-left h1 {
       font-size: 20px;
       font-weight: 600;
     }
@@ -39,6 +39,12 @@
       font-size: 12px;
       color: #666;
       margin-top: 4px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
     }
 
     /* Controls */
@@ -81,14 +87,16 @@
       border-color: #11362A;
     }
 
-    /* Version Toggle */
-    .version-toggle {
+    /* Version Toggle & Style Toggle */
+    .version-toggle,
+    .style-toggle {
       display: flex;
       align-items: center;
       gap: 16px;
     }
 
-    .version-toggle label {
+    .version-toggle label,
+    .style-toggle label {
       font-size: 13px;
       color: #666;
     }
@@ -291,9 +299,25 @@
 <body>
   <div class="container">
     <div class="header">
-      <div>
+      <div class="header-left">
         <h1>QF Gradient Preview</h1>
         <p class="header-subtitle">Year in Review 2025 - Animated Gradients</p>
+      </div>
+      <div class="header-right">
+        <div class="version-toggle">
+          <label>Version:</label>
+          <div class="toggle-group">
+            <button class="toggle-option active" data-version="full">Full</button>
+            <button class="toggle-option" data-version="lite">Lite+</button>
+          </div>
+        </div>
+        <div class="style-toggle">
+          <label>Style:</label>
+          <div class="toggle-group">
+            <button class="toggle-option active" data-style="standard">Standard</button>
+            <button class="toggle-option" data-style="varied">Varied</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -304,14 +328,6 @@
         <button class="theme-tab" data-theme="education">Progressive Education</button>
         <button class="theme-tab" data-theme="social-progress">Social Progress</button>
         <button class="theme-tab" data-theme="sustainability">Sustainability</button>
-      </div>
-
-      <div class="version-toggle">
-        <label>Version:</label>
-        <div class="toggle-group">
-          <button class="toggle-option active" data-version="full">Full</button>
-          <button class="toggle-option" data-version="lite">Lite+</button>
-        </div>
       </div>
     </div>
 
@@ -383,11 +399,37 @@
       }
     };
 
+    // Varied style colors (RGB float arrays for uniform colors)
+    // Each theme has 3 colors that blend from bottom to top
+    const VARIED_THEME_COLORS = {
+      'ai': {
+        colors: [[0.106, 0.557, 0.878], [0.475, 0.482, 0.302], [1.0, 0.914, 0.824]], // Blue → Khaki → Cream
+        hex: ['1B8EE0', '797B4D', 'FFE9D2']
+      },
+      'precision-health': {
+        colors: [[0.878, 0.420, 0.318], [0.720, 0.380, 0.560], [1.0, 0.914, 0.824]], // Coral → Mauve → Cream
+        hex: ['E06B51', 'B8618F', 'FFE9D2']
+      },
+      'education': {
+        colors: [[0.118, 0.302, 0.239], [0.769, 0.655, 0.490], [1.0, 0.914, 0.824]], // Teal → Sand → Cream
+        hex: ['1E4D3D', 'C4A77D', 'FFE9D2']
+      },
+      'social-progress': {
+        colors: [[0.463, 0.259, 0.729], [0.765, 0.561, 0.275], [1.0, 0.914, 0.824]], // Purple → Gold → Cream
+        hex: ['7642BA', 'C38F46', 'FFE9D2']
+      },
+      'sustainability': {
+        colors: [[0.878, 0.608, 0.106], [0.302, 0.482, 0.420], [1.0, 0.914, 0.824]], // Amber → Teal → Cream
+        hex: ['E09B1B', '4D7B6B', 'FFE9D2']
+      }
+    };
+
     // =========================================================
     // STATE
     // =========================================================
     let currentTheme = 'ai';
     let currentVersion = 'full';
+    let currentStyle = 'standard'; // 'standard' or 'varied'
     let isExporting = false;
     let exportCancelled = false;
 
@@ -402,15 +444,25 @@
     const cancelExportBtn = document.getElementById('cancelExport');
 
     // =========================================================
-    // THEME & VERSION SWITCHING
+    // THEME, VERSION & STYLE SWITCHING
     // =========================================================
     function updatePreview() {
-      const theme = THEMES[currentTheme];
-      const file = currentVersion === 'full' ? theme.full : theme.lite;
+      let file;
+
+      if (currentStyle === 'varied') {
+        // Load varied shader with theme colors via URL params
+        const themeColors = VARIED_THEME_COLORS[currentTheme];
+        file = `index-varied.html?c1=${themeColors.hex[0]}&c2=${themeColors.hex[1]}&c3=${themeColors.hex[2]}`;
+      } else {
+        // Load standard theme file
+        const theme = THEMES[currentTheme];
+        file = currentVersion === 'full' ? theme.full : theme.lite;
+      }
+
       previewIframe.src = file;
 
       // Update URL hash
-      window.location.hash = `${currentTheme}-${currentVersion}`;
+      window.location.hash = `${currentTheme}-${currentVersion}-${currentStyle}`;
     }
 
     // Theme tabs
@@ -424,11 +476,21 @@
     });
 
     // Version toggle
-    document.querySelectorAll('.toggle-option').forEach(option => {
+    document.querySelectorAll('.version-toggle .toggle-option').forEach(option => {
       option.addEventListener('click', () => {
-        document.querySelectorAll('.toggle-option').forEach(o => o.classList.remove('active'));
+        document.querySelectorAll('.version-toggle .toggle-option').forEach(o => o.classList.remove('active'));
         option.classList.add('active');
         currentVersion = option.dataset.version;
+        updatePreview();
+      });
+    });
+
+    // Style toggle
+    document.querySelectorAll('.style-toggle .toggle-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.style-toggle .toggle-option').forEach(o => o.classList.remove('active'));
+        option.classList.add('active');
+        currentStyle = option.dataset.style;
         updatePreview();
       });
     });
@@ -438,14 +500,21 @@
       const hash = window.location.hash.slice(1);
       if (hash) {
         const parts = hash.split('-');
-        // Handle themes with hyphens
-        let themeKey, versionKey;
+        // Handle themes with hyphens (precision-health, social-progress)
+        let themeKey, versionKey, styleKey;
+
         if (parts[0] === 'precision' && parts[1] === 'health') {
           themeKey = 'precision-health';
           versionKey = parts[2];
+          styleKey = parts[3];
+        } else if (parts[0] === 'social' && parts[1] === 'progress') {
+          themeKey = 'social-progress';
+          versionKey = parts[2];
+          styleKey = parts[3];
         } else {
           themeKey = parts[0];
           versionKey = parts[1];
+          styleKey = parts[2];
         }
 
         if (THEMES[themeKey]) {
@@ -456,8 +525,14 @@
         }
         if (versionKey === 'full' || versionKey === 'lite') {
           currentVersion = versionKey;
-          document.querySelectorAll('.toggle-option').forEach(o => {
+          document.querySelectorAll('.version-toggle .toggle-option').forEach(o => {
             o.classList.toggle('active', o.dataset.version === currentVersion);
+          });
+        }
+        if (styleKey === 'standard' || styleKey === 'varied') {
+          currentStyle = styleKey;
+          document.querySelectorAll('.style-toggle .toggle-option').forEach(o => {
+            o.classList.toggle('active', o.dataset.style === currentStyle);
           });
         }
         updatePreview();
@@ -1272,14 +1347,128 @@
       }
     `;
 
+    // Varied Style Fragment Shader - organic, pocket-like drift patterns
+    // Inspired by Runway Demo Day 2025 aesthetic
+    const VARIED_FRAGMENT_SHADER = `
+      precision highp float;
+      varying vec2 v_uv;
+      uniform float u_time;
+      uniform vec2 u_resolution;
+      uniform vec3 u_color1, u_color2, u_color3;
+
+      #define SPEED 0.40
+
+      vec4 permute(vec4 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+      vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+      float snoise(vec3 v) {
+        const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+        const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+        vec3 i = floor(v + dot(v, C.yyy));
+        vec3 x0 = v - i + dot(i, C.xxx);
+        vec3 g = step(x0.yzx, x0.xyz);
+        vec3 l = 1.0 - g;
+        vec3 i1 = min(g.xyz, l.zxy);
+        vec3 i2 = max(g.xyz, l.zxy);
+        vec3 x1 = x0 - i1 + C.xxx;
+        vec3 x2 = x0 - i2 + C.yyy;
+        vec3 x3 = x0 - D.yyy;
+        i = mod(i, 289.0);
+        vec4 p = permute(permute(permute(i.z + vec4(0.0, i1.z, i2.z, 1.0)) + i.y + vec4(0.0, i1.y, i2.y, 1.0)) + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+        float n_ = 1.0/7.0;
+        vec3 ns = n_ * D.wyz - D.xzx;
+        vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+        vec4 x_ = floor(j * ns.z);
+        vec4 y_ = floor(j - 7.0 * x_);
+        vec4 x = x_ * ns.x + ns.yyyy;
+        vec4 y = y_ * ns.x + ns.yyyy;
+        vec4 h = 1.0 - abs(x) - abs(y);
+        vec4 b0 = vec4(x.xy, y.xy);
+        vec4 b1 = vec4(x.zw, y.zw);
+        vec4 s0 = floor(b0)*2.0 + 1.0;
+        vec4 s1 = floor(b1)*2.0 + 1.0;
+        vec4 sh = -step(h, vec4(0.0));
+        vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+        vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+        vec3 p0 = vec3(a0.xy, h.x);
+        vec3 p1 = vec3(a0.zw, h.y);
+        vec3 p2 = vec3(a1.xy, h.z);
+        vec3 p3 = vec3(a1.zw, h.w);
+        vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+        p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+        vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+        m = m * m;
+        return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+      }
+
+      // 2-octave FBM for bigger, softer blobs
+      float fbm(vec3 p) {
+        float value = 0.0;
+        value += 0.7 * snoise(p);
+        value += 0.3 * snoise(p * 1.6);
+        return value;
+      }
+
+      void main() {
+        vec2 uv = v_uv;
+        float aspect = u_resolution.x / u_resolution.y;
+        vec2 coord = vec2(uv.x * aspect, uv.y);
+        float t = u_time * SPEED;
+
+        // Directional drift: clouds move left-to-right with slight upward angle
+        vec2 driftDir = vec2(0.989, 0.148); // ~8.5 degree angle upward
+        float driftSpeed = 0.72;
+        vec2 drift = driftDir * t * driftSpeed;
+
+        // Medium-sized blobs with good definition
+        float noiseScale = 0.55;
+
+        // Apply drift to coordinates for directional movement
+        vec2 driftedCoord = coord - drift;
+
+        // Two FBM layers - faster time evolution for organic shape morphing
+        float noise1 = fbm(vec3(driftedCoord * noiseScale, t * 0.6));
+        float noise2 = fbm(vec3(driftedCoord * noiseScale * 1.4 + 30.0, t * 0.84 + 50.0));
+
+        // Simpler combination for bigger, softer pockets
+        float combinedNoise = noise1 * 0.65 + noise2 * 0.35;
+        combinedNoise = smoothstep(0.15, 0.85, combinedNoise * 0.5 + 0.5);
+
+        // Mix vertical gradient with noise - less noise influence for calmer look
+        float blendFactor = mix(uv.y, combinedNoise, 0.55);
+
+        // 3-color gradient blending
+        vec3 color;
+        if (blendFactor < 0.5) {
+          color = mix(u_color1, u_color2, smoothstep(0.0, 1.0, blendFactor * 2.0));
+        } else {
+          color = mix(u_color2, u_color3, smoothstep(0.0, 1.0, (blendFactor - 0.5) * 2.0));
+        }
+
+        // Subtle depth variation
+        color *= 1.0 + noise1 * 0.08;
+
+        // Very subtle vignette
+        float vignette = smoothstep(0.0, 1.0, 1.0 - length((uv - 0.5) * 0.3));
+        color = mix(color * 0.95, color, vignette);
+
+        // Dithering to prevent banding
+        float dither = fract(sin(dot(gl_FragCoord.xy + u_time * 100.0, vec2(12.9898, 78.233))) * 43758.5453);
+        color += (dither - 0.5) / 64.0;
+
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `;
+
     // =========================================================
     // WEBGL EXPORT RENDERER
     // =========================================================
     class GradientRenderer {
-      constructor(canvas, fragmentShader, width, height) {
+      constructor(canvas, fragmentShader, width, height, colors = null) {
         this.canvas = canvas;
         this.canvas.width = width;
         this.canvas.height = height;
+        this.colors = colors; // Optional colors array for varied style [[r,g,b], [r,g,b], [r,g,b]]
 
         this.gl = canvas.getContext('webgl', {
           alpha: false,
@@ -1321,6 +1510,18 @@
           resolution: this.gl.getUniformLocation(this.program, 'u_resolution')
         };
 
+        // Add color uniforms if this is a varied style shader
+        if (this.colors) {
+          this.uniforms.color1 = this.gl.getUniformLocation(this.program, 'u_color1');
+          this.uniforms.color2 = this.gl.getUniformLocation(this.program, 'u_color2');
+          this.uniforms.color3 = this.gl.getUniformLocation(this.program, 'u_color3');
+
+          // Set color uniform values
+          this.gl.uniform3fv(this.uniforms.color1, this.colors[0]);
+          this.gl.uniform3fv(this.uniforms.color2, this.colors[1]);
+          this.gl.uniform3fv(this.uniforms.color3, this.colors[2]);
+        }
+
         this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
         this.gl.uniform2f(this.uniforms.resolution, this.canvas.width, this.canvas.height);
       }
@@ -1349,7 +1550,13 @@
     // =========================================================
     // VIDEO EXPORT
     // =========================================================
-    function getFragmentShader(theme) {
+    function getFragmentShader(theme, style) {
+      // Return varied shader for varied style (uses color uniforms)
+      if (style === 'varied') {
+        return VARIED_FRAGMENT_SHADER;
+      }
+
+      // Standard style - theme-specific shaders
       switch(theme) {
         case 'ai': return AI_FRAGMENT_SHADER;
         case 'precision-health': return PRECISION_HEALTH_FRAGMENT_SHADER;
@@ -1373,7 +1580,9 @@
 
       exportProgress.classList.add('active');
       progressBar.style.width = '0%';
-      progressSubtitle.textContent = `Rendering ${THEMES[currentTheme].name} (${width}x${height})...`;
+
+      const styleLabel = currentStyle === 'varied' ? ' (Varied)' : '';
+      progressSubtitle.textContent = `Rendering ${THEMES[currentTheme].name}${styleLabel} (${width}x${height})...`;
 
       document.querySelectorAll('.export-btn').forEach(btn => btn.disabled = true);
 
@@ -1382,17 +1591,25 @@
         canvas.style.display = 'none';
         document.body.appendChild(canvas);
 
-        let fragmentShader = getFragmentShader(currentTheme);
+        let fragmentShader = getFragmentShader(currentTheme, currentStyle);
 
-        // Scale down blobs for portrait
+        // Scale down blobs for portrait (works for both standard and varied)
         if (aspect === 'portrait') {
           fragmentShader = fragmentShader.replace(
             '#define BLOB_SCALE 0.35',
             '#define BLOB_SCALE 0.28'
           );
+          // Also adjust noiseScale for varied style portrait
+          fragmentShader = fragmentShader.replace(
+            'float noiseScale = 0.55;',
+            'float noiseScale = 0.45;'
+          );
         }
 
-        const renderer = new GradientRenderer(canvas, fragmentShader, width, height);
+        // Get colors for varied style
+        const colors = currentStyle === 'varied' ? VARIED_THEME_COLORS[currentTheme].colors : null;
+
+        const renderer = new GradientRenderer(canvas, fragmentShader, width, height, colors);
 
         const stream = canvas.captureStream(fps);
         const mimeType = MediaRecorder.isTypeSupported('video/mp4; codecs=avc1')
@@ -1412,7 +1629,8 @@
         recorder.onstop = () => {
           if (!exportCancelled) {
             const blob = new Blob(chunks, { type: 'video/mp4' });
-            downloadBlob(blob, `gradient-${currentTheme}-${aspect}.mp4`);
+            const styleSuffix = currentStyle === 'varied' ? '-varied' : '';
+            downloadBlob(blob, `gradient-${currentTheme}${styleSuffix}-${aspect}.mp4`);
           }
           cleanup();
         };
