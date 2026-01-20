@@ -411,8 +411,8 @@
         hex: ['E06B51', 'DB7A8F', '9B7BB8', 'FFE9D2']
       },
       'education': {
-        colors: [[0.106, 0.369, 0.710], [0.180, 0.380, 0.380], [0.340, 0.520, 0.480], [1.0, 0.914, 0.824]], // Dark Blue → Teal → Light Teal → Cream
-        hex: ['1B5EB5', '2E6161', '57857A', 'FFE9D2']
+        colors: [[0.310, 0.106, 0.878], [0.208, 0.478, 0.686], [0.118, 0.302, 0.239], [0.302, 0.482, 0.420], [1.0, 0.914, 0.824]], // Violet → Blue → Dark Teal → Light Teal → Cream
+        hex: ['4F1BE0', '357AAF', '1E4D3D', '4D7B6B', 'FFE9D2']
       },
       'social-progress': {
         colors: [[0.463, 0.259, 0.729], [0.765, 0.561, 0.275], [1.0, 0.914, 0.824]], // Purple → Gold → Cream
@@ -456,6 +456,10 @@
         // Add 4th color if present
         if (themeColors.hex.length >= 4) {
           params += `&c4=${themeColors.hex[3]}`;
+        }
+        // Add 5th color if present
+        if (themeColors.hex.length >= 5) {
+          params += `&c5=${themeColors.hex[4]}`;
         }
         file = `index-varied.html?${params}`;
       } else {
@@ -1359,7 +1363,7 @@
       varying vec2 v_uv;
       uniform float u_time;
       uniform vec2 u_resolution;
-      uniform vec3 u_color1, u_color2, u_color3, u_color4;
+      uniform vec3 u_color1, u_color2, u_color3, u_color4, u_color5;
       uniform int u_numColors;
 
       #define SPEED 0.40
@@ -1443,9 +1447,20 @@
         // Mix vertical gradient with noise - reversed so saturated colors appear at top
         float blendFactor = mix(1.0 - uv.y, combinedNoise, 0.55);
 
-        // Multi-color gradient blending (supports 3 or 4 colors)
+        // Multi-color gradient blending (supports 3, 4, or 5 colors)
         vec3 color;
-        if (u_numColors == 4) {
+        if (u_numColors == 5) {
+          // 5-color gradient: divide into 4 segments
+          if (blendFactor < 0.25) {
+            color = mix(u_color1, u_color2, smoothstep(0.0, 0.25, blendFactor));
+          } else if (blendFactor < 0.50) {
+            color = mix(u_color2, u_color3, smoothstep(0.25, 0.50, blendFactor));
+          } else if (blendFactor < 0.70) {
+            color = mix(u_color3, u_color4, smoothstep(0.50, 0.70, blendFactor));
+          } else {
+            color = mix(u_color4, u_color5, smoothstep(0.70, 1.0, blendFactor));
+          }
+        } else if (u_numColors == 4) {
           // 4-color gradient: divide into 3 segments
           if (blendFactor < 0.333) {
             color = mix(u_color1, u_color2, smoothstep(0.0, 1.0, blendFactor * 3.0));
@@ -1534,6 +1549,7 @@
           this.uniforms.color2 = this.gl.getUniformLocation(this.program, 'u_color2');
           this.uniforms.color3 = this.gl.getUniformLocation(this.program, 'u_color3');
           this.uniforms.color4 = this.gl.getUniformLocation(this.program, 'u_color4');
+          this.uniforms.color5 = this.gl.getUniformLocation(this.program, 'u_color5');
           this.uniforms.numColors = this.gl.getUniformLocation(this.program, 'u_numColors');
 
           // Set color uniform values
@@ -1541,13 +1557,19 @@
           this.gl.uniform3fv(this.uniforms.color2, this.colors[1]);
           this.gl.uniform3fv(this.uniforms.color3, this.colors[2]);
 
-          // Handle 4th color if present
-          if (this.colors.length >= 4) {
+          // Handle 4th and 5th colors based on array length
+          if (this.colors.length >= 5) {
             this.gl.uniform3fv(this.uniforms.color4, this.colors[3]);
+            this.gl.uniform3fv(this.uniforms.color5, this.colors[4]);
+            this.gl.uniform1i(this.uniforms.numColors, 5);
+          } else if (this.colors.length >= 4) {
+            this.gl.uniform3fv(this.uniforms.color4, this.colors[3]);
+            this.gl.uniform3fv(this.uniforms.color5, [1.0, 0.914, 0.824]); // Default cream
             this.gl.uniform1i(this.uniforms.numColors, 4);
           } else {
-            // Default 4th color to cream and set numColors to 3
+            // Default 4th and 5th colors to cream and set numColors to 3
             this.gl.uniform3fv(this.uniforms.color4, [1.0, 0.914, 0.824]);
+            this.gl.uniform3fv(this.uniforms.color5, [1.0, 0.914, 0.824]);
             this.gl.uniform1i(this.uniforms.numColors, 3);
           }
         }

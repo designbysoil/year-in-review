@@ -6,6 +6,17 @@ WebGL shader-based animated gradients for Qatar Foundation's 2025 Year in Review
 
 **Goal:** Organic, slowly-drifting color clouds that feel alive and exciting with anticipation—sophisticated yet noticeable movement.
 
+## Primary Development File
+
+**`demo/index.html`** is the central file for all gradient development.
+
+When updating gradients:
+1. Edit `demo/index.html` directly — it contains all theme shaders, colors, preview, and export functionality
+2. The preview tool loads individual theme files for iframe preview (Standard style)
+3. Varied style uses `index-varied.html` with URL color params
+4. All export functionality is built into index.html
+5. Individual theme files (`index-[theme]-v*.html`) are generated from the shaders in index.html
+
 ## Completed Themes
 
 ### AI (Artificial Intelligence) - FINAL: `index-ai-v6.html`
@@ -99,8 +110,8 @@ The preview tool supports two gradient styles:
 ```javascript
 const VARIED_THEME_COLORS = {
   'ai': ['1B8EE0', '797B4D', 'FFE9D2'],              // Blue → Khaki → Cream (3 colors)
-  'precision-health': ['E06B51', 'DB6B85', '7A4D9E', 'FFE9D2'], // Coral → Rose Pink → Purple → Cream (4 colors)
-  'education': ['1E4D3D', 'C4A77D', 'FFE9D2'],      // Teal → Sand → Cream (3 colors)
+  'precision-health': ['E06B51', 'DB7A8F', '9B7BB8', 'FFE9D2'], // Coral → Rose Pink → Lavender → Cream (4 colors)
+  'education': ['4F1BE0', '357AAF', '1E4D3D', '4D7B6B', 'FFE9D2'], // Violet → Blue → Dark Teal → Light Teal → Cream (5 colors)
   'social-progress': ['7642BA', 'C38F46', 'FFE9D2'], // Purple → Gold → Cream (3 colors)
   'sustainability': ['E09B1B', '4D7B6B', 'FFE9D2']  // Amber → Teal → Cream (3 colors)
 };
@@ -109,6 +120,7 @@ const VARIED_THEME_COLORS = {
 **URL Format:**
 - 3-color: `index-varied.html?c1=HEX&c2=HEX&c3=HEX`
 - 4-color: `index-varied.html?c1=HEX&c2=HEX&c3=HEX&c4=HEX`
+- 5-color: `index-varied.html?c1=HEX&c2=HEX&c3=HEX&c4=HEX&c5=HEX`
 
 ---
 
@@ -225,16 +237,18 @@ const vec3 SOFTLIGHT_TEAL = vec3(0.302, 0.482, 0.420);     // #4D7B6B @ 29%
 qf-gradient-project/
 ├── CLAUDE.md                           # This file
 └── demo/
-    ├── index.html                      # 🎬 Preview & Export tool (main entry)
-    ├── index-ai-v6.html                # ✅ FINAL AI theme
+    ├── index.html                      # 🎬 PRIMARY: Preview & Export tool (edit this!)
+    ├── index-varied.html               # Parameterized varied style (3-5 colors via URL)
+    ├── index-ai-v6.html                # ✅ FINAL AI theme (Standard)
     ├── index-ai-v7-lite.html           # ⚡ LITE AI theme
-    ├── index-precision-health-v7.html  # ✅ FINAL Precision Health
+    ├── index-precision-health-v7.html  # ✅ FINAL Precision Health (Standard)
     ├── index-precision-health-v8-lite.html  # ⚡ LITE Precision Health
-    ├── index-education-v1.html         # ✅ FINAL Progressive Education
+    ├── index-education-v1.html         # ✅ FINAL Progressive Education (Standard)
     ├── index-education-v2-lite.html    # ⚡ LITE Progressive Education
-    ├── index-social-progress-v1.html   # ✅ FINAL Social Progress
+    ├── index-education-varied.html     # ✅ Progressive Education (Varied, 5-color)
+    ├── index-social-progress-v1.html   # ✅ FINAL Social Progress (Standard)
     ├── index-social-progress-v2-lite.html  # ⚡ LITE Social Progress
-    ├── index-sustainability-v1.html    # ✅ FINAL Sustainability
+    ├── index-sustainability-v1.html    # ✅ FINAL Sustainability (Standard)
     ├── index-sustainability-v2-lite.html   # ⚡ LITE Sustainability
     └── index-*-v[1-5].html             # Earlier iterations (archived)
 ```
@@ -518,11 +532,12 @@ Also add the fragment shader code for export (inline in index.html as `THEME_FRA
 ## TODO
 
 - [x] Progressive Education theme (January 2026)
-- [ ] Social Progress theme
-- [ ] Sustainability theme
+- [x] Social Progress theme (January 2026)
+- [x] Sustainability theme (January 2026)
 - [x] Performance optimization for older MacBooks (January 2026)
 - [x] Ultra-lightweight "lite" versions for oldest devices (January 2026)
 - [x] Export as video loop option (January 2026)
+- [x] 5-color varied gradient support (January 2026)
 - [ ] Add `prefers-reduced-motion` media query support
 - [ ] Create production component version
 
