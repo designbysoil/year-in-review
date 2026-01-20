@@ -51,8 +51,9 @@ When updating gradients:
 
 ### Progressive Education - LITE: `index-education-v2-lite.html`
 - Ultra-lightweight version for older MacBooks
-- Simplified 4-color gradient: Dark Teal → Mid Teal → Warm Sand → Cream
-- Single snoise() call, no soft-light blending
+- 5-color gradient matching varied/full appearance: Violet → Blue → Dark Teal → Light Teal → Cream
+- Direct colors bypass expensive soft-light compositing from full version
+- Single snoise() call, mediump precision, DPR 1.0, 24fps
 
 ### Social Progress - FINAL: `index-social-progress-v1.html`
 - Purple (#7642BA @ 44.8%) → Warm Gold (#C38F46 @ 73% opacity @ 57.8%) → Cream (#FFE9D2)

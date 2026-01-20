@@ -71,7 +71,7 @@
     <span class="year">2025</span>
   </div>
 
-  <div class="info">Progressive Education Theme - Lite+</div>
+  <div class="info">Progressive Education Theme - Lite (5-color)</div>
 
   <script>
     const vertexShader = `
@@ -83,18 +83,20 @@
       }
     `;
 
-    // Ultra-lightweight shader - single noise, simplified blending
+    // Ultra-lightweight shader - single noise, direct 5-color gradient (matches varied/full appearance)
     const fragmentShader = `
       precision mediump float;
       varying vec2 v_uv;
       uniform float u_time;
       uniform vec2 u_resolution;
 
-      // Colors - Progressive Education (from Figma)
-      const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);           // #FFE9D2
+      // 5-color palette matching full/varied version appearance
+      // (Full version uses soft-light layers to create blue/violet tones - lite version uses direct colors)
+      const vec3 VIOLET = vec3(0.310, 0.106, 0.878);             // #4F1BE0
+      const vec3 BLUE = vec3(0.208, 0.478, 0.686);               // #357AAF
       const vec3 DARK_TEAL = vec3(0.118, 0.302, 0.239);          // #1E4D3D
-      const vec3 MID_TEAL = vec3(0.35, 0.45, 0.35);              // Mid transition
-      const vec3 WARM_SAND = vec3(0.769, 0.655, 0.490);          // #C4A77D
+      const vec3 LIGHT_TEAL = vec3(0.302, 0.482, 0.420);         // #4D7B6B
+      const vec3 CREAM = vec3(1.0, 0.914, 0.824);                // #FFE9D2
 
       #define BLOB_SCALE 0.35
       #define SPEED 0.40
@@ -156,19 +158,21 @@
         float vertPos = 1.0 - uv.y;
         float blendFactor = mix(vertPos, blob, 0.55);
 
-        // Simple 4-color gradient: teal → mid → sand → cream
+        // 5-color gradient: Violet → Blue → Dark Teal → Light Teal → Cream
+        // Matches the varied/full version appearance (which uses expensive soft-light layers)
         vec3 color;
-        if (blendFactor < 0.40) {
-          color = mix(BASE_COLOR, DARK_TEAL, smoothstep(0.0, 0.40, blendFactor));
-        }
-        else if (blendFactor < 0.52) {
-          color = mix(DARK_TEAL, MID_TEAL, smoothstep(0.40, 0.52, blendFactor));
-        }
-        else if (blendFactor < 0.65) {
-          color = mix(MID_TEAL, WARM_SAND, smoothstep(0.52, 0.65, blendFactor));
-        }
-        else {
-          color = mix(WARM_SAND, BASE_COLOR, smoothstep(0.65, 1.0, blendFactor));
+        if (blendFactor < 0.25) {
+          // Violet to Blue
+          color = mix(VIOLET, BLUE, smoothstep(0.0, 0.25, blendFactor));
+        } else if (blendFactor < 0.50) {
+          // Blue to Dark Teal
+          color = mix(BLUE, DARK_TEAL, smoothstep(0.25, 0.50, blendFactor));
+        } else if (blendFactor < 0.70) {
+          // Dark Teal to Light Teal
+          color = mix(DARK_TEAL, LIGHT_TEAL, smoothstep(0.50, 0.70, blendFactor));
+        } else {
+          // Light Teal to Cream
+          color = mix(LIGHT_TEAL, CREAM, smoothstep(0.70, 1.0, blendFactor));
         }
 
         gl_FragColor = vec4(color, 1.0);
