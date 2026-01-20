@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QF Gradient Preview & Export</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #F5F5F3;
+      color: #11362A;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #E8E8E5;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .header-subtitle {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 24px;
+    }
+
+    /* Theme Tabs */
+    .theme-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .theme-tab {
+      padding: 10px 20px;
+      border: 1px solid #D6D6D2;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #11362A;
+      transition: all 0.2s ease;
+    }
+
+    .theme-tab:hover {
+      background: #F5F5F3;
+      border-color: #11362A;
+    }
+
+    .theme-tab.active {
+      background: #11362A;
+      color: white;
+      border-color: #11362A;
+    }
+
+    /* Version Toggle */
+    .version-toggle {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .version-toggle label {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .toggle-group {
+      display: flex;
+      background: #E8E8E5;
+      border-radius: 8px;
+      padding: 3px;
+    }
+
+    .toggle-option {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: #666;
+    }
+
+    .toggle-option.active {
+      background: white;
+      color: #11362A;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Preview Container */
+    .preview-container {
+      background: #11362A;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .preview-container::before {
+      content: '';
+      display: block;
+      padding-top: 56.25%; /* 16:9 aspect ratio */
+    }
+
+    .preview-iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .preview-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 14px;
+      opacity: 0.5;
+    }
+
+    /* Export Section */
+    .export-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 24px;
+      border: 1px solid #E8E8E5;
+    }
+
+    .export-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .export-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .export-note {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .export-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .export-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border: 1px solid #D6D6D2;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #11362A;
+      transition: all 0.2s ease;
+    }
+
+    .export-btn:hover:not(:disabled) {
+      background: #11362A;
+      color: white;
+      border-color: #11362A;
+    }
+
+    .export-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .export-btn .icon {
+      font-size: 16px;
+    }
+
+    /* Progress overlay */
+    .export-progress {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 54, 42, 0.9);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .export-progress.active {
+      display: flex;
+    }
+
+    .progress-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px 48px;
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .progress-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #11362A;
+    }
+
+    .progress-subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    .progress-bar-container {
+      background: #E8E8E5;
+      border-radius: 8px;
+      height: 8px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .progress-bar {
+      background: #11362A;
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-time {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .progress-cancel {
+      margin-top: 16px;
+      padding: 8px 16px;
+      border: 1px solid #D6D6D2;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .progress-cancel:hover {
+      background: #F5F5F3;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1>QF Gradient Preview</h1>
+        <p class="header-subtitle">Year in Review 2025 - Animated Gradients</p>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="theme-tabs">
+        <button class="theme-tab active" data-theme="ai">Artificial Intelligence</button>
+        <button class="theme-tab" data-theme="precision-health">Precision Health</button>
+      </div>
+
+      <div class="version-toggle">
+        <label>Version:</label>
+        <div class="toggle-group">
+          <button class="toggle-option active" data-version="full">Full</button>
+          <button class="toggle-option" data-version="lite">Lite+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-container">
+      <span class="preview-loading">Loading gradient...</span>
+      <iframe id="previewIframe" class="preview-iframe" src="index-ai-v6.html"></iframe>
+    </div>
+
+    <div class="export-section">
+      <div class="export-header">
+        <span class="export-title">Export 30s Loop</span>
+        <span class="export-note">Uses Full version for best quality</span>
+      </div>
+      <div class="export-buttons">
+        <button class="export-btn" data-aspect="landscape" id="exportLandscape">
+          <span class="icon">&#9724;</span>
+          16:9 Landscape (1920x1080)
+        </button>
+        <button class="export-btn" data-aspect="portrait" id="exportPortrait">
+          <span class="icon">&#9646;</span>
+          9:16 Portrait (1080x1920)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export Progress Overlay -->
+  <div class="export-progress" id="exportProgress">
+    <div class="progress-card">
+      <div class="progress-title">Exporting Video</div>
+      <div class="progress-subtitle" id="progressSubtitle">Rendering gradient animation...</div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="progress-time" id="progressTime">0:00 / 0:30</div>
+      <button class="progress-cancel" id="cancelExport">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================
+    // THEME CONFIGURATION
+    // =========================================================
+    const THEMES = {
+      ai: {
+        name: 'Artificial Intelligence',
+        full: 'index-ai-v6.html',
+        lite: 'index-ai-v7-lite.html'
+      },
+      'precision-health': {
+        name: 'Precision Health',
+        full: 'index-precision-health-v7.html',
+        lite: 'index-precision-health-v8-lite.html'
+      }
+    };
+
+    // =========================================================
+    // STATE
+    // =========================================================
+    let currentTheme = 'ai';
+    let currentVersion = 'full';
+    let isExporting = false;
+    let exportCancelled = false;
+
+    // =========================================================
+    // DOM ELEMENTS
+    // =========================================================
+    const previewIframe = document.getElementById('previewIframe');
+    const exportProgress = document.getElementById('exportProgress');
+    const progressBar = document.getElementById('progressBar');
+    const progressTime = document.getElementById('progressTime');
+    const progressSubtitle = document.getElementById('progressSubtitle');
+    const cancelExportBtn = document.getElementById('cancelExport');
+
+    // =========================================================
+    // THEME & VERSION SWITCHING
+    // =========================================================
+    function updatePreview() {
+      const theme = THEMES[currentTheme];
+      const file = currentVersion === 'full' ? theme.full : theme.lite;
+      previewIframe.src = file;
+
+      // Update URL hash
+      window.location.hash = `${currentTheme}-${currentVersion}`;
+    }
+
+    // Theme tabs
+    document.querySelectorAll('.theme-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.theme-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentTheme = tab.dataset.theme;
+        updatePreview();
+      });
+    });
+
+    // Version toggle
+    document.querySelectorAll('.toggle-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.toggle-option').forEach(o => o.classList.remove('active'));
+        option.classList.add('active');
+        currentVersion = option.dataset.version;
+        updatePreview();
+      });
+    });
+
+    // Load from URL hash
+    function loadFromHash() {
+      const hash = window.location.hash.slice(1);
+      if (hash) {
+        const [theme, version] = hash.split('-');
+        if (THEMES[theme] || THEMES[`${theme}-${version?.split('-')[0]}`]) {
+          // Handle compound theme names like "precision-health"
+          const themeKey = THEMES[theme] ? theme : `${theme}-${version?.split('-')[0]}`;
+          const versionKey = THEMES[theme] ? version : version?.split('-').slice(1).join('-');
+
+          if (THEMES[themeKey]) {
+            currentTheme = themeKey;
+            document.querySelectorAll('.theme-tab').forEach(t => {
+              t.classList.toggle('active', t.dataset.theme === currentTheme);
+            });
+          }
+          if (versionKey === 'full' || versionKey === 'lite') {
+            currentVersion = versionKey;
+            document.querySelectorAll('.toggle-option').forEach(o => {
+              o.classList.toggle('active', o.dataset.version === currentVersion);
+            });
+          }
+          updatePreview();
+        }
+      }
+    }
+    loadFromHash();
+
+    // =========================================================
+    // SHADER CODE FOR EXPORT
+    // =========================================================
+    const VERTEX_SHADER = `
+      attribute vec2 a_position;
+      varying vec2 v_uv;
+      void main() {
+        v_uv = a_position * 0.5 + 0.5;
+        gl_Position = vec4(a_position, 0.0, 1.0);
+      }
+    `;
+
+    // AI Theme Fragment Shader (Full version)
+    const AI_FRAGMENT_SHADER = `
+      precision highp float;
+      varying vec2 v_uv;
+      uniform float u_time;
+      uniform vec2 u_resolution;
+
+      const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);
+      const vec3 PRIMARY_BLUE = vec3(0.106, 0.557, 0.880);
+      const vec3 PRIMARY_KHAKI = vec3(0.475, 0.482, 0.302);
+      const vec3 SOFTLIGHT_PURPLE = vec3(0.690, 0.612, 0.965);
+      const vec3 SOFTLIGHT_SAGE = vec3(0.302, 0.482, 0.420);
+
+      #define BLOB_SCALE 0.35
+      #define SPEED 0.14
+      #define BLOB_INTENSITY 0.55
+
+      vec4 permute(vec4 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+      vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+      float snoise(vec3 v) {
+        const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+        const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+        vec3 i = floor(v + dot(v, C.yyy));
+        vec3 x0 = v - i + dot(i, C.xxx);
+        vec3 g = step(x0.yzx, x0.xyz);
+        vec3 l = 1.0 - g;
+        vec3 i1 = min(g.xyz, l.zxy);
+        vec3 i2 = max(g.xyz, l.zxy);
+        vec3 x1 = x0 - i1 + C.xxx;
+        vec3 x2 = x0 - i2 + C.yyy;
+        vec3 x3 = x0 - D.yyy;
+        i = mod(i, 289.0);
+        vec4 p = permute(permute(permute(i.z + vec4(0.0, i1.z, i2.z, 1.0)) + i.y + vec4(0.0, i1.y, i2.y, 1.0)) + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+        float n_ = 1.0/7.0;
+        vec3 ns = n_ * D.wyz - D.xzx;
+        vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+        vec4 x_ = floor(j * ns.z);
+        vec4 y_ = floor(j - 7.0 * x_);
+        vec4 x = x_ * ns.x + ns.yyyy;
+        vec4 y = y_ * ns.x + ns.yyyy;
+        vec4 h = 1.0 - abs(x) - abs(y);
+        vec4 b0 = vec4(x.xy, y.xy);
+        vec4 b1 = vec4(x.zw, y.zw);
+        vec4 s0 = floor(b0)*2.0 + 1.0;
+        vec4 s1 = floor(b1)*2.0 + 1.0;
+        vec4 sh = -step(h, vec4(0.0));
+        vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+        vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+        vec3 p0 = vec3(a0.xy, h.x);
+        vec3 p1 = vec3(a0.zw, h.y);
+        vec3 p2 = vec3(a1.xy, h.z);
+        vec3 p3 = vec3(a1.zw, h.w);
+        vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+        p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+        vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+        m = m * m;
+        return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+      }
+
+      float fbm(vec3 p) {
+        float value = 0.0;
+        value += 0.667 * snoise(p);
+        value += 0.333 * snoise(p * 2.0);
+        return value;
+      }
+
+      vec3 softLight(vec3 base, vec3 blend) {
+        return (1.0 - 2.0 * blend) * base * base + 2.0 * blend * base;
+      }
+
+      void main() {
+        vec2 uv = v_uv;
+        float aspect = u_resolution.x / u_resolution.y;
+        vec2 coord = vec2(uv.x * aspect, uv.y);
+        float t = u_time * SPEED;
+
+        float blob1 = fbm(vec3(coord * BLOB_SCALE, t * 0.3));
+        blob1 = blob1 * 0.5 + 0.5;
+
+        float blob2 = snoise(vec3(coord * BLOB_SCALE * 0.8 + 50.0, t * 0.25 + 100.0));
+        blob2 = blob2 * 0.5 + 0.5;
+
+        float blob3 = snoise(vec3(coord * BLOB_SCALE * 0.6 + 100.0, t * 0.2 + 50.0));
+        blob3 = blob3 * 0.5 + 0.5;
+
+        float vertPos = 1.0 - uv.y;
+        float blendFactor = mix(vertPos, blob1, BLOB_INTENSITY);
+
+        vec3 primaryColor;
+        float primaryAlpha;
+
+        if (blendFactor < 0.25) {
+          primaryColor = PRIMARY_BLUE;
+          primaryAlpha = 1.0;
+        }
+        else if (blendFactor < 0.45) {
+          float t = smoothstep(0.25, 0.45, blendFactor);
+          primaryColor = mix(PRIMARY_BLUE, PRIMARY_KHAKI, t);
+          primaryAlpha = mix(1.0, 0.77, t);
+        }
+        else if (blendFactor < 0.65) {
+          primaryColor = PRIMARY_KHAKI;
+          primaryAlpha = 0.77 * (1.0 - smoothstep(0.45, 0.65, blendFactor));
+        }
+        else {
+          primaryColor = PRIMARY_KHAKI;
+          primaryAlpha = 0.0;
+        }
+
+        float softBlend = mix(vertPos, blob2, BLOB_INTENSITY * 0.8);
+        vec3 softlightColor = mix(SOFTLIGHT_PURPLE, SOFTLIGHT_SAGE, smoothstep(0.05, 0.35, softBlend));
+        float softlightAlpha = smoothstep(0.0, 0.2, softBlend) * (1.0 - smoothstep(0.2, 0.5, softBlend));
+        softlightAlpha = smoothstep(0.0, 1.0, softlightAlpha);
+
+        vec3 color = BASE_COLOR;
+        color = mix(color, primaryColor, primaryAlpha);
+        vec3 softResult = softLight(color, softlightColor);
+        color = mix(color, softResult, softlightAlpha * 0.45);
+
+        float depth = blob3 * 0.1;
+        color *= (1.0 + depth);
+
+        float vignette = 1.0 - length((uv - 0.5) * 0.25);
+        vignette = smoothstep(0.0, 1.0, vignette);
+        color = mix(color * 0.97, color, vignette);
+
+        // Dithering to prevent color banding in video export
+        float dither = fract(sin(dot(gl_FragCoord.xy + u_time * 100.0, vec2(12.9898, 78.233))) * 43758.5453);
+        color += (dither - 0.5) / 64.0; // Stronger dithering for smoother gradients
+
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `;
+
+    // Precision Health Fragment Shader (Full version)
+    const PRECISION_HEALTH_FRAGMENT_SHADER = `
+      precision highp float;
+      varying vec2 v_uv;
+      uniform float u_time;
+      uniform vec2 u_resolution;
+
+      const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);
+      const vec3 DEEP_CORAL = vec3(0.878, 0.420, 0.318);
+      const vec3 CORAL = vec3(0.918, 0.506, 0.376);
+      const vec3 SALMON = vec3(0.890, 0.530, 0.460);
+      const vec3 ROSE_PINK = vec3(0.860, 0.420, 0.520);
+      const vec3 MAUVE = vec3(0.720, 0.380, 0.560);
+      const vec3 ORCHID = vec3(0.580, 0.340, 0.600);
+      const vec3 PURPLE = vec3(0.480, 0.300, 0.620);
+
+      #define BLOB_SCALE 0.35
+      #define SPEED 0.14
+      #define BLOB_INTENSITY 0.55
+
+      vec4 permute(vec4 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+      vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+      float snoise(vec3 v) {
+        const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+        const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+        vec3 i = floor(v + dot(v, C.yyy));
+        vec3 x0 = v - i + dot(i, C.xxx);
+        vec3 g = step(x0.yzx, x0.xyz);
+        vec3 l = 1.0 - g;
+        vec3 i1 = min(g.xyz, l.zxy);
+        vec3 i2 = max(g.xyz, l.zxy);
+        vec3 x1 = x0 - i1 + C.xxx;
+        vec3 x2 = x0 - i2 + C.yyy;
+        vec3 x3 = x0 - D.yyy;
+        i = mod(i, 289.0);
+        vec4 p = permute(permute(permute(i.z + vec4(0.0, i1.z, i2.z, 1.0)) + i.y + vec4(0.0, i1.y, i2.y, 1.0)) + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+        float n_ = 1.0/7.0;
+        vec3 ns = n_ * D.wyz - D.xzx;
+        vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+        vec4 x_ = floor(j * ns.z);
+        vec4 y_ = floor(j - 7.0 * x_);
+        vec4 x = x_ * ns.x + ns.yyyy;
+        vec4 y = y_ * ns.x + ns.yyyy;
+        vec4 h = 1.0 - abs(x) - abs(y);
+        vec4 b0 = vec4(x.xy, y.xy);
+        vec4 b1 = vec4(x.zw, y.zw);
+        vec4 s0 = floor(b0)*2.0 + 1.0;
+        vec4 s1 = floor(b1)*2.0 + 1.0;
+        vec4 sh = -step(h, vec4(0.0));
+        vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+        vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+        vec3 p0 = vec3(a0.xy, h.x);
+        vec3 p1 = vec3(a0.zw, h.y);
+        vec3 p2 = vec3(a1.xy, h.z);
+        vec3 p3 = vec3(a1.zw, h.w);
+        vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+        p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+        vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+        m = m * m;
+        return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+      }
+
+      float fbm(vec3 p) {
+        float value = 0.0;
+        value += 0.667 * snoise(p);
+        value += 0.333 * snoise(p * 2.0);
+        return value;
+      }
+
+      void main() {
+        vec2 uv = v_uv;
+        float aspect = u_resolution.x / u_resolution.y;
+        vec2 coord = vec2(uv.x * aspect, uv.y);
+        float t = u_time * SPEED;
+
+        float blob1 = fbm(vec3(coord * BLOB_SCALE, t * 0.3));
+        blob1 = blob1 * 0.5 + 0.5;
+
+        float blob3 = snoise(vec3(coord * BLOB_SCALE * 0.6 + 100.0, t * 0.2 + 50.0));
+        blob3 = blob3 * 0.5 + 0.5;
+
+        float vertPos = 1.0 - uv.y;
+        float blendFactor = mix(vertPos, blob1, BLOB_INTENSITY);
+
+        vec3 primaryColor;
+        float primaryAlpha;
+
+        if (blendFactor < 0.12) {
+          primaryColor = DEEP_CORAL;
+          primaryAlpha = 1.0;
+        }
+        else if (blendFactor < 0.20) {
+          float t = smoothstep(0.12, 0.20, blendFactor);
+          primaryColor = mix(DEEP_CORAL, CORAL, t);
+          primaryAlpha = 1.0;
+        }
+        else if (blendFactor < 0.28) {
+          float t = smoothstep(0.20, 0.28, blendFactor);
+          primaryColor = mix(CORAL, SALMON, t);
+          primaryAlpha = 1.0;
+        }
+        else if (blendFactor < 0.35) {
+          float t = smoothstep(0.28, 0.35, blendFactor);
+          primaryColor = mix(SALMON, ROSE_PINK, t);
+          primaryAlpha = 1.0;
+        }
+        else if (blendFactor < 0.42) {
+          float t = smoothstep(0.35, 0.42, blendFactor);
+          primaryColor = mix(ROSE_PINK, MAUVE, t);
+          primaryAlpha = 1.0;
+        }
+        else if (blendFactor < 0.50) {
+          float t = smoothstep(0.42, 0.50, blendFactor);
+          primaryColor = mix(MAUVE, ORCHID, t);
+          primaryAlpha = mix(1.0, 0.9, t);
+        }
+        else if (blendFactor < 0.58) {
+          float t = smoothstep(0.50, 0.58, blendFactor);
+          primaryColor = mix(ORCHID, PURPLE, t);
+          primaryAlpha = mix(0.9, 0.7, t);
+        }
+        else if (blendFactor < 0.70) {
+          primaryColor = PURPLE;
+          primaryAlpha = 0.7 * (1.0 - smoothstep(0.58, 0.70, blendFactor));
+        }
+        else {
+          primaryColor = PURPLE;
+          primaryAlpha = 0.0;
+        }
+
+        vec3 color = BASE_COLOR;
+        color = mix(color, primaryColor, primaryAlpha);
+
+        float depth = blob3 * 0.1;
+        color *= (1.0 + depth);
+
+        float vignette = 1.0 - length((uv - 0.5) * 0.25);
+        vignette = smoothstep(0.0, 1.0, vignette);
+        color = mix(color * 0.97, color, vignette);
+
+        // Dithering to prevent color banding in video export
+        float dither = fract(sin(dot(gl_FragCoord.xy + u_time * 100.0, vec2(12.9898, 78.233))) * 43758.5453);
+        color += (dither - 0.5) / 64.0; // Stronger dithering for smoother gradients
+
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `;
+
+    // =========================================================
+    // WEBGL EXPORT RENDERER
+    // =========================================================
+    class GradientRenderer {
+      constructor(canvas, fragmentShader, width, height) {
+        this.canvas = canvas;
+        this.canvas.width = width;
+        this.canvas.height = height;
+
+        this.gl = canvas.getContext('webgl', {
+          alpha: false,
+          antialias: true,
+          preserveDrawingBuffer: true
+        });
+
+        if (!this.gl) {
+          throw new Error('WebGL not supported');
+        }
+
+        this.setupShaders(fragmentShader);
+        this.setupGeometry();
+      }
+
+      createShader(type, source) {
+        const shader = this.gl.createShader(type);
+        this.gl.shaderSource(shader, source);
+        this.gl.compileShader(shader);
+        if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
+          console.error('Shader error:', this.gl.getShaderInfoLog(shader));
+          return null;
+        }
+        return shader;
+      }
+
+      setupShaders(fragmentShader) {
+        const vs = this.createShader(this.gl.VERTEX_SHADER, VERTEX_SHADER);
+        const fs = this.createShader(this.gl.FRAGMENT_SHADER, fragmentShader);
+
+        this.program = this.gl.createProgram();
+        this.gl.attachShader(this.program, vs);
+        this.gl.attachShader(this.program, fs);
+        this.gl.linkProgram(this.program);
+        this.gl.useProgram(this.program);
+
+        this.uniforms = {
+          time: this.gl.getUniformLocation(this.program, 'u_time'),
+          resolution: this.gl.getUniformLocation(this.program, 'u_resolution')
+        };
+
+        this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+        this.gl.uniform2f(this.uniforms.resolution, this.canvas.width, this.canvas.height);
+      }
+
+      setupGeometry() {
+        const buffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), this.gl.STATIC_DRAW);
+
+        const posLoc = this.gl.getAttribLocation(this.program, 'a_position');
+        this.gl.enableVertexAttribArray(posLoc);
+        this.gl.vertexAttribPointer(posLoc, 2, this.gl.FLOAT, false, 0, 0);
+      }
+
+      render(time) {
+        this.gl.uniform1f(this.uniforms.time, time);
+        this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, 4);
+      }
+
+      destroy() {
+        // Clean up WebGL resources
+        const ext = this.gl.getExtension('WEBGL_lose_context');
+        if (ext) ext.loseContext();
+      }
+    }
+
+    // =========================================================
+    // VIDEO EXPORT
+    // =========================================================
+    async function exportVideo(aspect) {
+      if (isExporting) return;
+      isExporting = true;
+      exportCancelled = false;
+
+      // Get dimensions
+      const width = aspect === 'landscape' ? 1920 : 1080;
+      const height = aspect === 'landscape' ? 1080 : 1920;
+      const duration = 30; // seconds
+      const fps = 30;
+      const totalFrames = duration * fps;
+
+      // Show progress
+      exportProgress.classList.add('active');
+      progressBar.style.width = '0%';
+      progressSubtitle.textContent = `Rendering ${THEMES[currentTheme].name} (${width}x${height})...`;
+
+      // Disable export buttons
+      document.querySelectorAll('.export-btn').forEach(btn => btn.disabled = true);
+
+      try {
+        // Create a fresh canvas for each export to avoid WebGL context issues
+        const canvas = document.createElement('canvas');
+        canvas.style.display = 'none';
+        document.body.appendChild(canvas);
+
+        const fragmentShader = currentTheme === 'ai'
+          ? AI_FRAGMENT_SHADER
+          : PRECISION_HEALTH_FRAGMENT_SHADER;
+
+        const renderer = new GradientRenderer(canvas, fragmentShader, width, height);
+
+        // Setup MediaRecorder
+        const stream = canvas.captureStream(fps);
+        const mimeType = MediaRecorder.isTypeSupported('video/webm; codecs=vp9')
+          ? 'video/webm; codecs=vp9'
+          : 'video/webm';
+
+        const recorder = new MediaRecorder(stream, {
+          mimeType,
+          videoBitsPerSecond: 40000000 // 40 Mbps for After Effects source quality
+        });
+
+        const chunks = [];
+        recorder.ondataavailable = (e) => {
+          if (e.data.size > 0) chunks.push(e.data);
+        };
+
+        recorder.onstop = () => {
+          if (!exportCancelled) {
+            const blob = new Blob(chunks, { type: 'video/webm' });
+            downloadBlob(blob, `gradient-${currentTheme}-${aspect}.webm`);
+          }
+          cleanup();
+        };
+
+        function cleanup() {
+          renderer.destroy();
+          // Remove the canvas from DOM
+          if (canvas.parentNode) {
+            canvas.parentNode.removeChild(canvas);
+          }
+          exportProgress.classList.remove('active');
+          document.querySelectorAll('.export-btn').forEach(btn => btn.disabled = false);
+          isExporting = false;
+        }
+
+        // Start recording
+        recorder.start();
+
+        // Render frames
+        const frameInterval = 1000 / fps;
+        let frameCount = 0;
+        const startTime = performance.now();
+
+        function renderFrame() {
+          if (exportCancelled) {
+            recorder.stop();
+            return;
+          }
+
+          if (frameCount >= totalFrames) {
+            recorder.stop();
+            return;
+          }
+
+          // Calculate time for this frame
+          const time = frameCount / fps;
+          renderer.render(time);
+
+          // Update progress
+          const progress = (frameCount / totalFrames) * 100;
+          progressBar.style.width = `${progress}%`;
+
+          const elapsed = Math.floor(time);
+          const minutes = Math.floor(elapsed / 60);
+          const seconds = elapsed % 60;
+          progressTime.textContent = `${minutes}:${seconds.toString().padStart(2, '0')} / 0:30`;
+
+          frameCount++;
+
+          // Schedule next frame
+          requestAnimationFrame(renderFrame);
+        }
+
+        renderFrame();
+
+      } catch (error) {
+        console.error('Export error:', error);
+        alert('Export failed: ' + error.message);
+        exportProgress.classList.remove('active');
+        document.querySelectorAll('.export-btn').forEach(btn => btn.disabled = false);
+        isExporting = false;
+      }
+    }
+
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // Export button handlers
+    document.getElementById('exportLandscape').addEventListener('click', () => exportVideo('landscape'));
+    document.getElementById('exportPortrait').addEventListener('click', () => exportVideo('portrait'));
+
+    // Cancel export
+    cancelExportBtn.addEventListener('click', () => {
+      exportCancelled = true;
+      progressSubtitle.textContent = 'Cancelling...';
+    });
+  </script>
+</body>
+</html>
