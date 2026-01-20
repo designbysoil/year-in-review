@@ -466,7 +466,7 @@
       const vec3 SOFTLIGHT_SAGE = vec3(0.302, 0.482, 0.420);
 
       #define BLOB_SCALE 0.35
-      #define SPEED 0.14
+      #define SPEED 0.30
       #define BLOB_INTENSITY 0.55
 
       vec4 permute(vec4 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
@@ -604,7 +604,7 @@
       const vec3 PURPLE = vec3(0.480, 0.300, 0.620);
 
       #define BLOB_SCALE 0.35
-      #define SPEED 0.14
+      #define SPEED 0.30
       #define BLOB_INTENSITY 0.55
 
       vec4 permute(vec4 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
@@ -840,17 +840,25 @@
         canvas.style.display = 'none';
         document.body.appendChild(canvas);
 
-        const fragmentShader = currentTheme === 'ai'
+        let fragmentShader = currentTheme === 'ai'
           ? AI_FRAGMENT_SHADER
           : PRECISION_HEALTH_FRAGMENT_SHADER;
+
+        // Scale down blobs for portrait (0.35 * 0.8 = 0.28) so more drift is visible
+        if (aspect === 'portrait') {
+          fragmentShader = fragmentShader.replace(
+            '#define BLOB_SCALE 0.35',
+            '#define BLOB_SCALE 0.28'
+          );
+        }
 
         const renderer = new GradientRenderer(canvas, fragmentShader, width, height);
 
         // Setup MediaRecorder
         const stream = canvas.captureStream(fps);
-        const mimeType = MediaRecorder.isTypeSupported('video/webm; codecs=vp9')
-          ? 'video/webm; codecs=vp9'
-          : 'video/webm';
+        const mimeType = MediaRecorder.isTypeSupported('video/mp4; codecs=avc1')
+          ? 'video/mp4; codecs=avc1'
+          : 'video/mp4';
 
         const recorder = new MediaRecorder(stream, {
           mimeType,
@@ -864,8 +872,8 @@
 
         recorder.onstop = () => {
           if (!exportCancelled) {
-            const blob = new Blob(chunks, { type: 'video/webm' });
-            downloadBlob(blob, `gradient-${currentTheme}-${aspect}.webm`);
+            const blob = new Blob(chunks, { type: 'video/mp4' });
+            downloadBlob(blob, `gradient-${currentTheme}-${aspect}.mp4`);
           }
           cleanup();
         };
@@ -915,8 +923,9 @@
 
           frameCount++;
 
-          // Schedule next frame
-          requestAnimationFrame(renderFrame);
+          // Schedule next frame with real-time pacing
+          // Using setTimeout instead of requestAnimationFrame to ensure 30-second duration
+          setTimeout(renderFrame, frameInterval);
         }
 
         renderFrame();
