@@ -20,14 +20,16 @@
   <canvas id="canvas"></canvas>
 
   <script>
-    // Parse URL parameters for colors
+    // Parse URL parameters for colors (supports 3 or 4 colors)
     // Format: index-varied.html?c1=1B8EE0&c2=797B4D&c3=FFE9D2
+    // Or:     index-varied.html?c1=E06B51&c2=DB6B85&c3=7A4D9E&c4=FFE9D2
     function getUrlParams() {
       const params = new URLSearchParams(window.location.search);
       return {
         c1: params.get('c1') || 'FFE9D2',
         c2: params.get('c2') || 'FFE9D2',
-        c3: params.get('c3') || 'FFE9D2'
+        c3: params.get('c3') || 'FFE9D2',
+        c4: params.get('c4') || null // Optional 4th color
       };
     }
 
@@ -42,6 +44,8 @@
     const color1 = hexToRgb(urlParams.c1);
     const color2 = hexToRgb(urlParams.c2);
     const color3 = hexToRgb(urlParams.c3);
+    const color4 = urlParams.c4 ? hexToRgb(urlParams.c4) : [1.0, 0.914, 0.824]; // Default cream
+    const numColors = urlParams.c4 ? 4 : 3;
 
     const vertexShader = `
       attribute vec2 a_position;
@@ -59,7 +63,8 @@
       varying vec2 v_uv;
       uniform float u_time;
       uniform vec2 u_resolution;
-      uniform vec3 u_color1, u_color2, u_color3;
+      uniform vec3 u_color1, u_color2, u_color3, u_color4;
+      uniform int u_numColors;
 
       #define SPEED 0.40
 
@@ -142,12 +147,24 @@
         // Mix vertical gradient with noise - less noise influence for calmer look
         float blendFactor = mix(uv.y, combinedNoise, 0.55);
 
-        // 3-color gradient blending
+        // Multi-color gradient blending (supports 3 or 4 colors)
         vec3 color;
-        if (blendFactor < 0.5) {
-          color = mix(u_color1, u_color2, smoothstep(0.0, 1.0, blendFactor * 2.0));
+        if (u_numColors == 4) {
+          // 4-color gradient: divide into 3 segments
+          if (blendFactor < 0.333) {
+            color = mix(u_color1, u_color2, smoothstep(0.0, 1.0, blendFactor * 3.0));
+          } else if (blendFactor < 0.666) {
+            color = mix(u_color2, u_color3, smoothstep(0.0, 1.0, (blendFactor - 0.333) * 3.0));
+          } else {
+            color = mix(u_color3, u_color4, smoothstep(0.0, 1.0, (blendFactor - 0.666) * 3.0));
+          }
         } else {
-          color = mix(u_color2, u_color3, smoothstep(0.0, 1.0, (blendFactor - 0.5) * 2.0));
+          // 3-color gradient: divide into 2 segments
+          if (blendFactor < 0.5) {
+            color = mix(u_color1, u_color2, smoothstep(0.0, 1.0, blendFactor * 2.0));
+          } else {
+            color = mix(u_color2, u_color3, smoothstep(0.0, 1.0, (blendFactor - 0.5) * 2.0));
+          }
         }
 
         // Subtle depth variation
@@ -204,12 +221,16 @@
       color1: gl.getUniformLocation(program, 'u_color1'),
       color2: gl.getUniformLocation(program, 'u_color2'),
       color3: gl.getUniformLocation(program, 'u_color3'),
+      color4: gl.getUniformLocation(program, 'u_color4'),
+      numColors: gl.getUniformLocation(program, 'u_numColors'),
     };
 
     // Set colors
     gl.uniform3fv(uniforms.color1, color1);
     gl.uniform3fv(uniforms.color2, color2);
     gl.uniform3fv(uniforms.color3, color3);
+    gl.uniform3fv(uniforms.color4, color4);
+    gl.uniform1i(uniforms.numColors, numColors);
 
     function resize() {
       const dpr = Math.min(devicePixelRatio, PERF_CONFIG.maxDPR);

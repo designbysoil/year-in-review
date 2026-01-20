@@ -407,8 +407,8 @@
         hex: ['1B8EE0', '797B4D', 'FFE9D2']
       },
       'precision-health': {
-        colors: [[0.878, 0.420, 0.318], [0.860, 0.420, 0.520], [1.0, 0.914, 0.824]], // Coral → Rose Pink → Cream
-        hex: ['E06B51', 'DB6B85', 'FFE9D2']
+        colors: [[0.878, 0.420, 0.318], [0.860, 0.420, 0.520], [0.480, 0.300, 0.620], [1.0, 0.914, 0.824]], // Coral → Rose Pink → Purple → Cream
+        hex: ['E06B51', 'DB6B85', '7A4D9E', 'FFE9D2']
       },
       'education': {
         colors: [[0.118, 0.302, 0.239], [0.769, 0.655, 0.490], [1.0, 0.914, 0.824]], // Teal → Sand → Cream
@@ -452,7 +452,12 @@
       if (currentStyle === 'varied') {
         // Load varied shader with theme colors via URL params
         const themeColors = VARIED_THEME_COLORS[currentTheme];
-        file = `index-varied.html?c1=${themeColors.hex[0]}&c2=${themeColors.hex[1]}&c3=${themeColors.hex[2]}`;
+        let params = `c1=${themeColors.hex[0]}&c2=${themeColors.hex[1]}&c3=${themeColors.hex[2]}`;
+        // Add 4th color if present
+        if (themeColors.hex.length >= 4) {
+          params += `&c4=${themeColors.hex[3]}`;
+        }
+        file = `index-varied.html?${params}`;
       } else {
         // Load standard theme file
         const theme = THEMES[currentTheme];
@@ -1354,7 +1359,8 @@
       varying vec2 v_uv;
       uniform float u_time;
       uniform vec2 u_resolution;
-      uniform vec3 u_color1, u_color2, u_color3;
+      uniform vec3 u_color1, u_color2, u_color3, u_color4;
+      uniform int u_numColors;
 
       #define SPEED 0.40
 
@@ -1437,12 +1443,24 @@
         // Mix vertical gradient with noise - less noise influence for calmer look
         float blendFactor = mix(uv.y, combinedNoise, 0.55);
 
-        // 3-color gradient blending
+        // Multi-color gradient blending (supports 3 or 4 colors)
         vec3 color;
-        if (blendFactor < 0.5) {
-          color = mix(u_color1, u_color2, smoothstep(0.0, 1.0, blendFactor * 2.0));
+        if (u_numColors == 4) {
+          // 4-color gradient: divide into 3 segments
+          if (blendFactor < 0.333) {
+            color = mix(u_color1, u_color2, smoothstep(0.0, 1.0, blendFactor * 3.0));
+          } else if (blendFactor < 0.666) {
+            color = mix(u_color2, u_color3, smoothstep(0.0, 1.0, (blendFactor - 0.333) * 3.0));
+          } else {
+            color = mix(u_color3, u_color4, smoothstep(0.0, 1.0, (blendFactor - 0.666) * 3.0));
+          }
         } else {
-          color = mix(u_color2, u_color3, smoothstep(0.0, 1.0, (blendFactor - 0.5) * 2.0));
+          // 3-color gradient: divide into 2 segments
+          if (blendFactor < 0.5) {
+            color = mix(u_color1, u_color2, smoothstep(0.0, 1.0, blendFactor * 2.0));
+          } else {
+            color = mix(u_color2, u_color3, smoothstep(0.0, 1.0, (blendFactor - 0.5) * 2.0));
+          }
         }
 
         // Subtle depth variation
@@ -1515,11 +1533,23 @@
           this.uniforms.color1 = this.gl.getUniformLocation(this.program, 'u_color1');
           this.uniforms.color2 = this.gl.getUniformLocation(this.program, 'u_color2');
           this.uniforms.color3 = this.gl.getUniformLocation(this.program, 'u_color3');
+          this.uniforms.color4 = this.gl.getUniformLocation(this.program, 'u_color4');
+          this.uniforms.numColors = this.gl.getUniformLocation(this.program, 'u_numColors');
 
           // Set color uniform values
           this.gl.uniform3fv(this.uniforms.color1, this.colors[0]);
           this.gl.uniform3fv(this.uniforms.color2, this.colors[1]);
           this.gl.uniform3fv(this.uniforms.color3, this.colors[2]);
+
+          // Handle 4th color if present
+          if (this.colors.length >= 4) {
+            this.gl.uniform3fv(this.uniforms.color4, this.colors[3]);
+            this.gl.uniform1i(this.uniforms.numColors, 4);
+          } else {
+            // Default 4th color to cream and set numColors to 3
+            this.gl.uniform3fv(this.uniforms.color4, [1.0, 0.914, 0.824]);
+            this.gl.uniform1i(this.uniforms.numColors, 3);
+          }
         }
 
         this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
