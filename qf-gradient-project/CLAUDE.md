@@ -98,15 +98,17 @@ The preview tool supports two gradient styles:
 **Varied Style Colors (per theme):**
 ```javascript
 const VARIED_THEME_COLORS = {
-  'ai': ['1B8EE0', '797B4D', 'FFE9D2'],           // Blue → Khaki → Cream
-  'precision-health': ['E06B51', 'B8618F', 'FFE9D2'], // Coral → Mauve → Cream
-  'education': ['1E4D3D', 'C4A77D', 'FFE9D2'],   // Teal → Sand → Cream
-  'social-progress': ['7642BA', 'C38F46', 'FFE9D2'], // Purple → Gold → Cream
-  'sustainability': ['E09B1B', '4D7B6B', 'FFE9D2']  // Amber → Teal → Cream
+  'ai': ['1B8EE0', '797B4D', 'FFE9D2'],              // Blue → Khaki → Cream (3 colors)
+  'precision-health': ['E06B51', 'DB6B85', '7A4D9E', 'FFE9D2'], // Coral → Rose Pink → Purple → Cream (4 colors)
+  'education': ['1E4D3D', 'C4A77D', 'FFE9D2'],      // Teal → Sand → Cream (3 colors)
+  'social-progress': ['7642BA', 'C38F46', 'FFE9D2'], // Purple → Gold → Cream (3 colors)
+  'sustainability': ['E09B1B', '4D7B6B', 'FFE9D2']  // Amber → Teal → Cream (3 colors)
 };
 ```
 
-**URL Format:** `index-varied.html?c1=HEX&c2=HEX&c3=HEX`
+**URL Format:**
+- 3-color: `index-varied.html?c1=HEX&c2=HEX&c3=HEX`
+- 4-color: `index-varied.html?c1=HEX&c2=HEX&c3=HEX&c4=HEX`
 
 ---
 
