@@ -67,6 +67,49 @@ WebGL shader-based animated gradients for Qatar Foundation's 2025 Year in Review
 
 ## All 5 Themes Complete
 
+---
+
+## Style Variants
+
+The preview tool supports two gradient styles:
+
+### Standard Style (Default)
+- Figma-accurate multi-stop gradients with soft-light compositing
+- Theme-specific shaders with precise color stops
+- Best for full-screen web backgrounds
+- Files: `index-[theme]-v*.html`
+
+### Varied Style (Runway-inspired)
+- Organic, pocket-like drift patterns inspired by Runway Demo Day 2025
+- Directional movement: clouds drift left-to-right at ~8.5° upward angle
+- Simpler 3-color gradient with dynamic shape morphing
+- Best for social media video exports
+- File: `index-varied.html` (accepts colors via URL params)
+
+**Varied Style Parameters:**
+| Parameter | Value | Effect |
+|-----------|-------|--------|
+| `SPEED` | 0.40 | Base animation speed |
+| `driftSpeed` | 0.72 | Directional drift velocity |
+| `noiseScale` | 0.55 | Blob size (higher = smaller) |
+| `noise1 time` | t * 0.6 | Shape morphing speed (layer 1) |
+| `noise2 time` | t * 0.84 | Shape morphing speed (layer 2) |
+
+**Varied Style Colors (per theme):**
+```javascript
+const VARIED_THEME_COLORS = {
+  'ai': ['1B8EE0', '797B4D', 'FFE9D2'],           // Blue → Khaki → Cream
+  'precision-health': ['E06B51', 'B8618F', 'FFE9D2'], // Coral → Mauve → Cream
+  'education': ['1E4D3D', 'C4A77D', 'FFE9D2'],   // Teal → Sand → Cream
+  'social-progress': ['7642BA', 'C38F46', 'FFE9D2'], // Purple → Gold → Cream
+  'sustainability': ['E09B1B', '4D7B6B', 'FFE9D2']  // Amber → Teal → Cream
+};
+```
+
+**URL Format:** `index-varied.html?c1=HEX&c2=HEX&c3=HEX`
+
+---
+
 ## Technical Architecture
 
 ### Stack
@@ -79,7 +122,7 @@ WebGL shader-based animated gradients for Qatar Foundation's 2025 Year in Review
 | Parameter | Value | Effect |
 |-----------|-------|--------|
 | `BLOB_SCALE` | 0.35 | Big visible blobs (lower = bigger) |
-| `SPEED` | 0.14 | Animation speed (synced across Full/Lite+) |
+| `SPEED` | 0.40 | Animation speed (synced across Full/Lite+) |
 | `BLOB_INTENSITY` | 0.55 | Noise vs vertical gradient mix |
 
 ### Gradient Structure Pattern

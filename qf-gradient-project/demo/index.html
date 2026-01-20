@@ -1599,10 +1599,10 @@
             '#define BLOB_SCALE 0.35',
             '#define BLOB_SCALE 0.28'
           );
-          // Also adjust noiseScale for varied style portrait
+          // Increase noiseScale for varied style portrait (smaller, denser blobs)
           fragmentShader = fragmentShader.replace(
             'float noiseScale = 0.55;',
-            'float noiseScale = 0.45;'
+            'float noiseScale = 0.85;'
           );
         }
 
