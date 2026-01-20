@@ -32,8 +32,18 @@ WebGL shader-based animated gradients for Qatar Foundation's 2025 Year in Review
 - Single snoise() call (was 3), no depth variation, no vignette
 - 4 color stops only (was 8)
 
+### Progressive Education - FINAL: `index-education-v1.html`
+- Cyan/Teal (#357AAF) → Olive (#5E5722) → Cream (#FFE9D2)
+- **TWO soft-light layers** at different positions for rich color interaction
+- Soft-light: Lavender (#D29CF6) → Mint (#88CC90)
+- Creates soft cyan/teal appearance through layer blending
+
+### Progressive Education - LITE: `index-education-v2-lite.html`
+- Ultra-lightweight version for older MacBooks
+- Simplified 4-color gradient: Cyan → Teal → Olive → Cream
+- Single snoise() call, no soft-light blending
+
 ## Pending Themes
-- Progressive Education
 - Social Progress
 - Sustainability
 
@@ -111,19 +121,90 @@ const vec3 ORCHID = vec3(0.580, 0.340, 0.600);             // Orchid
 const vec3 PURPLE = vec3(0.480, 0.300, 0.620);             // Deep purple
 ```
 
+### Progressive Education Theme (index-education-v1.html)
+```glsl
+const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);           // #FFE9D2
+const vec3 PRIMARY_BLUE = vec3(0.208, 0.478, 0.686);       // #357AAF
+const vec3 PRIMARY_OLIVE = vec3(0.369, 0.341, 0.133);      // #5E5722
+
+// TWO soft-light layers create the rich cyan/teal
+const vec3 SOFTLIGHT_LAVENDER = vec3(0.824, 0.612, 0.965); // #D29CF6
+const vec3 SOFTLIGHT_MINT = vec3(0.533, 0.800, 0.565);     // #88CC90
+```
+
 ## File Structure
 
 ```
 qf-gradient-project/
 ├── CLAUDE.md                           # This file
 └── demo/
-    ├── overview.html                   # 🎬 Preview & Export tool
+    ├── index.html                      # 🎬 Preview & Export tool (main entry)
     ├── index-ai-v6.html                # ✅ FINAL AI theme
-    ├── index-ai-v7-lite.html           # ⚡ LITE AI theme (for older devices)
+    ├── index-ai-v7-lite.html           # ⚡ LITE AI theme
     ├── index-precision-health-v7.html  # ✅ FINAL Precision Health
-    ├── index-precision-health-v8-lite.html  # ⚡ LITE Precision Health (for older devices)
+    ├── index-precision-health-v8-lite.html  # ⚡ LITE Precision Health
+    ├── index-education-v1.html         # ✅ FINAL Progressive Education
+    ├── index-education-v2-lite.html    # ⚡ LITE Progressive Education
     └── index-*-v[1-5].html             # Earlier iterations (archived)
 ```
+
+## How to Extract Gradients from Figma
+
+The rich gradient colors come from **layered Figma backgrounds** that interact through blend modes. Here's the process:
+
+### Step 1: Access Figma via MCP
+Use the Figma MCP server to fetch design context:
+```javascript
+mcp__figma-dev-mode-mcp-server__get_design_context({
+  nodeId: "217:1425",  // Background node ID
+  clientLanguages: "html,css,javascript"
+})
+```
+
+### Step 2: Identify Layer Structure
+Each theme background typically has 3-4 layers:
+1. **Base layer**: Solid #FFE9D2 (peachy cream)
+2. **Primary gradient**: Linear gradient with theme colors
+3. **Soft-light layer(s)**: One or more gradients with `mix-blend-mode: soft-light`
+
+### Step 3: Extract Gradient Colors
+From the Figma response, extract `linear-gradient` values:
+```
+linear-gradient(
+  rgba(249, 249, 247, 0) 0%,        // transparent at top
+  rgb(53, 122, 175) 44.792%,        // Blue at 44.8%
+  rgba(94, 87, 34, 0.56) 57.812%,   // Olive at 56% opacity at 57.8%
+  rgba(217, 217, 217, 0) 100%       // transparent at bottom
+)
+```
+
+### Step 4: Note Layer Positions
+**Critical**: Layers may have different `top` positions that offset the gradient:
+- Layer at `top: -703px` vs `top: -441px` = 262px offset
+- This offset creates different blend zones and richer color interaction
+
+### Step 5: Implement in Shader
+Convert gradient stops to shader code:
+```glsl
+if (blendFactor < 0.448) {
+  primaryColor = PRIMARY_BLUE;
+  primaryAlpha = smoothstep(0.0, 0.448, blendFactor);
+}
+else if (blendFactor < 0.578) {
+  float t = smoothstep(0.448, 0.578, blendFactor);
+  primaryColor = mix(PRIMARY_BLUE, PRIMARY_OLIVE, t);
+  primaryAlpha = mix(1.0, 0.56, t);  // Note: 56% opacity from Figma
+}
+```
+
+### Why Multiple Soft-Light Layers Create Rich Colors
+The Progressive Education theme uses **two soft-light layers** at different positions:
+- When lavender (#D29CF6) soft-lights onto cream + blue, it creates cyan tones
+- When mint (#88CC90) soft-lights, it adds green depth
+- The offset between layers creates variation across the gradient
+- Double application intensifies the effect
+
+This is why the final result looks like rich cyan/teal even though the raw colors are blue and lavender/mint.
 
 ## Iteration History
 
@@ -292,35 +373,35 @@ if (blendFactor < 0.35) {
 
 ## Preview & Export Tool
 
-**File:** `demo/overview.html`
+**File:** `demo/index.html`
 
 A unified tool for previewing and exporting gradient themes.
 
 ### Features
-- **Theme tabs**: Switch between AI, Precision Health (more themes to be added)
+- **Theme tabs**: AI, Precision Health, Progressive Education
 - **Version toggle**: Full vs Lite+ versions
 - **Iframe preview**: 16:9 aspect ratio preview
-- **Video export**: 30-second WebM loops for After Effects
+- **Video export**: 30-second MP4 loops for After Effects
 
 ### Export Settings
 | Setting | Value |
 |---------|-------|
-| Format | WebM (VP9 codec) |
+| Format | MP4 (H.264 codec) |
 | Frame rate | 30fps |
 | Bitrate | 40 Mbps |
 | Landscape | 1920 × 1080 |
-| Portrait | 1080 × 1920 |
+| Portrait | 1080 × 1920 (with smaller blob scale 0.28) |
 | Dithering | Yes (prevents banding) |
 
 ### Export Workflow
 1. Select theme and preview in iframe
 2. Click export button (Landscape or Portrait)
 3. Wait for 30-second render (progress shown)
-4. WebM file auto-downloads
+4. MP4 file auto-downloads
 5. Import into After Effects for compositing
 
 ### Adding New Themes
-Update the `THEMES` config in overview.html:
+Update the `THEMES` config in index.html:
 ```javascript
 const THEMES = {
   ai: {
@@ -333,15 +414,19 @@ const THEMES = {
     full: 'index-precision-health-v7.html',
     lite: 'index-precision-health-v8-lite.html'
   },
-  // Add new themes here
+  'education': {
+    name: 'Progressive Education',
+    full: 'index-education-v1.html',
+    lite: 'index-education-v2-lite.html'
+  }
 };
 ```
 
-Also add the fragment shader code for export (inline in overview.html).
+Also add the fragment shader code for export (inline in index.html as `THEME_FRAGMENT_SHADER`).
 
 ## TODO
 
-- [ ] Progressive Education theme
+- [x] Progressive Education theme (January 2026)
 - [ ] Social Progress theme
 - [ ] Sustainability theme
 - [x] Performance optimization for older MacBooks (January 2026)
