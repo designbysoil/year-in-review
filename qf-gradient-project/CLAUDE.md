@@ -33,14 +33,14 @@ WebGL shader-based animated gradients for Qatar Foundation's 2025 Year in Review
 - 4 color stops only (was 8)
 
 ### Progressive Education - FINAL: `index-education-v1.html`
-- Cyan/Teal (#357AAF) → Olive (#5E5722) → Cream (#FFE9D2)
+- Dark Teal (#1E4D3D @ 40%) → Warm Sand (#C4A77D @ 65%) → Cream (#FFE9D2)
 - **TWO soft-light layers** at different positions for rich color interaction
-- Soft-light: Lavender (#D29CF6) → Mint (#88CC90)
-- Creates soft cyan/teal appearance through layer blending
+- Soft-light: Purple (#4F1BE0 @ 12%) → Blue (#357AAF @ 35%)
+- Creates sophisticated teal-sand appearance through layer blending
 
 ### Progressive Education - LITE: `index-education-v2-lite.html`
 - Ultra-lightweight version for older MacBooks
-- Simplified 4-color gradient: Cyan → Teal → Olive → Cream
+- Simplified 4-color gradient: Dark Teal → Mid Teal → Warm Sand → Cream
 - Single snoise() call, no soft-light blending
 
 ## Pending Themes
@@ -124,12 +124,12 @@ const vec3 PURPLE = vec3(0.480, 0.300, 0.620);             // Deep purple
 ### Progressive Education Theme (index-education-v1.html)
 ```glsl
 const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);           // #FFE9D2
-const vec3 PRIMARY_BLUE = vec3(0.208, 0.478, 0.686);       // #357AAF
-const vec3 PRIMARY_OLIVE = vec3(0.369, 0.341, 0.133);      // #5E5722
+const vec3 PRIMARY_TEAL = vec3(0.118, 0.302, 0.239);       // #1E4D3D @ 40%
+const vec3 PRIMARY_SAND = vec3(0.769, 0.655, 0.490);       // #C4A77D @ 65%
 
-// TWO soft-light layers create the rich cyan/teal
-const vec3 SOFTLIGHT_LAVENDER = vec3(0.824, 0.612, 0.965); // #D29CF6
-const vec3 SOFTLIGHT_MINT = vec3(0.533, 0.800, 0.565);     // #88CC90
+// TWO soft-light layers create rich color interaction
+const vec3 SOFTLIGHT_PURPLE = vec3(0.310, 0.106, 0.878);   // #4F1BE0 @ 12%
+const vec3 SOFTLIGHT_BLUE = vec3(0.208, 0.478, 0.686);     // #357AAF @ 35%
 ```
 
 ## File Structure

@@ -755,10 +755,10 @@
       uniform vec2 u_resolution;
 
       const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);
-      const vec3 PRIMARY_BLUE = vec3(0.208, 0.478, 0.686);
-      const vec3 PRIMARY_OLIVE = vec3(0.369, 0.341, 0.133);
-      const vec3 SOFTLIGHT_LAVENDER = vec3(0.824, 0.612, 0.965);
-      const vec3 SOFTLIGHT_MINT = vec3(0.533, 0.800, 0.565);
+      const vec3 PRIMARY_TEAL = vec3(0.118, 0.302, 0.239);       // #1E4D3D
+      const vec3 PRIMARY_SAND = vec3(0.769, 0.655, 0.490);       // #C4A77D
+      const vec3 SOFTLIGHT_PURPLE = vec3(0.310, 0.106, 0.878);   // #4F1BE0
+      const vec3 SOFTLIGHT_BLUE = vec3(0.208, 0.478, 0.686);     // #357AAF
 
       #define BLOB_SCALE 0.35
       #define SPEED 0.14
@@ -836,62 +836,62 @@
         float vertPos = 1.0 - uv.y;
         float blendFactor = mix(vertPos, blob1, BLOB_INTENSITY);
 
-        // Primary gradient
+        // Layer 1: Primary gradient (Teal → Sand)
         vec3 primaryColor;
         float primaryAlpha;
 
-        if (blendFactor < 0.448) {
-          primaryColor = PRIMARY_BLUE;
-          primaryAlpha = smoothstep(0.0, 0.448, blendFactor);
+        if (blendFactor < 0.40) {
+          primaryColor = PRIMARY_TEAL;
+          primaryAlpha = smoothstep(0.0, 0.40, blendFactor);
         }
-        else if (blendFactor < 0.578) {
-          float t = smoothstep(0.448, 0.578, blendFactor);
-          primaryColor = mix(PRIMARY_BLUE, PRIMARY_OLIVE, t);
-          primaryAlpha = mix(1.0, 0.56, t);
+        else if (blendFactor < 0.65) {
+          float t = smoothstep(0.40, 0.65, blendFactor);
+          primaryColor = mix(PRIMARY_TEAL, PRIMARY_SAND, t);
+          primaryAlpha = mix(1.0, 0.77, t);
         }
         else {
-          primaryColor = PRIMARY_OLIVE;
-          primaryAlpha = 0.56 * (1.0 - smoothstep(0.578, 1.0, blendFactor));
+          primaryColor = PRIMARY_SAND;
+          primaryAlpha = 0.77 * (1.0 - smoothstep(0.65, 1.0, blendFactor));
         }
 
-        // First soft-light (offset)
-        float softBlend1 = mix(vertPos, blob2, BLOB_INTENSITY * 0.8) + 0.12;
+        // Layer 2: First soft-light (offset -20%)
+        float softBlend1 = mix(vertPos, blob2, BLOB_INTENSITY * 0.8) + 0.20;
 
         vec3 softlightColor1;
         float softlightAlpha1;
 
-        if (softBlend1 < 0.149) {
-          softlightColor1 = SOFTLIGHT_LAVENDER;
-          softlightAlpha1 = smoothstep(0.0, 0.149, softBlend1);
+        if (softBlend1 < 0.12) {
+          softlightColor1 = SOFTLIGHT_PURPLE;
+          softlightAlpha1 = smoothstep(0.0, 0.12, softBlend1);
         }
-        else if (softBlend1 < 0.288) {
-          float t = smoothstep(0.149, 0.288, softBlend1);
-          softlightColor1 = mix(SOFTLIGHT_LAVENDER, SOFTLIGHT_MINT, t);
+        else if (softBlend1 < 0.35) {
+          float t = smoothstep(0.12, 0.35, softBlend1);
+          softlightColor1 = mix(SOFTLIGHT_PURPLE, SOFTLIGHT_BLUE, t);
           softlightAlpha1 = 1.0;
         }
         else {
-          softlightColor1 = SOFTLIGHT_MINT;
-          softlightAlpha1 = 1.0 - smoothstep(0.288, 0.8, softBlend1);
+          softlightColor1 = SOFTLIGHT_BLUE;
+          softlightAlpha1 = 1.0 - smoothstep(0.35, 0.8, softBlend1);
         }
 
-        // Second soft-light
+        // Layer 3: Second soft-light (standard position)
         float softBlend2 = mix(vertPos, blob2 * 0.9 + blob3 * 0.1, BLOB_INTENSITY * 0.7);
 
         vec3 softlightColor2;
         float softlightAlpha2;
 
-        if (softBlend2 < 0.149) {
-          softlightColor2 = SOFTLIGHT_LAVENDER;
-          softlightAlpha2 = smoothstep(0.0, 0.149, softBlend2);
+        if (softBlend2 < 0.12) {
+          softlightColor2 = SOFTLIGHT_PURPLE;
+          softlightAlpha2 = smoothstep(0.0, 0.12, softBlend2);
         }
-        else if (softBlend2 < 0.288) {
-          float t = smoothstep(0.149, 0.288, softBlend2);
-          softlightColor2 = mix(SOFTLIGHT_LAVENDER, SOFTLIGHT_MINT, t);
+        else if (softBlend2 < 0.35) {
+          float t = smoothstep(0.12, 0.35, softBlend2);
+          softlightColor2 = mix(SOFTLIGHT_PURPLE, SOFTLIGHT_BLUE, t);
           softlightAlpha2 = 1.0;
         }
         else {
-          softlightColor2 = SOFTLIGHT_MINT;
-          softlightAlpha2 = 1.0 - smoothstep(0.288, 0.9, softBlend2);
+          softlightColor2 = SOFTLIGHT_BLUE;
+          softlightAlpha2 = 1.0 - smoothstep(0.35, 0.9, softBlend2);
         }
 
         // Composite

@@ -90,11 +90,11 @@
       uniform float u_time;
       uniform vec2 u_resolution;
 
-      // Colors
+      // Colors - Progressive Education (from Figma)
       const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);           // #FFE9D2
-      const vec3 CYAN_TEAL = vec3(0.30, 0.55, 0.55);             // Soft cyan
-      const vec3 TEAL_GREEN = vec3(0.35, 0.50, 0.40);            // Teal-green
-      const vec3 OLIVE = vec3(0.40, 0.38, 0.20);                 // Olive
+      const vec3 DARK_TEAL = vec3(0.118, 0.302, 0.239);          // #1E4D3D
+      const vec3 MID_TEAL = vec3(0.35, 0.45, 0.35);              // Mid transition
+      const vec3 WARM_SAND = vec3(0.769, 0.655, 0.490);          // #C4A77D
 
       #define BLOB_SCALE 0.35
       #define SPEED 0.14
@@ -156,19 +156,19 @@
         float vertPos = 1.0 - uv.y;
         float blendFactor = mix(vertPos, blob, 0.55);
 
-        // Simple 4-color gradient
+        // Simple 4-color gradient: teal → mid → sand → cream
         vec3 color;
-        if (blendFactor < 0.30) {
-          color = mix(BASE_COLOR, CYAN_TEAL, smoothstep(0.0, 0.30, blendFactor));
+        if (blendFactor < 0.40) {
+          color = mix(BASE_COLOR, DARK_TEAL, smoothstep(0.0, 0.40, blendFactor));
         }
-        else if (blendFactor < 0.50) {
-          color = mix(CYAN_TEAL, TEAL_GREEN, smoothstep(0.30, 0.50, blendFactor));
+        else if (blendFactor < 0.52) {
+          color = mix(DARK_TEAL, MID_TEAL, smoothstep(0.40, 0.52, blendFactor));
         }
-        else if (blendFactor < 0.70) {
-          color = mix(TEAL_GREEN, OLIVE, smoothstep(0.50, 0.70, blendFactor));
+        else if (blendFactor < 0.65) {
+          color = mix(MID_TEAL, WARM_SAND, smoothstep(0.52, 0.65, blendFactor));
         }
         else {
-          color = mix(OLIVE, BASE_COLOR, smoothstep(0.70, 1.0, blendFactor));
+          color = mix(WARM_SAND, BASE_COLOR, smoothstep(0.65, 1.0, blendFactor));
         }
 
         gl_FragColor = vec4(color, 1.0);

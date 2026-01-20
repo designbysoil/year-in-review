@@ -91,22 +91,18 @@
 
       // ===========================================
       // FIGMA COLORS - Progressive Education
-      // Visual result colors from layer interaction
+      // Three-layer system with soft-light blending
       // ===========================================
-      // Layer 1: Base
+      // Base Layer
       const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);           // #FFE9D2 peachy cream
 
-      // Layer 2: Primary gradient colors
-      const vec3 PRIMARY_BLUE = vec3(0.208, 0.478, 0.686);       // #357AAF
-      const vec3 PRIMARY_OLIVE = vec3(0.369, 0.341, 0.133);      // #5E5722
+      // Layer 1: Primary gradient
+      const vec3 PRIMARY_TEAL = vec3(0.118, 0.302, 0.239);       // #1E4D3D dark teal at 40%
+      const vec3 PRIMARY_SAND = vec3(0.769, 0.655, 0.490);       // #C4A77D warm sand at 65%
 
-      // Layer 3 & 4: TWO soft-light gradients (one offset)
-      const vec3 SOFTLIGHT_LAVENDER = vec3(0.824, 0.612, 0.965); // #D29CF6
-      const vec3 SOFTLIGHT_MINT = vec3(0.533, 0.800, 0.565);     // #88CC90
-
-      // Target visual result colors (from screenshot)
-      const vec3 CYAN_TEAL = vec3(0.357, 0.710, 0.710);          // Soft cyan/teal at top
-      const vec3 TEAL_GREEN = vec3(0.380, 0.620, 0.520);         // Teal-green middle
+      // Layer 2 & 3: Soft-light gradients (offset positions)
+      const vec3 SOFTLIGHT_PURPLE = vec3(0.310, 0.106, 0.878);   // #4F1BE0 at 12%
+      const vec3 SOFTLIGHT_BLUE = vec3(0.208, 0.478, 0.686);     // #357AAF at 35%
 
       // ===========================================
       // PARAMETERS
@@ -197,87 +193,91 @@
         float blendFactor = mix(vertPos, blob1, BLOB_INTENSITY);
 
         // ===========================================
-        // LAYER 2: Primary Gradient
-        // transparent 0% → Blue 44.8% → Olive@56% 57.8% → transparent 100%
+        // LAYER 1: Primary Gradient
+        // transparent 0% → Teal 40% → Sand@77% 65% → transparent 100%
         // ===========================================
         vec3 primaryColor;
         float primaryAlpha;
 
-        if (blendFactor < 0.448) {
-          primaryColor = PRIMARY_BLUE;
-          primaryAlpha = smoothstep(0.0, 0.448, blendFactor);
+        if (blendFactor < 0.40) {
+          // Fade in to teal
+          primaryColor = PRIMARY_TEAL;
+          primaryAlpha = smoothstep(0.0, 0.40, blendFactor);
         }
-        else if (blendFactor < 0.578) {
-          float t = smoothstep(0.448, 0.578, blendFactor);
-          primaryColor = mix(PRIMARY_BLUE, PRIMARY_OLIVE, t);
-          primaryAlpha = mix(1.0, 0.56, t);
+        else if (blendFactor < 0.65) {
+          // Teal to sand transition
+          float t = smoothstep(0.40, 0.65, blendFactor);
+          primaryColor = mix(PRIMARY_TEAL, PRIMARY_SAND, t);
+          primaryAlpha = mix(1.0, 0.77, t);
         }
         else {
-          primaryColor = PRIMARY_OLIVE;
-          primaryAlpha = 0.56 * (1.0 - smoothstep(0.578, 1.0, blendFactor));
+          // Sand fading out
+          primaryColor = PRIMARY_SAND;
+          primaryAlpha = 0.77 * (1.0 - smoothstep(0.65, 1.0, blendFactor));
         }
 
         // ===========================================
-        // LAYER 3: First Soft-Light Gradient (offset position)
-        // Position offset creates different blend zone
+        // LAYER 2: First Soft-Light Gradient (offset -20%)
+        // transparent 0% → Purple 12% → Blue 35% → transparent 100%
         // ===========================================
         float softBlend1 = mix(vertPos, blob2, BLOB_INTENSITY * 0.8);
-        // Offset by ~12% to simulate the -441px vs -703px difference
-        softBlend1 = softBlend1 + 0.12;
+        // Offset by 20% to simulate the higher position
+        softBlend1 = softBlend1 + 0.20;
 
         vec3 softlightColor1;
         float softlightAlpha1;
 
-        if (softBlend1 < 0.149) {
-          softlightColor1 = SOFTLIGHT_LAVENDER;
-          softlightAlpha1 = smoothstep(0.0, 0.149, softBlend1);
+        if (softBlend1 < 0.12) {
+          softlightColor1 = SOFTLIGHT_PURPLE;
+          softlightAlpha1 = smoothstep(0.0, 0.12, softBlend1);
         }
-        else if (softBlend1 < 0.288) {
-          float t = smoothstep(0.149, 0.288, softBlend1);
-          softlightColor1 = mix(SOFTLIGHT_LAVENDER, SOFTLIGHT_MINT, t);
+        else if (softBlend1 < 0.35) {
+          float t = smoothstep(0.12, 0.35, softBlend1);
+          softlightColor1 = mix(SOFTLIGHT_PURPLE, SOFTLIGHT_BLUE, t);
           softlightAlpha1 = 1.0;
         }
         else {
-          softlightColor1 = SOFTLIGHT_MINT;
-          softlightAlpha1 = 1.0 - smoothstep(0.288, 0.8, softBlend1);
+          softlightColor1 = SOFTLIGHT_BLUE;
+          softlightAlpha1 = 1.0 - smoothstep(0.35, 0.8, softBlend1);
         }
 
         // ===========================================
-        // LAYER 4: Second Soft-Light Gradient (same position as primary)
+        // LAYER 3: Second Soft-Light Gradient (standard -50% position)
+        // Same gradient as Layer 2 but different position
         // ===========================================
         float softBlend2 = mix(vertPos, blob2 * 0.9 + blob3 * 0.1, BLOB_INTENSITY * 0.7);
 
         vec3 softlightColor2;
         float softlightAlpha2;
 
-        if (softBlend2 < 0.149) {
-          softlightColor2 = SOFTLIGHT_LAVENDER;
-          softlightAlpha2 = smoothstep(0.0, 0.149, softBlend2);
+        if (softBlend2 < 0.12) {
+          softlightColor2 = SOFTLIGHT_PURPLE;
+          softlightAlpha2 = smoothstep(0.0, 0.12, softBlend2);
         }
-        else if (softBlend2 < 0.288) {
-          float t = smoothstep(0.149, 0.288, softBlend2);
-          softlightColor2 = mix(SOFTLIGHT_LAVENDER, SOFTLIGHT_MINT, t);
+        else if (softBlend2 < 0.35) {
+          float t = smoothstep(0.12, 0.35, softBlend2);
+          softlightColor2 = mix(SOFTLIGHT_PURPLE, SOFTLIGHT_BLUE, t);
           softlightAlpha2 = 1.0;
         }
         else {
-          softlightColor2 = SOFTLIGHT_MINT;
-          softlightAlpha2 = 1.0 - smoothstep(0.288, 0.9, softBlend2);
+          softlightColor2 = SOFTLIGHT_BLUE;
+          softlightAlpha2 = 1.0 - smoothstep(0.35, 0.9, softBlend2);
         }
 
         // ===========================================
-        // COMPOSITE: Layer 1 + Layer 2 + Layer 3 + Layer 4
+        // COMPOSITE: Base + Layer 1 + Layer 2 + Layer 3
         // ===========================================
         // Start with base cream
         vec3 color = BASE_COLOR;
 
-        // Apply Layer 2: Primary gradient (normal blend)
+        // Apply Layer 1: Primary gradient (normal blend)
         color = mix(color, primaryColor, primaryAlpha);
 
-        // Apply Layer 3: First soft-light (offset)
+        // Apply Layer 2: First soft-light (offset -20%)
         vec3 softResult1 = softLight(color, softlightColor1);
         color = mix(color, softResult1, softlightAlpha1);
 
-        // Apply Layer 4: Second soft-light
+        // Apply Layer 3: Second soft-light (standard position)
         vec3 softResult2 = softLight(color, softlightColor2);
         color = mix(color, softResult2, softlightAlpha2);
 
