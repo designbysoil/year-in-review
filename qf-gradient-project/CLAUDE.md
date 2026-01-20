@@ -43,8 +43,18 @@ WebGL shader-based animated gradients for Qatar Foundation's 2025 Year in Review
 - Simplified 4-color gradient: Dark Teal → Mid Teal → Warm Sand → Cream
 - Single snoise() call, no soft-light blending
 
+### Social Progress - FINAL: `index-social-progress-v1.html`
+- Purple (#7642BA @ 44.8%) → Warm Gold (#C38F46 @ 73% opacity @ 57.8%) → Cream (#FFE9D2)
+- **TWO soft-light layers** at different positions for rich color interaction
+- Soft-light: Dark Purple (#351D47 @ 15%) → Medium Purple (#7D66A2 @ 29%)
+- Creates sophisticated purple-gold appearance through layer blending
+
+### Social Progress - LITE: `index-social-progress-v2-lite.html`
+- Ultra-lightweight version for older MacBooks
+- Simplified 4-color gradient: Purple → Mauve → Warm Gold → Cream
+- Single snoise() call, no soft-light blending
+
 ## Pending Themes
-- Social Progress
 - Sustainability
 
 ## Technical Architecture
@@ -132,6 +142,17 @@ const vec3 SOFTLIGHT_PURPLE = vec3(0.310, 0.106, 0.878);   // #4F1BE0 @ 12%
 const vec3 SOFTLIGHT_BLUE = vec3(0.208, 0.478, 0.686);     // #357AAF @ 35%
 ```
 
+### Social Progress Theme (index-social-progress-v1.html)
+```glsl
+const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);           // #FFE9D2
+const vec3 PRIMARY_PURPLE = vec3(0.463, 0.259, 0.729);     // #7642BA @ 44.8%
+const vec3 PRIMARY_GOLD = vec3(0.765, 0.561, 0.275);       // #C38F46 @ 57.8%
+
+// TWO soft-light layers create rich color interaction
+const vec3 SOFTLIGHT_DARK = vec3(0.208, 0.114, 0.278);     // #351D47 @ 15%
+const vec3 SOFTLIGHT_MID = vec3(0.490, 0.400, 0.635);      // #7D66A2 @ 29%
+```
+
 ## File Structure
 
 ```
@@ -145,6 +166,8 @@ qf-gradient-project/
     ├── index-precision-health-v8-lite.html  # ⚡ LITE Precision Health
     ├── index-education-v1.html         # ✅ FINAL Progressive Education
     ├── index-education-v2-lite.html    # ⚡ LITE Progressive Education
+    ├── index-social-progress-v1.html   # ✅ FINAL Social Progress
+    ├── index-social-progress-v2-lite.html  # ⚡ LITE Social Progress
     └── index-*-v[1-5].html             # Earlier iterations (archived)
 ```
 
