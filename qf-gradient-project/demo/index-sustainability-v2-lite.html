@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QF Gradient - Progressive Education Theme (Lite)</title>
+  <title>QF Gradient - Sustainability Theme (Lite)</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -67,11 +67,11 @@
 
   <div class="overlay">
     <span class="theme-label">Theme</span>
-    <h1 class="theme-name">Progressive Education</h1>
+    <h1 class="theme-name">Sustainability</h1>
     <span class="year">2025</span>
   </div>
 
-  <div class="info">Progressive Education Theme - Lite+</div>
+  <div class="info">Sustainability Theme - Lite+</div>
 
   <script>
     const vertexShader = `
@@ -90,11 +90,11 @@
       uniform float u_time;
       uniform vec2 u_resolution;
 
-      // Colors - Progressive Education (from Figma)
+      // Colors - Sustainability (from Figma)
       const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);           // #FFE9D2
-      const vec3 DARK_TEAL = vec3(0.118, 0.302, 0.239);          // #1E4D3D
-      const vec3 MID_TEAL = vec3(0.35, 0.45, 0.35);              // Mid transition
-      const vec3 WARM_SAND = vec3(0.769, 0.655, 0.490);          // #C4A77D
+      const vec3 PRIMARY_AMBER = vec3(0.878, 0.608, 0.106);      // #E09B1B
+      const vec3 MID_OLIVE = vec3(0.55, 0.52, 0.30);             // Mid transition
+      const vec3 PRIMARY_TEAL = vec3(0.302, 0.482, 0.420);       // #4D7B6B
 
       #define BLOB_SCALE 0.35
       #define SPEED 0.40
@@ -156,19 +156,19 @@
         float vertPos = 1.0 - uv.y;
         float blendFactor = mix(vertPos, blob, 0.55);
 
-        // Simple 4-color gradient: teal → mid → sand → cream
+        // Simple 4-color gradient: amber → olive → teal → cream
         vec3 color;
-        if (blendFactor < 0.40) {
-          color = mix(BASE_COLOR, DARK_TEAL, smoothstep(0.0, 0.40, blendFactor));
+        if (blendFactor < 0.45) {
+          color = mix(BASE_COLOR, PRIMARY_AMBER, smoothstep(0.0, 0.45, blendFactor));
         }
         else if (blendFactor < 0.52) {
-          color = mix(DARK_TEAL, MID_TEAL, smoothstep(0.40, 0.52, blendFactor));
+          color = mix(PRIMARY_AMBER, MID_OLIVE, smoothstep(0.45, 0.52, blendFactor));
         }
-        else if (blendFactor < 0.65) {
-          color = mix(MID_TEAL, WARM_SAND, smoothstep(0.52, 0.65, blendFactor));
+        else if (blendFactor < 0.60) {
+          color = mix(MID_OLIVE, PRIMARY_TEAL, smoothstep(0.52, 0.60, blendFactor));
         }
         else {
-          color = mix(WARM_SAND, BASE_COLOR, smoothstep(0.65, 1.0, blendFactor));
+          color = mix(PRIMARY_TEAL, BASE_COLOR, smoothstep(0.60, 1.0, blendFactor));
         }
 
         gl_FragColor = vec4(color, 1.0);

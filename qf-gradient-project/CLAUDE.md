@@ -54,8 +54,18 @@ WebGL shader-based animated gradients for Qatar Foundation's 2025 Year in Review
 - Simplified 4-color gradient: Purple → Mauve → Warm Gold → Cream
 - Single snoise() call, no soft-light blending
 
-## Pending Themes
-- Sustainability
+### Sustainability - FINAL: `index-sustainability-v1.html`
+- Golden Amber (#E09B1B @ 44.8%) → Teal-Green (#4D7B6B @ 62% opacity @ 57.8%) → Cream (#FFE9D2)
+- **TWO soft-light layers** at different positions for rich color interaction
+- Soft-light: Lavender (#B09CF6 @ 15%) → Teal-Green (#4D7B6B @ 29%)
+- Creates earthy amber-green appearance through layer blending
+
+### Sustainability - LITE: `index-sustainability-v2-lite.html`
+- Ultra-lightweight version for older MacBooks
+- Simplified 4-color gradient: Amber → Olive → Teal → Cream
+- Single snoise() call, no soft-light blending
+
+## All 5 Themes Complete
 
 ## Technical Architecture
 
@@ -153,6 +163,17 @@ const vec3 SOFTLIGHT_DARK = vec3(0.208, 0.114, 0.278);     // #351D47 @ 15%
 const vec3 SOFTLIGHT_MID = vec3(0.490, 0.400, 0.635);      // #7D66A2 @ 29%
 ```
 
+### Sustainability Theme (index-sustainability-v1.html)
+```glsl
+const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);           // #FFE9D2
+const vec3 PRIMARY_AMBER = vec3(0.878, 0.608, 0.106);      // #E09B1B @ 44.8%
+const vec3 PRIMARY_TEAL = vec3(0.302, 0.482, 0.420);       // #4D7B6B @ 57.8%
+
+// TWO soft-light layers create rich color interaction
+const vec3 SOFTLIGHT_LAVENDER = vec3(0.690, 0.612, 0.965); // #B09CF6 @ 15%
+const vec3 SOFTLIGHT_TEAL = vec3(0.302, 0.482, 0.420);     // #4D7B6B @ 29%
+```
+
 ## File Structure
 
 ```
@@ -168,6 +189,8 @@ qf-gradient-project/
     ├── index-education-v2-lite.html    # ⚡ LITE Progressive Education
     ├── index-social-progress-v1.html   # ✅ FINAL Social Progress
     ├── index-social-progress-v2-lite.html  # ⚡ LITE Social Progress
+    ├── index-sustainability-v1.html    # ✅ FINAL Sustainability
+    ├── index-sustainability-v2-lite.html   # ⚡ LITE Sustainability
     └── index-*-v[1-5].html             # Earlier iterations (archived)
 ```
 

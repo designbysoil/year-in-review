@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QF Gradient - Progressive Education Theme (Lite)</title>
+  <title>QF Animated Gradient - Demo</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #FFE9D2;
+      background: #000;
       color: white;
       overflow: hidden;
     }
@@ -24,8 +24,7 @@
       inset: 0;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      padding-top: 15vh;
+      justify-content: center;
       align-items: center;
       text-align: center;
       z-index: 10;
@@ -45,35 +44,82 @@
     .theme-label { font-size: 11px; opacity: 0.4; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
     .theme-name { font-size: clamp(36px, 7vw, 72px); font-weight: 300; letter-spacing: -1px; margin-bottom: 20px; }
     .year { font-size: clamp(52px, 10vw, 100px); font-weight: 200; opacity: 0.2; letter-spacing: -3px; }
-    .info {
+    .controls {
       position: fixed;
       bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 20;
+    }
+    .btn {
+      padding: 12px 24px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.75);
+      cursor: pointer;
+      border-radius: 6px;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.4);
+    }
+    .btn.active {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.6);
+      color: white;
+    }
+    .info {
+      position: fixed;
+      bottom: 88px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 11px;
       opacity: 0.35;
       z-index: 20;
-      color: #11362A;
     }
   </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
-
+  
   <div class="header">
     <span class="logo">Qatar Foundation</span>
     <span class="subtitle">2025 Year in Review</span>
   </div>
-
+  
   <div class="overlay">
     <span class="theme-label">Theme</span>
-    <h1 class="theme-name">Progressive Education</h1>
+    <h1 class="theme-name" id="themeName">Artificial Intelligence</h1>
     <span class="year">2025</span>
   </div>
-
-  <div class="info">Progressive Education Theme - Lite+</div>
+  
+  <div class="info">WebGL Shader · Runway-style FBM Noise</div>
+  
+  <div class="controls">
+    <button class="btn active" data-theme="ai">AI</button>
+    <button class="btn" data-theme="precisionHealth">Health</button>
+    <button class="btn" data-theme="progressiveEducation">Education</button>
+    <button class="btn" data-theme="socialProgress">Social</button>
+    <button class="btn" data-theme="sustainability">Sustainability</button>
+  </div>
 
   <script>
+    // Theme configurations
+    const THEMES = {
+      ai: { name: 'Artificial Intelligence', colors: [[0.102, 0.643, 0.667], [0.498, 0.592, 0.467], [0.620, 0.639, 0.486]] },
+      precisionHealth: { name: 'Precision Health', colors: [[0.690, 0.459, 0.494], [0.796, 0.682, 0.635], [0.545, 0.678, 0.651]] },
+      progressiveEducation: { name: 'Progressive Education', colors: [[0.949, 0.839, 0.584], [0.847, 0.718, 0.502], [0.365, 0.510, 0.455]] },
+      socialProgress: { name: 'Social Progress', colors: [[0.820, 0.639, 0.494], [0.718, 0.549, 0.451], [0.314, 0.451, 0.463]] },
+      sustainability: { name: 'Sustainability', colors: [[0.298, 0.502, 0.431], [0.467, 0.576, 0.467], [0.627, 0.667, 0.533]] },
+    };
+
     const vertexShader = `
       attribute vec2 a_position;
       varying vec2 v_uv;
@@ -83,26 +129,16 @@
       }
     `;
 
-    // Ultra-lightweight shader - single noise, simplified blending
     const fragmentShader = `
-      precision mediump float;
+      precision highp float;
       varying vec2 v_uv;
       uniform float u_time;
       uniform vec2 u_resolution;
-
-      // Colors - Progressive Education (from Figma)
-      const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);           // #FFE9D2
-      const vec3 DARK_TEAL = vec3(0.118, 0.302, 0.239);          // #1E4D3D
-      const vec3 MID_TEAL = vec3(0.35, 0.45, 0.35);              // Mid transition
-      const vec3 WARM_SAND = vec3(0.769, 0.655, 0.490);          // #C4A77D
-
-      #define BLOB_SCALE 0.35
-      #define SPEED 0.40
-
-      // Simplified noise
+      uniform vec3 u_color1, u_color2, u_color3;
+      
       vec4 permute(vec4 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
       vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
-
+      
       float snoise(vec3 v) {
         const vec2 C = vec2(1.0/6.0, 1.0/3.0);
         const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
@@ -142,48 +178,51 @@
         m = m * m;
         return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
       }
-
+      
+      float fbm(vec3 p) {
+        float value = 0.0, amplitude = 0.6, frequency = 1.0;
+        for (int i = 0; i < 3; i++) {
+          value += amplitude * snoise(p * frequency);
+          amplitude *= 0.5;
+          frequency *= 1.8;
+        }
+        return value;
+      }
+      
       void main() {
         vec2 uv = v_uv;
         float aspect = u_resolution.x / u_resolution.y;
         vec2 coord = vec2(uv.x * aspect, uv.y);
-        float t = u_time * SPEED;
-
-        // Single noise call
-        float blob = snoise(vec3(coord * BLOB_SCALE, t * 0.3));
-        blob = blob * 0.5 + 0.5;
-
-        float vertPos = 1.0 - uv.y;
-        float blendFactor = mix(vertPos, blob, 0.55);
-
-        // Simple 4-color gradient: teal → mid → sand → cream
+        float t = u_time * 0.12;
+        float noiseScale = 0.8;
+        
+        float noise1 = fbm(vec3(coord * noiseScale, t * 0.4));
+        float noise2 = fbm(vec3(coord * noiseScale * 1.5 + 50.0, t * 0.6 + 100.0));
+        float noise3 = fbm(vec3(coord * noiseScale * 2.5 + 100.0, t * 0.8 + 200.0));
+        
+        float combinedNoise = noise1 * 0.55 + noise2 * 0.3 + noise3 * 0.15;
+        combinedNoise = smoothstep(0.2, 0.8, combinedNoise * 0.6 + 0.5);
+        
+        float blendFactor = mix(uv.y, combinedNoise, 0.65);
+        
         vec3 color;
-        if (blendFactor < 0.40) {
-          color = mix(BASE_COLOR, DARK_TEAL, smoothstep(0.0, 0.40, blendFactor));
+        if (blendFactor < 0.5) {
+          color = mix(u_color1, u_color2, smoothstep(0.0, 1.0, blendFactor * 2.0));
+        } else {
+          color = mix(u_color2, u_color3, smoothstep(0.0, 1.0, (blendFactor - 0.5) * 2.0));
         }
-        else if (blendFactor < 0.52) {
-          color = mix(DARK_TEAL, MID_TEAL, smoothstep(0.40, 0.52, blendFactor));
-        }
-        else if (blendFactor < 0.65) {
-          color = mix(MID_TEAL, WARM_SAND, smoothstep(0.52, 0.65, blendFactor));
-        }
-        else {
-          color = mix(WARM_SAND, BASE_COLOR, smoothstep(0.65, 1.0, blendFactor));
-        }
-
+        
+        color *= 1.0 + noise1 * 0.12;
+        float vignette = smoothstep(0.0, 1.0, 1.0 - length((uv - 0.5) * 0.4));
+        color = mix(color * 0.92, color, vignette);
+        
         gl_FragColor = vec4(color, 1.0);
       }
     `;
 
-    // Performance config for Lite version
-    const PERF_CONFIG = {
-      maxDPR: 1.0,
-      targetFPS: 24,
-      pauseWhenHidden: true
-    };
-
+    // WebGL setup
     const canvas = document.getElementById('canvas');
-    const gl = canvas.getContext('webgl', { alpha: false, antialias: false });
+    const gl = canvas.getContext('webgl', { alpha: false, antialias: true });
 
     function createShader(type, source) {
       const shader = gl.createShader(type);
@@ -214,10 +253,24 @@
     const uniforms = {
       time: gl.getUniformLocation(program, 'u_time'),
       resolution: gl.getUniformLocation(program, 'u_resolution'),
+      color1: gl.getUniformLocation(program, 'u_color1'),
+      color2: gl.getUniformLocation(program, 'u_color2'),
+      color3: gl.getUniformLocation(program, 'u_color3'),
     };
 
+    let currentTheme = 'ai';
+    let currentColors = THEMES.ai.colors.map(c => [...c]);
+    let targetColors = THEMES.ai.colors.map(c => [...c]);
+
+    function setTheme(name) {
+      currentTheme = name;
+      targetColors = THEMES[name].colors.map(c => [...c]);
+      document.getElementById('themeName').textContent = THEMES[name].name;
+      document.querySelectorAll('.btn').forEach(b => b.classList.toggle('active', b.dataset.theme === name));
+    }
+
     function resize() {
-      const dpr = Math.min(devicePixelRatio, PERF_CONFIG.maxDPR);
+      const dpr = Math.min(devicePixelRatio, 2);
       canvas.width = innerWidth * dpr;
       canvas.height = innerHeight * dpr;
       gl.viewport(0, 0, canvas.width, canvas.height);
@@ -226,44 +279,28 @@
 
     resize();
     addEventListener('resize', resize);
+    document.querySelectorAll('.btn').forEach(b => b.addEventListener('click', () => setTheme(b.dataset.theme)));
 
     const startTime = performance.now();
-    const frameInterval = 1000 / PERF_CONFIG.targetFPS;
-    let lastFrameTime = 0;
-    let isRunning = true;
-    let animationId = null;
 
     function render(now) {
-      if (!isRunning) return;
-
-      if (now - lastFrameTime < frameInterval) {
-        animationId = requestAnimationFrame(render);
-        return;
-      }
-      lastFrameTime = now;
-
-      gl.uniform1f(uniforms.time, (now - startTime) / 1000);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      animationId = requestAnimationFrame(render);
-    }
-
-    if (PERF_CONFIG.pauseWhenHidden) {
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          isRunning = false;
-          if (animationId) {
-            cancelAnimationFrame(animationId);
-            animationId = null;
-          }
-        } else {
-          isRunning = true;
-          lastFrameTime = performance.now();
-          animationId = requestAnimationFrame(render);
+      // Lerp colors
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          currentColors[i][j] += (targetColors[i][j] - currentColors[i][j]) * 0.05;
         }
-      });
+      }
+
+      gl.uniform3fv(uniforms.color1, currentColors[0]);
+      gl.uniform3fv(uniforms.color2, currentColors[1]);
+      gl.uniform3fv(uniforms.color3, currentColors[2]);
+      gl.uniform1f(uniforms.time, (now - startTime) / 1000);
+
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(render);
     }
 
-    animationId = requestAnimationFrame(render);
+    requestAnimationFrame(render);
   </script>
 </body>
 </html>
