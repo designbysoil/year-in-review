@@ -8,14 +8,24 @@ WebGL shader-based animated gradients for Qatar Foundation's 2025 Year in Review
 
 ## Primary Development File
 
-**`demo/index.html`** is the central file for all gradient development.
+**`demo/index.html`** is the SINGLE SOURCE OF TRUTH for all gradient development.
 
-When updating gradients:
-1. Edit `demo/index.html` directly — it contains all theme shaders, colors, preview, and export functionality
-2. The preview tool loads individual theme files for iframe preview (Standard style)
-3. Varied style uses `index-varied.html` with URL color params
-4. All export functionality is built into index.html
-5. Individual theme files (`index-[theme]-v*.html`) are generated from the shaders in index.html
+### IMPORTANT: All gradient changes happen in `demo/index.html`
+
+When updating gradients, colors, or adding features:
+1. **Edit `demo/index.html` directly** — it contains:
+   - All theme shaders (Standard style)
+   - All varied style color definitions (`VARIED_THEME_COLORS`)
+   - Preview tool with theme/style toggles
+   - Video export functionality
+   - Text overlay for Varied style preview
+2. The preview tool loads individual theme files via iframe (Standard style)
+3. Varied style uses `index-varied.html` with URL color params passed from index.html
+4. Individual theme files (`index-[theme]-v*.html`) are standalone but shaders originate in index.html
+
+### Never edit these files directly for color changes:
+- `index-varied.html` — only receives colors via URL params from index.html
+- `index-[theme]-v*.html` — standalone files, but colors should match index.html
 
 ## Completed Themes
 
@@ -94,9 +104,10 @@ The preview tool supports two gradient styles:
 ### Varied Style (Runway-inspired)
 - Organic, pocket-like drift patterns inspired by Runway Demo Day 2025
 - Directional movement: clouds drift left-to-right at ~8.5° upward angle
-- Simpler 3-color gradient with dynamic shape morphing
+- 3-5 color gradients with dynamic shape morphing
 - Best for social media video exports
 - File: `index-varied.html` (accepts colors via URL params)
+- **Preview includes text overlay** (Qatar Foundation + Year in Review + Theme title) — overlay only in preview, not in exports
 
 **Varied Style Parameters:**
 | Parameter | Value | Effect |
@@ -107,14 +118,14 @@ The preview tool supports two gradient styles:
 | `noise1 time` | t * 0.6 | Shape morphing speed (layer 1) |
 | `noise2 time` | t * 0.84 | Shape morphing speed (layer 2) |
 
-**Varied Style Colors (per theme):**
+**Varied Style Colors (per theme) — defined in `demo/index.html`:**
 ```javascript
 const VARIED_THEME_COLORS = {
   'ai': ['1B8EE0', '797B4D', 'FFE9D2'],              // Blue → Khaki → Cream (3 colors)
   'precision-health': ['E06B51', 'DB7A8F', '9B7BB8', 'FFE9D2'], // Coral → Rose Pink → Lavender → Cream (4 colors)
   'education': ['4F1BE0', '357AAF', '1E4D3D', '4D7B6B', 'FFE9D2'], // Violet → Blue → Dark Teal → Light Teal → Cream (5 colors)
   'social-progress': ['5B2D91', '7642BA', '9B6B9E', 'C38F46', 'FFE9D2'], // Deep Purple → Purple → Mauve → Gold → Cream (5 colors)
-  'sustainability': ['E09B1B', '4D7B6B', 'FFE9D2']  // Amber → Teal → Cream (3 colors)
+  'sustainability': ['E09B1B', '8B8648', '6B8B5E', '4D7B6B', 'FFE9D2']  // Amber → Olive → Sage → Teal → Cream (5 colors)
 };
 ```
 
@@ -539,6 +550,9 @@ Also add the fragment shader code for export (inline in index.html as `THEME_FRA
 - [x] Ultra-lightweight "lite" versions for oldest devices (January 2026)
 - [x] Export as video loop option (January 2026)
 - [x] 5-color varied gradient support (January 2026)
+- [x] Text overlay for Varied style preview (January 2026)
+- [ ] **Lite+ versions optimized for web** — performance-tuned gradients for Year in Review pages
+- [ ] **Integration with Year in Review pages** — embed gradients as hero backgrounds
 - [ ] Add `prefers-reduced-motion` media query support
 - [ ] Create production component version
 
