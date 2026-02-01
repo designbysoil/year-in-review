@@ -248,8 +248,19 @@ const vec3 SOFTLIGHT_TEAL = vec3(0.302, 0.482, 0.420);     // #4D7B6B @ 29%
 ```
 qf-gradient-project/
 ├── CLAUDE.md                           # This file
+├── package.json                        # Project metadata
+├── src/                                # Source components & utilities
+│   ├── components/
+│   │   └── AnimatedGradient.jsx        # React component wrapper (inline shaders)
+│   ├── config/
+│   │   └── themes.js                   # Theme color configs (RGB 0-1)
+│   ├── shaders/
+│   │   ├── vertex.glsl                 # Shared vertex shader
+│   │   └── fragment.glsl               # Full fragment shader (FBM, 3 colors)
+│   └── utils/
+│       └── webgl.js                    # WebGL utility functions
 └── demo/
-    ├── index.html                      # 🎬 PRIMARY: Preview & Export tool (edit this!)
+    ├── index.html                      # 🎬 PRIMARY: Preview, Export MP4 & Export for Web
     ├── index-varied.html               # Parameterized varied style (3-5 colors via URL)
     ├── index-ai-v6.html                # ✅ FINAL AI theme (Standard)
     ├── index-ai-v7-lite.html           # ⚡ LITE AI theme
@@ -262,7 +273,8 @@ qf-gradient-project/
     ├── index-social-progress-v2-lite.html  # ⚡ LITE Social Progress
     ├── index-sustainability-v1.html    # ✅ FINAL Sustainability (Standard)
     ├── index-sustainability-v2-lite.html   # ⚡ LITE Sustainability
-    └── index-*-v[1-5].html             # Earlier iterations (archived)
+    ├── overview.html                   # Reference overview page
+    └── index-*-v[1-5].html            # Earlier iterations (archived)
 ```
 
 ## How to Extract Gradients from Figma
@@ -541,6 +553,40 @@ const THEMES = {
 
 Also add the fragment shader code for export (inline in index.html as `THEME_FRAGMENT_SHADER`).
 
+### Export for Web (React / Gatsby)
+
+The preview tool includes an "Export for Web" section that generates production-ready components for embedding animated gradients in React/Gatsby sites.
+
+**Click "Generate Component"** to produce:
+
+1. **`gradient-renderer.js`** (~10KB) — Vanilla JS ES module
+   - `QFGradientRenderer` class with full WebGL lifecycle
+   - Single parameterized lite+ fragment shader (all 5 themes via `u_color1..u_color5` + `u_numColors` uniforms)
+   - Single `snoise()` call, `mediump` precision — optimized for performance
+   - `THEME_COLORS` export with all 5 theme color configs
+   - Performance: DPR 1.0, 30fps throttle, visibility API pause
+   - `ResizeObserver` for container-aware canvas sizing
+   - `prefers-reduced-motion` media query support
+   - Clean `destroy()`, `pause()`, `resume()` methods
+
+2. **`GradientCanvas.jsx`** (~1.2KB) — React wrapper component
+   - Props: `theme`, `className`, `style`, `paused`
+   - SSR-safe (`typeof window === 'undefined'` guard)
+   - Falls back to solid `#FFE9D2` background if WebGL unavailable
+
+3. **Usage tab** — Gatsby integration example
+
+**Download .zip** bundles both files plus a README.
+
+**Lite+ theme colors used in the web export** (from `LITE_THEME_COLORS` in index.html):
+```javascript
+'ai':               3 colors — Blue → Khaki → Cream
+'precision-health':  4 colors — Coral → Mauve → Purple → Cream
+'education':         5 colors — Violet → Blue → Dark Teal → Light Teal → Cream
+'social-progress':   4 colors — Purple → Mauve → Gold → Cream
+'sustainability':    4 colors — Amber → Olive → Teal → Cream
+```
+
 ## TODO
 
 - [x] Progressive Education theme (January 2026)
@@ -551,10 +597,11 @@ Also add the fragment shader code for export (inline in index.html as `THEME_FRA
 - [x] Export as video loop option (January 2026)
 - [x] 5-color varied gradient support (January 2026)
 - [x] Text overlay for Varied style preview (January 2026)
-- [ ] **Lite+ versions optimized for web** — performance-tuned gradients for Year in Review pages
+- [x] **Export for Web** — generates gradient-renderer.js ES module + GradientCanvas.jsx React wrapper (February 2026)
+- [x] **Parameterized lite+ shader** — single fragment shader with color uniforms supports all 5 themes (February 2026)
+- [x] Add `prefers-reduced-motion` media query support (in generated web export)
+- [x] Create production component version (gradient-renderer.js + GradientCanvas.jsx)
 - [ ] **Integration with Year in Review pages** — embed gradients as hero backgrounds
-- [ ] Add `prefers-reduced-motion` media query support
-- [ ] Create production component version
 
 ## Resources
 
