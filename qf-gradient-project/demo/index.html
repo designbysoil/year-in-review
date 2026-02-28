@@ -648,8 +648,8 @@
     // Each theme has 3 colors that blend from bottom to top
     const VARIED_THEME_COLORS = {
       'ai': {
-        colors: [[0.106, 0.557, 0.878], [0.475, 0.482, 0.302], [1.0, 0.914, 0.824]], // Blue → Khaki → Cream
-        hex: ['1B8EE0', '797B4D', 'FFE9D2']
+        colors: [[0.106, 0.557, 0.878], [0.475, 0.482, 0.302], [0.769, 0.655, 0.490]], // Blue → Khaki → Warm Sand
+        hex: ['1B8EE0', '797B4D', 'C4A77D']
       },
       'precision-health': {
         colors: [[0.878, 0.420, 0.318], [0.860, 0.480, 0.560], [0.608, 0.482, 0.722], [1.0, 0.914, 0.824]], // Coral → Rose Pink → Lavender → Cream
@@ -821,7 +821,7 @@
       uniform float u_time;
       uniform vec2 u_resolution;
 
-      const vec3 BASE_COLOR = vec3(1.0, 0.914, 0.824);
+      const vec3 BASE_COLOR = vec3(0.769, 0.655, 0.490);
       const vec3 PRIMARY_BLUE = vec3(0.106, 0.557, 0.880);
       const vec3 PRIMARY_KHAKI = vec3(0.475, 0.482, 0.302);
       const vec3 SOFTLIGHT_PURPLE = vec3(0.690, 0.612, 0.965);
@@ -2019,7 +2019,7 @@
     const LITE_THEME_COLORS = {
       'ai': {
         name: 'Artificial Intelligence',
-        colors: [[0.106, 0.557, 0.880], [0.475, 0.482, 0.302], [1.0, 0.914, 0.824]]
+        colors: [[0.106, 0.557, 0.880], [0.475, 0.482, 0.302], [0.769, 0.655, 0.490]]
       },
       'precision-health': {
         name: 'Precision Health',
