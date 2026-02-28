@@ -190,7 +190,7 @@
         // ===========================================
         vec3 color;
 
-        vec3 MUTED_GOLD = vec3(0.831, 0.725, 0.471);  // #D4B978
+        vec3 WARM_SAND = vec3(0.769, 0.655, 0.490);  // #C4A77D
 
         if (blendFactor < 0.35) {
           // Blue region
@@ -204,11 +204,11 @@
         else if (blendFactor < 0.75) {
           // Khaki → Muted Gold transition
           float t = smoothstep(0.55, 0.75, blendFactor);
-          color = mix(PRIMARY_KHAKI, MUTED_GOLD, t);
+          color = mix(PRIMARY_KHAKI, WARM_SAND, t);
         }
         else {
           // Muted Gold region
-          color = MUTED_GOLD;
+          color = WARM_SAND;
         }
 
         // ===========================================
