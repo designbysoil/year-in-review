@@ -190,6 +190,8 @@
         // ===========================================
         vec3 color;
 
+        vec3 MUTED_GOLD = vec3(0.831, 0.725, 0.471);  // #D4B978
+
         if (blendFactor < 0.35) {
           // Blue region
           color = PRIMARY_BLUE;
@@ -200,13 +202,13 @@
           color = mix(PRIMARY_BLUE, PRIMARY_KHAKI, t);
         }
         else if (blendFactor < 0.75) {
-          // Khaki → Cream transition
+          // Khaki → Muted Gold transition
           float t = smoothstep(0.55, 0.75, blendFactor);
-          color = mix(PRIMARY_KHAKI, BASE_COLOR, t);
+          color = mix(PRIMARY_KHAKI, MUTED_GOLD, t);
         }
         else {
-          // Cream region
-          color = BASE_COLOR;
+          // Muted Gold region
+          color = MUTED_GOLD;
         }
 
         // ===========================================
