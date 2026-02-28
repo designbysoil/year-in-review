@@ -1817,12 +1817,13 @@
             this.gl.uniform1i(this.uniforms.numColors, 5);
           } else if (this.colors.length >= 4) {
             this.gl.uniform3fv(this.uniforms.color4, this.colors[3]);
-            this.gl.uniform3fv(this.uniforms.color5, [1.0, 0.914, 0.824]); // Default cream
+            this.gl.uniform3fv(this.uniforms.color5, this.colors[this.colors.length - 1]); // Default to last color
             this.gl.uniform1i(this.uniforms.numColors, 4);
           } else {
-            // Default 4th and 5th colors to cream and set numColors to 3
-            this.gl.uniform3fv(this.uniforms.color4, [1.0, 0.914, 0.824]);
-            this.gl.uniform3fv(this.uniforms.color5, [1.0, 0.914, 0.824]);
+            // Default 4th and 5th colors to last color and set numColors to 3
+            const last = this.colors[this.colors.length - 1];
+            this.gl.uniform3fv(this.uniforms.color4, last);
+            this.gl.uniform3fv(this.uniforms.color5, last);
             this.gl.uniform1i(this.uniforms.numColors, 3);
           }
         }
@@ -2267,12 +2268,12 @@ export class QFGradientRenderer {
 
     // Set color uniforms
     const c = this._colors;
-    const cream = [1.0, 0.914, 0.824];
+    const fallback = c[c.length - 1]; // Use last color as fallback
     gl.uniform3fv(this._u.color1, c[0]);
     gl.uniform3fv(this._u.color2, c[1]);
     gl.uniform3fv(this._u.color3, c[2]);
-    gl.uniform3fv(this._u.color4, c.length >= 4 ? c[3] : cream);
-    gl.uniform3fv(this._u.color5, c.length >= 5 ? c[4] : cream);
+    gl.uniform3fv(this._u.color4, c.length >= 4 ? c[3] : fallback);
+    gl.uniform3fv(this._u.color5, c.length >= 5 ? c[4] : fallback);
     gl.uniform1i(this._u.numColors, c.length);
 
     // Fullscreen quad geometry
@@ -2402,7 +2403,7 @@ export function GradientCanvas({ theme = 'ai', className, style, paused = false 
         width: '100%',
         height: '100%',
         display: 'block',
-        background: '#FFE9D2',
+        background: '#C4A77D',
         ...style,
       }}
     />
@@ -2440,7 +2441,7 @@ export default function AIThemePage() {
 }
 
 // ─── Available themes ──────────────────────────────────────
-//   'ai'               — Blue → Khaki → Cream (3 colors)
+//   'ai'               — Blue → Khaki → Warm Sand (3 colors)
 //   'precision-health'  — Coral → Mauve → Purple → Cream (4 colors)
 //   'education'         — Violet → Blue → Dark Teal → Light Teal → Cream (5 colors)
 //   'social-progress'   — Purple → Mauve → Gold → Cream (4 colors)
@@ -2487,7 +2488,7 @@ WebGL animated gradient backgrounds for Qatar Foundation Year in Review 2025.
 - \`GradientCanvas.jsx\` — React wrapper component (~1KB)
   - Props: \`theme\`, \`className\`, \`style\`, \`paused\`
   - SSR-safe (guarded with \`typeof window\`)
-  - Falls back to solid #FFE9D2 if WebGL unavailable
+  - Falls back to solid background if WebGL unavailable
 
 ## Quick Start
 
@@ -2510,7 +2511,7 @@ function Page() {
 
 | Key | Colors | Stops |
 |-----|--------|-------|
-| \`ai\` | Blue → Khaki → Cream | 3 |
+| \`ai\` | Blue → Khaki → Warm Sand | 3 |
 | \`precision-health\` | Coral → Mauve → Purple → Cream | 4 |
 | \`education\` | Violet → Blue → Dark Teal → Light Teal → Cream | 5 |
 | \`social-progress\` | Purple → Mauve → Gold → Cream | 4 |
