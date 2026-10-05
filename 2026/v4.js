@@ -350,6 +350,7 @@
     function paint() {
       const w = Math.max(1, Math.round(host.clientWidth * SCALE));
       const h = Math.max(1, Math.round(host.clientHeight * SCALE));
+      const k = host.clientHeight / 900;   // Figma frames are 900 tall: stretch the gradient with the screen
       THEMES.forEach((th, i) => {
         const c = canvases[i];
         c.width = w; c.height = h;
@@ -358,7 +359,7 @@
         ctx.fillStyle = '#ffe9d2';           // theme page base
         ctx.fillRect(0, 0, w, h);
         th.bg.layers.forEach(l => {
-          const top = (l.y - th.bg.y0) * SCALE, lh = (l.h || 2160) * SCALE;
+          const top = (l.y - th.bg.y0) * k * SCALE, lh = (l.h || 2160) * k * SCALE;
           const g = ctx.createLinearGradient(0, top, 0, top + lh);
           l.stops.forEach(([hex, a, pos]) => g.addColorStop(pos, rgba(hex, a)));
           ctx.globalCompositeOperation = l.blend || 'source-over';
