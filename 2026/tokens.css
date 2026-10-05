@@ -1,0 +1,20 @@
+/* QF Impact Index — shared token layer. Typefaces and values from design-system/library/tokens.css. */
+
+@font-face { font-family:"QF";       src:url("fonts/QF-VF.woff2") format("woff2");       font-style:normal; font-weight:100 900; font-display:swap; }
+@font-face { font-family:"QF Serif"; src:url("fonts/QFSerif-VF.woff2") format("woff2"); font-style:normal; font-weight:100 900; font-display:swap; }
+
+:root{
+  color-scheme: light;
+  --cream:#F4F0EB; --cream-2:#EDE8E0; --paper:#FBF9F5;
+  --sidra:#11362A; --ink:#11362A; --ink-2:#475B51; --muted:#8C9A91;
+  --rule:rgba(17,54,42,.14); --rule-2:rgba(17,54,42,.28); --sage:#7FA893;
+
+  --t-ai:#2a78d6; --t-education:#c2306b; --t-social:#eb6834; --t-health:#4a3aa7; --t-sustain:#1f7a3d;
+  --seq-0:#E4EBE6; --seq-6:#11362A;
+  --div-neg:#12564A; --div-mid:#E3DCD1; --div-pos:#93441F;
+
+  --qf-font:"QF",system-ui,sans-serif;
+  --qf-serif:"QF Serif",Georgia,"Times New Roman",serif;
+  --track:.02em; --track-stat:-.01em;
+  --gut:clamp(16px,3vw,34px);
+}
