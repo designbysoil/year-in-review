@@ -11,6 +11,8 @@ Thumbs.db
 # PDFs and documents (not needed for web)
 *.pdf
 *.zip
+*.pptx
+*.docx
 
 # Old content
 2024 content/

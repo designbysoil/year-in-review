@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03 · The editorial index — YIR 2026</title>
+<meta name="description" content="Two registers: themes read as a magazine opener, priorities as evidence.">
+<link rel="preload" href="fonts/QFSerif-VF.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/QF-VF.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="recap.css">
+<link rel="stylesheet" href="v3.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;right:14px;bottom:14px;z-index:999;background:#11362A;color:#F0EDE6;border-radius:999px;padding:8px 15px;font:500 12px/1 'QF',system-ui,sans-serif;letter-spacing:.02em;text-decoration:none;box-shadow:0 6px 20px rgba(17,54,42,.28)">03 · The editorial index · all concepts</a>
+<div class="shell">
+
+  <header class="top">
+    <div class="top-in">
+      <div class="top-l">
+        <p class="top-date">2026 edition</p>
+        <h1>Year in Review</h1>
+      </div>
+      <div class="top-r">
+        <p class="top-sub">Qatar Foundation's year, read as one record: what we worked on, what it counted toward, and who we did it with.</p>
+        <div class="top-facts" id="facts"></div>
+        <a class="top-link" href="../index.html">Read the written report &rarr;</a>
+      </div>
+    </div>
+    <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
+  </header>
+
+  <main class="main">
+
+    <!-- 01 · THEMES — the magazine register -->
+    <section class="sec" id="themes">
+      <div class="facet-col">
+        <p class="sec-no">01</p>
+        <h2 class="sec-h">Themes</h2>
+        <div class="facet-cards" id="f-themes"></div>
+      </div>
+      <div class="stage">
+        <div class="block-text">
+          <div class="claim-strip">
+            <h3 class="standfirst" id="t-standfirst"></h3>
+            <p class="claim" id="t-claim"></p>
+          </div>
+        </div>
+        <div class="stage-body">
+          <div class="feature-panel" id="t-feature"></div>
+          <div class="carousel-head">
+            <h4 class="cap" id="t-carousel-lbl"></h4>
+            <div class="cnav"><button type="button" data-dir="-1" aria-label="Previous">&larr;</button><button type="button" data-dir="1" aria-label="Next">&rarr;</button></div>
+          </div>
+          <div class="carousel" id="t-carousel"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · NATIONAL PRIORITIES — the evidence register -->
+    <section class="sec" id="priorities">
+      <div class="facet-col">
+        <p class="sec-no">02</p>
+        <h2 class="sec-h">National Priorities</h2>
+        <div class="facet-cards" id="f-priorities"></div>
+      </div>
+      <div class="stage">
+        <div class="block-text">
+          <div class="claim-strip">
+            <h3 class="standfirst" id="p-standfirst"></h3>
+            <p class="claim" id="p-claim"></p>
+          </div>
+        </div>
+        <div class="stage-body">
+          <div class="feature-panel" id="p-feature"></div>
+          <div class="carousel-head">
+            <h4 class="cap" id="p-carousel-lbl"></h4>
+            <div class="cnav"><button type="button" data-dir="-1" aria-label="Previous">&larr;</button><button type="button" data-dir="1" aria-label="Next">&rarr;</button></div>
+          </div>
+          <div class="carousel" id="p-carousel"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 · ACROSS QF -->
+    <section class="sec" id="entities">
+      <div class="facet-col">
+        <p class="sec-no">03</p>
+        <h2 class="sec-h">Across QF</h2>
+        <div class="rail-search"><input type="search" id="e-q" aria-label="Search entities"></div>
+        <div class="facet-cards" id="e-sorts"></div>
+      </div>
+      <div class="stage">
+        <div class="summary" id="e-summary"></div>
+        <div class="tagfield" id="e-tags"></div>
+        <p class="stage-foot">Who was involved. Names reconciled from the variants the 2025 pages use &mdash; NU-Q and Northwestern, HBKU and Hamad Bin Khalifa.</p>
+      </div>
+    </section>
+
+    <!-- 04 · WITH PARTNERS -->
+    <section class="sec" id="partners">
+      <div class="facet-col">
+        <p class="sec-no">04</p>
+        <h2 class="sec-h">With partners</h2>
+        <div class="rail-search"><input type="search" id="p-q" aria-label="Search partners"></div>
+        <div class="facet-cards" id="p-types"></div>
+      </div>
+      <div class="stage">
+        <div class="summary" id="p-summary"></div>
+        <div class="tagfield" id="p-tags"></div>
+        <p class="stage-foot">Who we did it with. 130 organisations named across the year.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-label="Recap">
+  <div class="ov-in">
+    <button class="ov-close" id="ov-close" type="button">Close &times;</button>
+    <div id="ov-recap"></div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="content.js"></script>
+<script src="vocab.js"></script>
+<script src="recap.js"></script>
+<script src="v3.js"></script>
+</body>
+</html>

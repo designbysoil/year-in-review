@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QF Impact Index 2026</title>
+<meta name="description" content="One story set, four entry points, one screen each.">
+<link rel="preload" href="fonts/QFSerif-VF.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/QF-VF.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="frame.css">
+</head>
+<body>
+
+<div class="frame">
+
+  <header class="mast">
+    <h1>2026 Impact Index</h1>
+    <div class="facts" id="facts"></div>
+  </header>
+
+  <div class="head">
+    <div class="switch" id="switch" role="group" aria-label="Entry point"></div>
+    <p class="claim" id="claim">&nbsp;</p>
+  </div>
+
+  <div class="body">
+    <div class="set" id="set"></div>
+    <aside class="detail" id="detail"></aside>
+  </div>
+
+  <footer class="foot">
+    <p class="method" id="method"></p>
+    <div class="controls" id="controls"></div>
+  </footer>
+
+</div>
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+
+<script src="data.js"></script>
+<script src="vocab.js"></script>
+<script src="frame.js"></script>
+</body>
+</html>

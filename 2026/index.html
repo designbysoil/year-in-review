@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026 Year in Review — concepts</title>
+<meta name="description" content="Four concepts for the 2026 Year in Review index, for review.">
+<link rel="preload" href="fonts/QFSerif-VF.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/QF-VF.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="tokens.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--qf-font);
+  font-size:14px;line-height:1.55;letter-spacing:var(--track);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1060px;margin:0 auto;padding:0 clamp(20px,4vw,40px)}
+.hd{background:var(--sidra);color:#F0EDE6;padding:clamp(34px,5vw,64px) 0 clamp(28px,4vw,48px)}
+.hd p.k{font-size:11px;color:var(--sage);margin:0 0 10px}
+.hd h1{font-family:var(--qf-serif);font-weight:200;font-size:clamp(32px,5vw,58px);line-height:1.04;margin:0;letter-spacing:var(--track)}
+.hd p.s{color:#CFDCD4;max-width:62ch;margin:16px 0 0}
+.list{padding:clamp(28px,4vw,52px) 0 70px}
+.v{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:clamp(16px,3vw,40px);
+  align-items:start;padding:26px 0;border-top:1px solid var(--rule);text-decoration:none}
+.v:last-child{border-bottom:1px solid var(--rule)}
+.v:hover{background:var(--cream-2)}
+.v .no{font-family:var(--qf-serif);font-weight:300;font-size:26px;color:var(--muted);line-height:1;letter-spacing:-.02em}
+.v h2{font-family:var(--qf-serif);font-weight:300;font-size:clamp(19px,2.2vw,26px);line-height:1.2;margin:0 0 7px;letter-spacing:var(--track)}
+.v p{margin:0;color:var(--ink-2);max-width:66ch;font-size:13.5px}
+.v .meta{margin-top:9px;font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.v .go{font-size:12.5px;color:var(--ink-2);white-space:nowrap;padding-top:4px}
+.v:hover .go{color:var(--ink)}
+.note{margin-top:34px;padding-top:20px;border-top:1px solid var(--rule);font-size:12px;color:var(--muted);max-width:74ch}
+.note a{border-bottom:1px solid var(--rule-2)}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="wrap">
+    <p class="k">2026 edition · for review</p>
+    <h1>Year in Review — four concepts</h1>
+    <p class="s">The same 90 stories from 2025, re-read as a tagged record, shown three ways. Each concept answers the brief differently; the differences are structural, not cosmetic.</p>
+  </div>
+</header>
+
+<main class="wrap list">
+
+  <a class="v" href="v1.html">
+    <span class="no">01</span>
+    <span>
+      <h2>The report</h2>
+      <p>A long scrolling report after the Anthropic Economic Index: a world map of QF's reach, an entity grid, a story explorer and a queryable data table. Strongest on evidence and completeness; weakest on narrative and emotion.</p>
+      <span class="meta">Scrolling · four data sections · world map</span>
+    </span>
+    <span class="go">Open →</span>
+  </a>
+
+  <a class="v" href="v2.html">
+    <span class="no">02</span>
+    <span>
+      <h2>One screen per question</h2>
+      <p>Four entry points — Themes, National Priorities, Across QF, With partners — each locked to a single viewport so a control and its result are never separated by a scroll. Tight and legible; light on editorial voice.</p>
+      <span class="meta">Four framings · one viewport each · no scroll to result</span>
+    </span>
+    <span class="go">Open →</span>
+  </a>
+
+  <a class="v" href="v3.html">
+    <span class="no">03</span>
+    <span>
+      <h2>The editorial index</h2>
+      <p>After the Patagonia progress report. A masthead with the scrolling wordmark, then per-section: a claim, a two-up of photograph and contribution, and a five-card carousel led by the recap. Themes read as a magazine; priorities read as evidence. Grids vary by what each theme actually contains.</p>
+      <span class="meta">Current · magazine + evidence registers · recap as a card</span>
+    </span>
+    <span class="go">Open →</span>
+  </a>
+
+  <a class="v" href="v4.html">
+    <span class="no">04</span>
+    <span>
+      <h2>The paged stack</h2>
+      <p>Four full-screen sections — Recaps, National Priorities, Themes, Partners — that stack: each slides away on scroll to reveal the next, and snaps to the nearest section when you let go. Priorities and Themes are a list beside one big stat card; Themes carries each theme page's own gradient. Built from the Figma "Paged (v4)" frames.</p>
+      <span class="meta">Scroll-driven stack · split list + stat card · phones scroll freely</span>
+    </span>
+    <span class="go">Open →</span>
+  </a>
+
+  <p class="note">
+    All three run off one dataset (<code>data.js</code>) and one vocabulary (<code>vocab.js</code>), so the numbers agree across concepts.
+    Authored copy sits in <code>content.js</code> and is marked as draft wherever it has not been signed off — see
+    <a href="CONTENT-SPEC.md">CONTENT-SPEC.md</a> for the fields still required, including the nine 2015 baselines.
+    An intermediate step between 02 and 03 is preserved at <a href="v2b.html">v2b</a>.
+  </p>
+
+</main>
+</body>
+</html>

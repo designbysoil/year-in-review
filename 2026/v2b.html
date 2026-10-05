@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02b · Sections — YIR 2026</title>
+<meta name="description" content="One story set, four entry points. Section, facet, recap.">
+<link rel="preload" href="fonts/QFSerif-VF.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/QF-VF.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="recap.css">
+<link rel="stylesheet" href="v2b.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;right:14px;bottom:14px;z-index:999;background:#11362A;color:#F0EDE6;border-radius:999px;padding:8px 15px;font:500 12px/1 'QF',system-ui,sans-serif;letter-spacing:.02em;text-decoration:none;box-shadow:0 6px 20px rgba(17,54,42,.28)">02b · Sections · all concepts</a>
+
+<div class="shell">
+
+  <!-- ============ section nav ============ -->
+  <aside class="nav">
+    <div class="nav-top">
+      <p class="nav-date">2026 edition</p>
+      <h1>Year in Review</h1>
+      <p class="nav-sub">Qatar Foundation's year, read as one record: what we worked on, what it counted toward, and who we did it with.</p>
+      <nav class="nav-links" id="nav-links" aria-label="Sections"></nav>
+    </div>
+    <div class="nav-bottom">
+      <div class="nav-card">
+        <h2>The 2026 report</h2>
+        <p>The written edition, with the full essay for every month and theme.</p>
+        <a href="../index.html">Read the report &rarr;</a>
+      </div>
+      <div class="nav-facts" id="facts"></div>
+    </div>
+  </aside>
+
+  <!-- ============ sections ============ -->
+  <main class="main">
+
+    <section class="sec" id="themes">
+      <div class="facet-col">
+        <h2 class="sec-h">Themes</h2>
+        <div class="facet-cards" id="f-themes"></div>
+      </div>
+      <div class="stage">
+        <div class="blocks" id="b-themes"></div>
+        <div class="stage-lbl"><span>Recap</span><em id="r-themes-note"></em></div>
+        <div class="stage-recap"><div id="r-themes"></div></div>
+        <a class="jump-page" id="c-themes-more" href="#"><span id="c-themes-lbl"></span><em>&rarr;</em></a>
+      </div>
+    </section>
+
+    <section class="sec" id="priorities">
+      <div class="facet-col">
+        <h2 class="sec-h">National Priorities</h2>
+        <div class="facet-cards" id="f-priorities"></div>
+      </div>
+      <div class="stage">
+        <div class="blocks" id="b-priorities"></div>
+        <div class="stage-lbl"><span>Recap</span><em id="r-priorities-note"></em></div>
+        <div class="stage-recap"><div id="r-priorities"></div></div>
+        <a class="jump-page" id="c-priorities-more" href="#"><span id="c-priorities-lbl"></span><em>&rarr;</em></a>
+      </div>
+    </section>
+
+    <section class="sec" id="partners">
+      <div class="facet-col">
+        <h2 class="sec-h">With partners</h2>
+        <div class="rail-search"><input type="search" id="p-q" placeholder="Search&hellip;" aria-label="Search partners"></div>
+        <div class="facet-cards" id="p-types"></div>
+      </div>
+      <div class="stage">
+        <div class="summary" id="p-summary"></div>
+        <div class="tagfield" id="p-tags"></div>
+        <p class="stage-foot">Partner names are not cleared for publication. In year one this view stays internal.</p>
+      </div>
+    </section>
+
+    <section class="sec" id="entities">
+      <div class="facet-col">
+        <h2 class="sec-h">Across QF</h2>
+        <div class="rail-search"><input type="search" id="e-q" placeholder="Search&hellip;" aria-label="Search entities"></div>
+        <div class="facet-cards" id="e-sorts"></div>
+      </div>
+      <div class="stage">
+        <div class="summary" id="e-summary"></div>
+        <div class="tagfield" id="e-tags"></div>
+        <p class="stage-foot">Names reconciled from the variants the 2025 pages use &mdash; NU-Q and Northwestern, HBKU and Hamad Bin Khalifa.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="data.js"></script>
+<script src="vocab.js"></script>
+<script src="recap.js"></script>
+<script src="v2b.js"></script>
+</body>
+</html>

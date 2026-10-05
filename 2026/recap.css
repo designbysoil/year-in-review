@@ -1,0 +1,70 @@
+/* Auto-paging recap — placeholder for the video overview.
+   Card treatments follow the new Figma card templates (node 1724:1000):
+   dark sidra green, cream, warm taupe; eyebrow top-left, serif headline bottom-left. */
+
+.recap{position:relative;border-radius:14px;overflow:hidden;background:var(--sidra);aspect-ratio:16/9}
+.recap:focus-visible{outline:2px solid var(--sidra);outline-offset:3px}
+
+/* segmented progress, one per card */
+.recap-bar{position:absolute;top:0;left:0;right:0;display:flex;gap:4px;padding:10px 12px;z-index:4}
+.recap-seg{flex:1;height:2.5px;border-radius:2px;background:rgba(255,255,255,.28);overflow:hidden;cursor:pointer;border:0;padding:0}
+.recap-seg i{display:block;height:100%;width:0;background:rgba(255,255,255,.92);border-radius:2px}
+.recap-seg.done i{width:100%}
+.recap-seg.live i{width:0;animation:fillseg var(--dur,5s) linear forwards}
+.recap.paused .recap-seg.live i{animation-play-state:paused}
+@keyframes fillseg{to{width:100%}}
+
+/* cards */
+.recap-card{position:absolute;inset:0;opacity:0;transition:opacity .5s ease;display:flex;pointer-events:none}
+.recap-card.on{opacity:1;pointer-events:auto}
+.recap-pad{padding:clamp(20px,4.2%,42px);display:flex;flex-direction:column;justify-content:space-between;flex:1;min-width:0}
+.recap-eyebrow{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.62}
+.recap-h{font-family:var(--qf-serif);font-weight:200;letter-spacing:var(--track);line-height:1.04;
+  font-size:clamp(26px,4.6vw,60px);margin:0}
+.recap-sub{font-family:var(--qf-serif);font-weight:300;font-size:clamp(13px,1.5vw,20px);line-height:1.35;opacity:.8;margin:10px 0 0;max-width:30ch}
+.recap-stat{font-family:var(--qf-font);font-weight:400;letter-spacing:var(--track-stat);line-height:.92;
+  font-size:clamp(38px,8vw,104px)}
+.recap-lbl{font-family:var(--qf-serif);font-weight:300;font-size:clamp(13px,1.6vw,21px);line-height:1.3;max-width:26ch;margin-top:14px;opacity:.85}
+.recap-quote{font-family:var(--qf-serif);font-weight:200;font-size:clamp(19px,3vw,40px);line-height:1.18;margin:0}
+.recap-attr{font-size:11.5px;opacity:.7;margin-top:16px}
+
+/* colourways, from the templates */
+.rc-green{background:var(--sidra);color:#F0EDE6}
+.rc-cream{background:#F4F0EB;color:var(--sidra)}
+.rc-taupe{background:#6B5344;color:#F3EDE4}
+.rc-olive{background:#889A68;color:#11261B}
+
+/* image treatments */
+.recap-img{position:absolute;inset:0;background-size:cover;background-position:center}
+.recap-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,54,42,.12) 0%,rgba(17,54,42,.82) 78%)}
+.recap-card.has-img .recap-pad{position:relative;z-index:2;justify-content:flex-end;color:#F2EFE9}
+.recap-split{display:grid;grid-template-columns:1fr 1fr;flex:1;min-width:0}
+.recap-split .half-img{background-size:cover;background-position:center;background-color:var(--cream-2)}
+
+/* stat grid */
+.recap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:clamp(12px,2.4vw,34px);align-items:end}
+.recap-grid .g .v{font-family:var(--qf-font);font-weight:400;letter-spacing:var(--track-stat);font-size:clamp(26px,4.4vw,58px);line-height:1}
+.recap-grid .g .l{font-size:11px;line-height:1.35;opacity:.75;margin-top:7px}
+
+/* editorial placeholder */
+.recap-todo{border-left:2px solid currentColor;padding-left:12px;opacity:.6;font-size:11.5px;max-width:34ch}
+.recap-todo b{display:block;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;margin-bottom:3px}
+
+/* controls */
+.recap-ctrl{position:absolute;right:12px;bottom:12px;display:flex;gap:6px;z-index:5}
+.recap-ctrl button{
+  width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.34);
+  background:rgba(17,54,42,.42);color:#F0EDE6;display:grid;place-items:center;font-size:11px;backdrop-filter:blur(4px);
+}
+.recap-card.rc-cream ~ .recap-ctrl button{border-color:rgba(17,54,42,.3);background:rgba(244,240,235,.55);color:var(--sidra)}
+.recap-ctrl button:hover{border-color:#fff}
+.recap-count{position:absolute;left:14px;bottom:14px;z-index:5;font-size:10.5px;letter-spacing:.06em;color:rgba(255,255,255,.7)}
+.recap.light-ui .recap-count{color:rgba(17,54,42,.6)}
+
+/* placeholder quote card — reads as designed, not as missing */
+.recap-quote .qm{display:block;font-size:2.4em;line-height:.6;opacity:.45}
+.recap-quote .qrule{display:block;margin-top:.34em}
+.recap-quote .qrule i{display:block;height:2px;background:currentColor;opacity:.22;border-radius:2px;margin-bottom:.26em}
+.recap-quote .qrule i:nth-child(1){width:92%}
+.recap-quote .qrule i:nth-child(2){width:78%}
+.recap-quote .qrule i:nth-child(3){width:44%}

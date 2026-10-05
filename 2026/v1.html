@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01 · The report — YIR 2026</title>
+<meta name="description" content="Prototype — the Year in Review restructured as an index: one story set, four lenses, two maps and an explorer.">
+<link rel="preload" href="fonts/QFSerif-VF.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/QF-VF.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;right:14px;bottom:14px;z-index:999;background:#11362A;color:#F0EDE6;border-radius:999px;padding:8px 15px;font:500 12px/1 'QF',system-ui,sans-serif;letter-spacing:.02em;text-decoration:none;box-shadow:0 6px 20px rgba(17,54,42,.28)">01 · The report · all concepts</a>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <p class="breadcrumb"><a href="../index.html">Qatar Foundation</a> &nbsp;|&nbsp; Impact Index</p>
+  </div>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track" id="marquee"></div>
+  </div>
+  <div class="wrap">
+    <h1 class="hero-claim">Not a review of the year. A measure of it.</h1>
+    <p class="hero-sub">One story set, read through four lenses — where it landed in the world, which part of Qatar Foundation did it, what it was about, and what it counted toward.</p>
+    <div class="toplines" id="toplines"></div>
+  </div>
+</header>
+
+<!-- ============ SECTIONAL NAV ============ -->
+<nav class="secnav" id="secnav">
+  <div class="secnav-inner">
+    <a href="#world" data-sec="world">QF in the world</a>
+    <a href="#inside" data-sec="inside">Inside QF</a>
+    <a href="#stories" data-sec="stories">Story explorer</a>
+    <a href="#explore" data-sec="explore">Explore the data</a>
+    <span class="spacer"></span>
+    <a href="#explore" class="ghost">Download dataset</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ============ 01 · QF IN THE WORLD ============ -->
+  <section class="section" id="world">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2 class="section-title">QF in the world</h2>
+      </div>
+      <p class="section-claim" id="world-claim">&nbsp;</p>
+
+      <div class="lenses" id="world-lenses" role="group" aria-label="Choose a lens"></div>
+      <div class="subchips" id="world-subchips" hidden></div>
+      <p class="lens-note" id="world-note"></p>
+
+      <div class="viz-row">
+        <div class="viz-surface" id="world-map"><svg viewBox="0 0 960 440" role="img" aria-label="World map of Qatar Foundation reach"></svg></div>
+        <div>
+          <div class="rank-head">
+            <h3>Ranked</h3>
+            <span class="unit" id="world-unit">stories</span>
+          </div>
+          <ol class="ranks" id="world-ranks"></ol>
+        </div>
+      </div>
+
+      <div class="drill" id="world-drill"></div>
+      <p class="method" id="world-method"></p>
+    </div>
+  </section>
+
+  <!-- ============ 02 · INSIDE QF ============ -->
+  <section class="section" id="inside">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2 class="section-title">Inside QF</h2>
+      </div>
+      <p class="section-claim" id="inside-claim">&nbsp;</p>
+
+      <div class="lenses" id="inside-lenses" role="group" aria-label="Choose a lens"></div>
+      <div class="subchips" id="inside-subchips" hidden></div>
+      <p class="lens-note" id="inside-note"></p>
+
+      <div class="viz-row">
+        <div class="viz-surface" id="inside-grid" style="padding:14px"></div>
+        <div>
+          <div class="rank-head">
+            <h3>Ranked</h3>
+            <span class="unit" id="inside-unit">stories</span>
+          </div>
+          <ol class="ranks" id="inside-ranks"></ol>
+        </div>
+      </div>
+
+      <div class="drill" id="inside-drill"></div>
+      <p class="method" id="inside-method"></p>
+    </div>
+  </section>
+
+  <!-- ============ 03 · STORY EXPLORER ============ -->
+  <section class="section" id="stories">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <h2 class="section-title">Story explorer</h2>
+      </div>
+      <p class="section-claim">Every story of the year, one tile each — coloured by whether it built the foundation or pushed the frontier. <em>Hover for the detail.</em></p>
+
+      <div class="toolbar">
+        <div>
+          <h4 class="eyebrow" style="margin:0 0 8px">Theme</h4>
+          <div class="subchips" id="story-themes" style="margin:0"></div>
+        </div>
+        <div>
+          <h4 class="eyebrow" style="margin:0 0 8px">Sort by</h4>
+          <div class="subchips" id="story-sort" style="margin:0"></div>
+        </div>
+      </div>
+
+      <div class="axis-key">
+        <span>Foundation</span>
+        <span class="axis-ramp" id="axis-ramp"></span>
+        <span>Frontier</span>
+      </div>
+
+      <div class="tiles" id="story-tiles"></div>
+      <p class="method">The Foundation&ndash;Frontier score is a placeholder, derived here from each story's keywords. In production it is one editorial field per story, set once at sourcing. It is the recurring axis: the same split colours the maps in sections 01 and 02.</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 · EXPLORE THE DATA ============ -->
+  <section class="section" id="explore">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <h2 class="section-title">Explore the data</h2>
+      </div>
+      <p class="section-claim">Pick a dimension and a measure. Nothing is hidden behind the editing. <em>This is where Keywords finally earn their place.</em></p>
+
+      <div class="facets">
+        <div class="facet">
+          <h4>Dimension</h4>
+          <div class="facet-opts subchips" id="ex-dim" style="margin:0"></div>
+        </div>
+        <div class="facet">
+          <h4>Measure</h4>
+          <div class="facet-opts subchips" id="ex-measure" style="margin:0"></div>
+        </div>
+        <div class="facet">
+          <h4>Filter by theme</h4>
+          <div class="facet-opts subchips" id="ex-theme" style="margin:0"></div>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto">
+        <table class="data" id="ex-table"></table>
+      </div>
+      <p class="method">Percentages are shares of the 2025 story set, which is what exists today. The index in the drill panels reads <em>share of activity</em> for now; from 2026 it becomes <em>change against the previous year</em>, with an expected value of 1.00 — the baseline is the archive.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><strong>Prototype.</strong> Structure borrowed from the Anthropic Economic Index; content is the real 2025 Year in Review, re-read as data. National Priorities are provisional QNV 2030 pillars, pending the decision recorded in the IA draft. The Foundation&ndash;Frontier axis is a placeholder for an editorial field.</p>
+    <p style="margin-bottom:0">Themes use a fixed, validated colour order. Sustainability and Precision Health were the same green in the 2025 system &mdash; fine as badges on separate pages, unusable side by side in a chart. Precision Health moved to violet.</p>
+  </div>
+</footer>
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
