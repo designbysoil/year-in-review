@@ -247,23 +247,37 @@
   }
 
   /* ─────────── 02/03 · split: pinned list beside a column of cards ─────────── */
+  /* Each item opens its own page (v4-theme.html / v4-priority.html): the
+     card is the link, and in the pinned list a click on the item already
+     showing opens it while a click on any other scrolls to its card. */
+  const slug = name => name.toLowerCase().replace(/[^a-z]+/g, '-').replace(/^-|-$/g, '');
+  const PAGE = {
+    priority: { href: it => `v4-priority.html?p=${slug(it.name)}`, cta: 'Explore this priority' },
+    theme: { href: it => `v4-theme.html?t=${slug(it.name)}`, cta: 'Explore this theme' }
+  };
+  const ctaArrow = '<svg width="14" height="10" viewBox="0 0 14 10" aria-hidden="true"><path d="M9 1l4 4-4 4M13 5H0" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
+
   function buildSplit(el, items, prefix, onChange) {
     const list = $('.split-list', el), column = $('.split-media', el);
+    const page = PAGE[prefix];
 
     list.innerHTML = items.map((it, i) =>
-      `<li><a href="#${prefix}-${i + 1}" data-i="${i}"><span class="idx">${pad(i + 1)}</span><span class="nm">${esc(it.name)}</span></a></li>`).join('');
+      `<li><a href="${page.href(it)}" data-i="${i}"><span class="idx">${pad(i + 1)}</span><span class="nm">${esc(it.name)}</span><span class="go" aria-hidden="true">${ctaArrow}</span></a></li>`).join('');
     column.innerHTML = items.map((it, i) => `
       <div class="item" id="${prefix}-${i + 1}">
-        <p class="card-label"><span class="idx">${pad(i + 1)}</span>${esc(it.name)}</p>
-        <article class="card" aria-label="${esc(it.name)}">
+        <a class="card-label" href="${page.href(it)}"><span class="idx">${pad(i + 1)}</span>${esc(it.name)}<span class="go" aria-hidden="true">${ctaArrow}</span></a>
+        <a class="card" href="${page.href(it)}" aria-label="${esc(it.name)}: ${page.cta.toLowerCase()}">
           <div class="card-media"><img class="on" src="${IMG}${it.img}" alt="" decoding="async" ${i ? 'loading="lazy"' : ''}></div>
           <div class="card-shade" aria-hidden="true"></div>
           <div class="card-text">
-            <p class="card-key rv" style="--d:0.04s">${esc(it.key)}</p>
+            <div class="card-top">
+              <p class="card-key rv" style="--d:0.04s">${esc(it.key)}</p>
+              <span class="card-cta rv" style="--d:0.1s">${page.cta}${ctaArrow}</span>
+            </div>
             <dl class="card-stats">${it.stats.map(([num, lbl], k) =>
               `<div class="stat rv" style="--d:${(0.16 + k * 0.1).toFixed(2)}s"><dt class="num">${esc(num)}</dt><dd class="lbl">${esc(lbl)}</dd></div>`).join('')}</dl>
           </div>
-        </article>
+        </a>
       </div>`).join('');
 
     const links = $$('a', list), cells = $$('.item', column), cards = $$('.card', column);
@@ -276,6 +290,7 @@
     cards.forEach(c => io.observe(c));
 
     links.forEach((a, i) => a.addEventListener('click', e => {
+      if (i === cur || e.metaKey || e.ctrlKey || e.shiftKey) return;   // already showing: open its page
       e.preventDefault();
       const y = cells[i].getBoundingClientRect().top + scrollY - navH() - gutter();
       scrollTo({ top: y, behavior: mqReduce.matches ? 'auto' : 'smooth' });
