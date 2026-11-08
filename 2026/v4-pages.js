@@ -7,7 +7,9 @@
    v4-sid-data.js via v4-pages-data.js; the monthly stories are data.js.
    Nav behaviour and the theme gradients follow v4-long.js. Version B
    (v4-theme-b.html, data-variant="b") shows each achievement's initiatives
-   as cards and gives the nav this page's own sections. */
+   as cards and gives the nav this page's own sections. Version C
+   (v4-theme-c.html) shows one card per achievement, each opening its story
+   page (v4-story.html, v4-story.js). */
 (() => {
   'use strict';
 
@@ -82,7 +84,8 @@
   const mine = stories.filter(s => s.theme === me.key);
   const NP = Object.fromEntries(PRIORITIES.map(p => [p.key, p]));
   const all = [...me.achievements, ...me.difference];
-  const B = document.body.dataset.variant === 'b';   // v4-theme-b.html
+  const V = document.body.dataset.variant || 'a';   // a: v4-theme.html, b: v4-theme-b.html, c: v4-theme-c.html
+  const B = V !== 'a';                               // B and C share the page-section nav
   document.body.dataset.theme = me.key;
 
   document.title = `${me.name} — Themes — YIR 2026`;
@@ -252,7 +255,7 @@
 
   /* ─────────────────────────── next + peers ─────────────────────────── */
   function buildNext() {
-    const href = B ? (t => themeHref(t).replace('v4-theme.html', 'v4-theme-b.html')) : themeHref;
+    const href = V === 'a' ? themeHref : (t => themeHref(t).replace('v4-theme.html', `v4-theme-${V}.html`));
     const next = THEMES[(idx + 1) % THEMES.length];
     const a = $('#pg-next');
     a.href = href(next);
@@ -441,6 +444,26 @@
     }));
   }
 
+  /* ─────────────────────────── version C ───────────────────────────
+     v4-theme-c.html: one tall card per achievement, in the story-card style
+     the monthly stories used; each opens the achievement's own page
+     (v4-story.html). */
+  function buildAchievementsC() {
+    const list = me.achievements;
+    $('#ach-sub').textContent = `${list.length} achievements of ${me.name} at Qatar Foundation. Open one to read the full story.`;
+    $('#pg-index').innerHTML = list.map((x, i) => `
+      <li><a class="scard scard--ach${x.img ? '' : ' no-photo'}" id="${x.id}" href="v4-story.html?t=${me.slug}&amp;s=${x.id}" data-theme="${me.key}">
+        <span class="scard-media">${x.img ? `<img src="${x.img}" alt="" loading="lazy" decoding="async">` : ''}</span>
+        <span class="scard-top"><span>${pad(i + 1)}</span>${x.group ? `<span>${esc(x.group)}</span>` : ''}</span>
+        <span class="scard-foot">
+          ${x.stat ? `<span class="scard-num">${esc(x.stat[0])}</span>` : ''}
+          <span class="scard-title">${esc(x.title)}</span>
+          <span class="scard-sum">${esc(x.stat ? x.stat[1] : plain(x.intro[0] || x.items[0] || '').split(/(?<=\.)\s/)[0])}</span>
+          <span class="scard-go">Read the story<svg width="14" height="10" viewBox="0 0 14 10" aria-hidden="true"><path d="M9 1l4 4-4 4M13 5H0" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></span>
+        </span>
+      </a></li>`).join('');
+  }
+
   /* Land on a story from the long page (…#s-arabic-language-preservation)
      once the page exists; a "difference" card opens its evidence on arrival. */
   function landOnHash() {
@@ -456,7 +479,7 @@
   buildHero();
   buildWhy();
   buildPriorities();
-  B ? buildAchievementsB() : buildAchievements();
+  ({ a: buildAchievements, b: buildAchievementsB, c: buildAchievementsC })[V]();
   buildDifference();
   buildNotes();
   if ($('#st-grid')) buildStories();

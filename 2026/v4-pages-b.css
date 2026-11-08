@@ -82,3 +82,17 @@ body.ix-open{overflow:hidden}
   .ix-body{padding:28px var(--gut) 40px}
   .ix-text > p{font-size:17px}
 }
+
+/* ───────────────── Version C: one card per achievement ───────────────── */
+.pg--c .pg-ach .st-grid{margin-top:8px}
+.scard--ach .scard-foot{gap:10px}
+.scard-num{font-size:clamp(40px,3vw,56px);line-height:1;letter-spacing:-.01em;font-variant-numeric:lining-nums}
+.scard--ach .scard-title{font-size:20px}
+.scard-go{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;opacity:.9}
+.scard-go svg{transition:transform .35s var(--ease-out)}
+.scard--ach:hover .scard-go svg{transform:translateX(4px)}
+@media (max-width:820px){
+  .scard-num{font-size:30px}
+  .scard--ach .scard-title{font-size:15px}
+  .scard-go{display:none}
+}
