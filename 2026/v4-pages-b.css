@@ -1,0 +1,84 @@
+/* 2026 Year in Review — theme page, version B (v4-theme-b.html).
+   Loads after v4-pages.css. Each achievement's initiatives are cards in a
+   rail, read one at a time in a drawer; the nav lists this page's sections. */
+
+/* the section tabs are longer than the long page's; keep them on one line */
+.pg--b .nav-tabs{gap:28px;white-space:nowrap}
+@media (max-width:1100px){ .pg--b .nav-tabs{gap:20px} .pg--b .nav-tabs a span{display:none} }
+@media (max-width:820px){ .pg--b .nav-current{display:flex} }
+
+/* ───────────────── Achievements: one block per story ───────────────── */
+.sb{padding-top:48px;border-top:1px solid var(--v4-warm300);margin-bottom:88px}
+.sb:last-child{margin-bottom:0}
+.sb-head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:var(--gut) calc(var(--gut) * 2);align-items:start;margin-bottom:40px}
+.sb-text{display:flex;flex-direction:column;gap:20px;max-width:44em}
+.sb-media{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;border-radius:4px}
+.sb-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+/* the initiatives: a rail of cards running to the page edge */
+.ix-rail-wrap{position:relative;display:flex;flex-direction:column;gap:20px}
+.ix-rail{list-style:none;margin:0 calc(var(--gut) * -1);padding:0 var(--gut) 4px;display:flex;gap:16px;overflow-x:auto;
+  scroll-snap-type:x mandatory;scroll-padding-left:var(--gut);scrollbar-width:none;overscroll-behavior-x:contain}
+.ix-rail::-webkit-scrollbar{display:none}
+.ix-rail li{flex:0 0 auto;width:clamp(280px,23vw,340px);scroll-snap-align:start;display:flex}
+.ix-card{position:relative;display:flex;flex-direction:column;gap:14px;width:100%;min-height:340px;padding:24px;text-align:left;
+  background:var(--v4-warm50);border:1px solid var(--v4-warm300);border-radius:8px;color:var(--v4-primary);cursor:pointer;
+  transition:transform .35s var(--ease-out),box-shadow .35s ease,border-color .3s}
+.ix-card::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;border-radius:8px 8px 0 0;background:var(--tone,#4d7b6b)}
+.ix-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(17,54,42,.12);border-color:transparent}
+.ix-card:focus-visible{outline:2px solid var(--v4-brand);outline-offset:3px}
+.ix-card-idx{font-size:12px;color:var(--v4-tertiary);font-variant-numeric:tabular-nums}
+.ix-card-title{font-family:var(--qf-serif);font-weight:300;font-size:24px;line-height:1.15;color:var(--v4-brand)}
+.ix-card-text{font-size:15px;line-height:1.5;color:var(--v4-secondary);display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+.ix-card-go{margin-top:auto;display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--v4-brand)}
+.ix-card-go svg{transition:transform .35s var(--ease-out)}
+.ix-card:hover .ix-card-go svg{transform:translateX(4px)}
+.ix-arrows{display:flex;gap:16px;justify-content:flex-end}
+.ix-arrows button{width:44px;height:44px;border-radius:50%;border:1px solid rgba(17,54,42,.3);display:grid;place-items:center;color:var(--v4-green);transition:background .2s,color .2s}
+.ix-arrows button:hover{background:var(--v4-green);color:var(--v4-white)}
+.ix-arrows button:disabled{opacity:.35;pointer-events:none}
+.ix-rail-wrap.is-static .ix-arrows{display:none}
+
+/* each theme's accent on its cards */
+.pg--b[data-theme="ai"]{--tone:linear-gradient(90deg,#1b8ee0,#797b4d)}
+.pg--b[data-theme="health"]{--tone:linear-gradient(90deg,#4f1be0,#e09b1b)}
+.pg--b[data-theme="education"]{--tone:linear-gradient(90deg,#357aaf,#1e4d3d 60%,#c4a77d)}
+.pg--b[data-theme="sustainability"]{--tone:linear-gradient(90deg,#4d7b6b,#e09b1b)}
+.pg--b[data-theme="social"]{--tone:linear-gradient(90deg,#351d47,#7642ba 55%,#c38f46)}
+
+/* ───────────────── Drawer: one initiative ───────────────── */
+.ix-overlay{position:fixed;inset:0;z-index:500;background:rgba(11,36,28,.5);opacity:0;transition:opacity .4s ease}
+.ix-overlay.on{opacity:1}
+.ix-drawer{position:fixed;left:0;right:0;bottom:0;z-index:600;height:min(86vh,820px);display:flex;flex-direction:column;
+  background:var(--v4-cream);border-radius:24px 24px 0 0;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1)}
+.ix-drawer.on{transform:none}
+.ix-overlay[hidden],.ix-drawer[hidden]{display:none}
+body.ix-open{overflow:hidden}
+.ix-head{display:flex;justify-content:space-between;align-items:center;padding:20px var(--gut);border-bottom:1px solid var(--v4-warm300)}
+.ix-pos{font-size:13px;color:var(--v4-secondary);font-variant-numeric:tabular-nums}
+.ix-close{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--v4-green);border:1px solid rgba(17,54,42,.25)}
+.ix-close:hover{background:var(--v4-green);color:#fff}
+.ix-body{flex:1;overflow-y:auto;padding:40px var(--gut) 48px}
+.ix-body > *{max-width:44rem;margin-left:auto;margin-right:auto}
+.ix-story{font-size:13px;letter-spacing:.02em;color:var(--v4-tertiary);margin-bottom:12px}
+.ix-title{font-family:var(--qf-serif);font-weight:300;font-size:clamp(32px,2.6vw,48px);line-height:1.1;color:var(--v4-brand);margin-bottom:28px}
+.ix-text > p{font-size:19px;line-height:1.65;color:var(--v4-primary)}
+.ix-text > p strong{font-weight:600}
+.ix-text .np-chips{margin-top:28px}
+.ix-foot{display:flex;justify-content:space-between;padding:16px var(--gut);border-top:1px solid var(--v4-warm300)}
+.ix-foot button{padding:10px 18px;border:1px solid rgba(17,54,42,.3);border-radius:999px;font-size:15px;color:var(--v4-green)}
+.ix-foot button:hover{background:var(--v4-green);color:#fff}
+.ix-foot button:disabled{opacity:.35;pointer-events:none}
+
+/* ───────────────── Phones ───────────────── */
+@media (max-width:820px){
+  .sb{padding-top:32px;margin-bottom:56px}
+  .sb-head{grid-template-columns:1fr;gap:24px;margin-bottom:28px}
+  .sb-media{order:-1;aspect-ratio:16/9}
+  .ix-rail li{width:78vw}
+  .ix-card{min-height:300px;padding:20px}
+  .ix-card-title{font-size:22px}
+  .ix-arrows{display:none}
+  .ix-body{padding:28px var(--gut) 40px}
+  .ix-text > p{font-size:17px}
+}

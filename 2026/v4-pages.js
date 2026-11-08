@@ -5,7 +5,9 @@
    theme, how it contributes to Qatar's national priorities, QF's
    achievements (the stories) and how QF is making a difference. Content is
    v4-sid-data.js via v4-pages-data.js; the monthly stories are data.js.
-   Nav behaviour and the theme gradients follow v4-long.js. */
+   Nav behaviour and the theme gradients follow v4-long.js. Version B
+   (v4-theme-b.html, data-variant="b") shows each achievement's initiatives
+   as cards and gives the nav this page's own sections. */
 (() => {
   'use strict';
 
@@ -80,6 +82,8 @@
   const mine = stories.filter(s => s.theme === me.key);
   const NP = Object.fromEntries(PRIORITIES.map(p => [p.key, p]));
   const all = [...me.achievements, ...me.difference];
+  const B = document.body.dataset.variant === 'b';   // v4-theme-b.html
+  document.body.dataset.theme = me.key;
 
   document.title = `${me.name} — Themes — YIR 2026`;
   $('#pg-title').textContent = me.name;
@@ -104,7 +108,7 @@
       ['achievements', `${me.achievements.length} achievements`],
       ['difference', 'Making a difference']
     ];
-    $('#pg-parts').innerHTML = parts.map(([id, l], i) =>
+    if ($('#pg-parts')) $('#pg-parts').innerHTML = parts.map(([id, l], i) =>
       `<li><a href="#${id}"><span class="idx">${pad(i + 1)}</span>${esc(l)}</a></li>`).join('');
     // the year in four figures, quoted from the stories below
     $('#pg-stats').innerHTML = all.filter(x => x.stat).slice(0, 4).map(x =>
@@ -248,7 +252,7 @@
 
   /* ─────────────────────────── next + peers ─────────────────────────── */
   function buildNext() {
-    const href = themeHref;
+    const href = B ? (t => themeHref(t).replace('v4-theme.html', 'v4-theme-b.html')) : themeHref;
     const next = THEMES[(idx + 1) % THEMES.length];
     const a = $('#pg-next');
     a.href = href(next);
@@ -302,6 +306,141 @@
     update();
   }
 
+  /* ─────────────────────────── version B ───────────────────────────
+     v4-theme-b.html: each achievement's initiatives are cards in a rail,
+     read one at a time in a drawer; no "Through the year"; the nav carries
+     this page's own sections instead of the long page's. */
+  const plain = html => { const d = document.createElement('div'); d.innerHTML = html; return d.textContent.replace(/\s+/g, ' ').trim(); };
+
+  /* A card's title: the initiative's bold name when it leads the text,
+     otherwise its opening clause. */
+  const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+  function cardTitle(html) {
+    const m = html.match(/<strong>(.*?)<\/strong>/);
+    if (m && html.indexOf(m[0]) < 240 && plain(m[1]).length <= 90) return cap(plain(m[1]).replace(/[.,:;]$/, ''));
+    const t = plain(html).replace(/^(19|20)\d\d:\s*/, '');
+    const clause = t.split(/(?<=[.;:])\s|,\s(?=[a-z])/)[0];
+    const words = clause.split(' ');
+    return cap(words.length > 11 ? words.slice(0, 10).join(' ') + '…' : clause.replace(/[.;:]$/, ''));
+  }
+
+  function buildAchievementsB() {
+    const list = me.achievements;
+    $('#ach-sub').textContent = `${list.length} stories of ${me.name} at Qatar Foundation. Each card is one initiative; open it to read the detail.`;
+    $('#pg-index').remove();
+    $('#pg-stories').innerHTML = list.map((x, i) => `
+      <article class="sb" id="${x.id}">
+        <div class="sb-head">
+          <div class="sb-text">
+            <p class="sx-eyebrow"><span class="idx">${pad(i + 1)}</span>${x.group ? esc(x.group) : 'Achievement'}</p>
+            <h3 class="sx-title">${esc(x.title)}</h3>
+            ${chips(x.align)}
+            ${figure(x.stat)}
+            ${x.intro.map((p, k) => `<p class="${k ? 'pg-p' : 'sx-lede'}">${p}</p>`).join('')}
+          </div>
+          ${media(x, 'sb-media')}
+        </div>
+        ${x.items.length ? `
+        <div class="ix-rail-wrap">
+          <ul class="ix-rail" role="list" aria-label="${esc(x.title)}: ${x.items.length} initiatives">
+            ${x.items.map((it, k) => `
+            <li><button type="button" class="ix-card" data-s="${i}" data-k="${k}">
+              <span class="ix-card-idx">${pad(k + 1)} / ${pad(x.items.length)}</span>
+              <span class="ix-card-title">${esc(cardTitle(it))}</span>
+              <span class="ix-card-text">${esc(plain(it))}</span>
+              <span class="ix-card-go">Read more<svg width="14" height="10" viewBox="0 0 14 10" aria-hidden="true"><path d="M9 1l4 4-4 4M13 5H0" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></span>
+            </button></li>`).join('')}
+          </ul>
+          <div class="ix-arrows">
+            <button type="button" data-dir="-1" aria-label="Previous initiatives"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+            <button type="button" data-dir="1" aria-label="Next initiatives"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+          </div>
+        </div>` : ''}
+      </article>`).join('');
+
+    // rail arrows
+    $$('.ix-rail-wrap').forEach(w => {
+      const rail = $('.ix-rail', w), [prev, next] = $$('.ix-arrows button', w);
+      const sync = () => {
+        const max = rail.scrollWidth - rail.clientWidth;
+        prev.disabled = rail.scrollLeft < 4; next.disabled = rail.scrollLeft > max - 4;
+        w.classList.toggle('is-static', max < 4);
+      };
+      [prev, next].forEach(b => b.addEventListener('click', () => {
+        const step = $('li', rail).offsetWidth + 16;
+        rail.scrollBy({ left: +b.dataset.dir * step * 2, behavior: mqReduce.matches ? 'auto' : 'smooth' });
+      }));
+      rail.addEventListener('scroll', sync, { passive: true });
+      addEventListener('resize', sync);
+      sync();
+    });
+
+    buildDrawer(list);
+  }
+
+  /* One initiative at a time, in a drawer; arrows step through its story. */
+  function buildDrawer(list) {
+    const drawer = $('#ix-drawer'), overlay = $('#ix-overlay');
+    let s = 0, k = 0, opener = null;
+    const show = () => {
+      const x = list[s];
+      $('#ix-story').innerHTML = `${esc(x.title)}`;
+      $('#ix-title').textContent = cardTitle(x.items[k]);
+      $('#ix-text').innerHTML = `<p>${x.items[k]}</p>${x.align.length ? chips(x.align) : ''}`;
+      $('#ix-pos').textContent = `Initiative ${k + 1} of ${x.items.length}`;
+      $('#ix-prev').disabled = k === 0;
+      $('#ix-next').disabled = k === x.items.length - 1;
+      $('.ix-body', drawer).scrollTop = 0;
+    };
+    const open = (si, ki, from) => {
+      s = si; k = ki; opener = from; show();
+      drawer.hidden = overlay.hidden = false;
+      requestAnimationFrame(() => { drawer.classList.add('on'); overlay.classList.add('on'); });
+      document.body.classList.add('ix-open');
+      $('#ix-close').focus();
+    };
+    const close = () => {
+      drawer.classList.remove('on'); overlay.classList.remove('on');
+      document.body.classList.remove('ix-open');
+      setTimeout(() => { drawer.hidden = overlay.hidden = true; }, mqReduce.matches ? 0 : 400);
+      opener && opener.focus();
+    };
+    document.addEventListener('click', e => {
+      const c = e.target.closest('.ix-card'); if (c) open(+c.dataset.s, +c.dataset.k, c);
+    });
+    $('#ix-close').addEventListener('click', close);
+    overlay.addEventListener('click', close);
+    $('#ix-prev').addEventListener('click', () => { if (k > 0) { k--; show(); } });
+    $('#ix-next').addEventListener('click', () => { if (k < list[s].items.length - 1) { k++; show(); } });
+    document.addEventListener('keydown', e => {
+      if (drawer.hidden) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') $('#ix-prev').click();
+      if (e.key === 'ArrowRight') $('#ix-next').click();
+    });
+  }
+
+  /* The nav's tabs follow the section being read. */
+  function trackSections() {
+    const links = $$('.nav-tabs a, .nav-menu a');
+    const ids = [...new Set(links.map(a => a.getAttribute('href').slice(1)))];
+    const label = $('#nav-current-label');
+    const update = () => {
+      const probe = innerHeight * 0.35;
+      let cur = '';
+      ids.forEach(id => { const t = document.getElementById(id); if (t && t.getBoundingClientRect().top <= probe) cur = id; });
+      links.forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + cur)));
+      const on = links.find(a => a.getAttribute('href') === '#' + cur);
+      label.textContent = on ? on.textContent.replace(/^\d+/, '') : me.name;
+    };
+    addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+    update();
+    // on phones the section menu closes once a section is picked
+    $$('.nav-menu a').forEach(a => a.addEventListener('click', () => {
+      $('#nav-menu').hidden = true; $('#nav-current').setAttribute('aria-expanded', 'false');
+    }));
+  }
+
   /* Land on a story from the long page (…#s-arabic-language-preservation)
      once the page exists; a "difference" card opens its evidence on arrival. */
   function landOnHash() {
@@ -317,13 +456,13 @@
   buildHero();
   buildWhy();
   buildPriorities();
-  buildAchievements();
+  B ? buildAchievementsB() : buildAchievements();
   buildDifference();
   buildNotes();
-  buildStories();
+  if ($('#st-grid')) buildStories();
   buildNext();
   buildNav();
-  trackToc();
+  B ? trackSections() : trackToc();
   landOnHash();
   document.fonts && document.fonts.ready.then(landOnHash);
 })();
