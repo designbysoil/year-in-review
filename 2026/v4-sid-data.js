@@ -1,5 +1,5 @@
 /* 2026 Year in Review — theme page content from the SID source documents
-   (“<Theme> at Qatar Foundation”, September 2026). Generated: do not edit by hand.
+   (“<Theme> at Qatar Foundation”, September 2026), converted from the .docx files.
    Text is the SID wording; each story’s photo and headline figure are an editorial
    layer quoted from that text. Pictograms are IBM Carbon (@carbon/pictograms, Apache-2.0). */
 window.YIR_SID = {
