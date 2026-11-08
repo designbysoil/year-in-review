@@ -1,13 +1,15 @@
-/* 2026 Year in Review — theme and national priority pages.
+/* 2026 Year in Review — theme pages: v4-theme.html?t=<slug>, reached from
+   the long page's Themes section and its National Priority cards.
 
-   One script for both templates: v4-theme.html?t=<slug> and
-   v4-priority.html?p=<slug>, reached from the long page's Themes and National
-   Priorities sections. Content is v4-pages-data.js; stories are data.js.
+   The page follows the theme's SID source document: why QF focuses on the
+   theme, how it contributes to Qatar's national priorities, QF's
+   achievements (the stories) and how QF is making a difference. Content is
+   v4-sid-data.js via v4-pages-data.js; the monthly stories are data.js.
    Nav behaviour and the theme gradients follow v4-long.js. */
 (() => {
   'use strict';
 
-  const { THEMES, PRIORITIES, MATRIX, STRENGTH, stories, themeHref, priorityHref } = window.YIRP;
+  const { THEMES, PRIORITIES, stories, themeHref } = window.YIRP;
   const IMG = 'v4/img/';
   const PAGE_SIZE = 12;
 
@@ -50,7 +52,6 @@
   const root = document.documentElement;
   const mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
   const arrow = '<svg class="i-arr" width="16" height="12" viewBox="0 0 16 12" aria-hidden="true"><path d="M10 1l5 5-5 5M15 6H0" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
-  const meter = n => `<span class="meter" data-n="${n}" aria-label="${STRENGTH[n]}"><i></i><i></i><i></i></span>`;
 
   /* Paints a theme gradient onto a canvas the size of its box (canvas does soft-light natively). */
   function paintGradient(canvas, slug, scale = 0.5) {
@@ -72,97 +73,142 @@
     ctx.globalCompositeOperation = 'source-over';
   }
 
-  /* ─────────────────────────── what are we looking at ─────────────────────────── */
-  const isTheme = document.body.dataset.page === 'theme';
-  const set = isTheme ? THEMES : PRIORITIES;
-  const qs = new URLSearchParams(location.search).get(isTheme ? 't' : 'p');
-  const idx = Math.max(0, set.findIndex(x => x.slug === qs));
-  const me = set[idx];
-  const mine = isTheme ? stories.filter(s => s.theme === me.key) : stories.filter(s => s.priorities.includes(me.key));
+  /* ─────────────────────────── which theme ─────────────────────────── */
+  const qs = new URLSearchParams(location.search).get('t');
+  const idx = Math.max(0, THEMES.findIndex(x => x.slug === qs));
+  const me = THEMES[idx];
+  const mine = stories.filter(s => s.theme === me.key);
+  const NP = Object.fromEntries(PRIORITIES.map(p => [p.key, p]));
+  const all = [...me.achievements, ...me.difference];
 
-  document.title = `${me.name} — ${isTheme ? 'Themes' : 'National Priorities'} — YIR 2026`;
+  document.title = `${me.name} — Themes — YIR 2026`;
   $('#pg-title').textContent = me.name;
-  $('#pg-eyebrow').textContent = `${isTheme ? 'Theme' : 'National Priority'} ${pad(idx + 1)} / ${pad(set.length)}`;
+  $('#pg-eyebrow').textContent = `Theme ${pad(idx + 1)} / ${pad(THEMES.length)}`;
 
-  /* ─────────────────────────── theme page ─────────────────────────── */
-  function buildTheme() {
+  /* a priority as a small tag: its pictogram and name */
+  const chip = k => `<span class="np-chip"><svg viewBox="0 0 32 32" aria-hidden="true">${NP[k].icon}</svg>${esc(NP[k].name)}</span>`;
+  const chips = keys => keys.length ? `<p class="np-chips"><span class="vh">Counts toward: </span>${keys.map(chip).join('')}</p>` : '';
+  const figure = st => st ? `<p class="sx-fig"><span class="num">${esc(st[0])}</span><span class="lbl">${esc(st[1])}</span></p>` : '';
+  const media = (sec, cls) => sec.img
+    ? `<span class="${cls}"><img src="${sec.img}" alt="" loading="lazy" decoding="async"></span>`
+    : `<span class="${cls} is-tone" data-theme="${me.key}"></span>`;
+  const itemList = items => items.length ? `<ul class="sx-items" role="list">${items.map(x => `<li>${x}</li>`).join('')}</ul>` : '';
+
+  /* ─────────────────────────── hero ─────────────────────────── */
+  function buildHero() {
     $('#pg-key').textContent = me.key_line;
-    const img = $('#pg-img'); img.src = IMG + me.img;
-    $('#pg-achieved').innerHTML = me.achieved;
-    $('#pg-stats').innerHTML = me.stats.map(([n, l]) => `<div class="stat"><dt class="num">${esc(n)}</dt><dd class="lbl">${esc(l)}</dd></div>`).join('');
-    $('#ch-name').textContent = me.name;
-    $('#pg-intro').textContent = me.intro;
-
-    $('#pg-toc').innerHTML = me.chapters.map((c, i) =>
-      `<li><a href="#ch-${i + 1}"><span class="idx">${pad(i + 1)}</span><span class="nm">${esc(c.title)}</span></a></li>`).join('') +
-      `<li><a href="#np-h"><span class="idx">${pad(me.chapters.length + 1)}</span><span class="nm">Where it counts</span></a></li>` +
-      `<li><a href="#st-h"><span class="idx">${pad(me.chapters.length + 2)}</span><span class="nm">Stories</span></a></li>`;
-    $('#pg-chapters').innerHTML = me.chapters.map((c, i) => `
-      <article class="chapter" id="ch-${i + 1}">
-        <p class="chapter-idx">${pad(i + 1)}</p>
-        <h3 class="chapter-title">${esc(c.title)}</h3>
-        ${c.body.map(p => `<p>${esc(p)}</p>`).join('')}
-      </article>`).join('');
-
-    // national priorities this theme counts toward, strongest first
-    const rows = PRIORITIES.map((p, i) => ({ p, i, n: MATRIX[me.key][p.key], count: mine.filter(s => s.priorities.includes(p.key)).length }))
-      .filter(r => r.n > 0).sort((a, b) => b.n - a.n || a.i - b.i);
-    $('#pg-xrows').innerHTML = rows.map(r => `
-      <li><a class="xrow" href="${priorityHref(r.p)}">
-        <span class="idx">${pad(r.i + 1)}</span>
-        <span class="xrow-name">${esc(r.p.name)}</span>
-        <span class="xrow-meta">${meter(r.n)}<span class="xrow-lbl">${STRENGTH[r.n]}</span></span>
-        <span class="xrow-count">${r.count ? `${r.count} ${r.count === 1 ? 'story' : 'stories'}` : '–'}</span>
-        ${arrow}
-      </a></li>`).join('');
-
+    $('#pg-img').src = IMG + me.img;
+    const parts = [
+      ['why', `Why ${me.name}`],
+      ['priorities', 'National priorities'],
+      ['achievements', `${me.achievements.length} achievements`],
+      ['difference', 'Making a difference']
+    ];
+    $('#pg-parts').innerHTML = parts.map(([id, l], i) =>
+      `<li><a href="#${id}"><span class="idx">${pad(i + 1)}</span>${esc(l)}</a></li>`).join('');
+    // the year in four figures, quoted from the stories below
+    $('#pg-stats').innerHTML = all.filter(x => x.stat).slice(0, 4).map(x =>
+      `<div class="stat"><dt class="num">${esc(x.stat[0])}</dt><dd class="lbl">${esc(x.stat[1])}</dd></div>`).join('');
     const canvas = $('#t-hero-bg canvas');
     const paint = () => paintGradient(canvas, me.slug);
     paint();
     let t = 0; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(paint, 120); });
   }
 
-  /* ─────────────────────────── priority page ─────────────────────────── */
-  function buildPriority() {
-    $('#pg-desc').textContent = `${me.name} is one of seven outcomes in Qatar’s national development strategy. Qatar Foundation contributes to it ${me.via}. ${mine.length} of this year’s stories count toward this outcome.`;
-    $('#pg-peers-inline').innerHTML = PRIORITIES.filter(p => p !== me).map(p => `<a href="${priorityHref(p)}">${esc(p.name)}</a>`).join(' ');
+  /* ─────────────────────────── 01 · why ─────────────────────────── */
+  function buildWhy() {
+    $('#why-h').textContent = `Why does QF focus on ${me.name}?`;
+    const [lede, ...rest] = me.why;
+    $('#pg-why').innerHTML = `<p class="pg-lede">${lede}</p>` + rest.map(p => `<p class="pg-p">${p}</p>`).join('');
+  }
 
-    // the long page's card, unchanged
-    $('#pg-card').innerHTML = `
-      <div class="card-media"><img class="on" src="${IMG}${me.img}" alt="" decoding="async"></div>
-      <div class="card-shade" aria-hidden="true"></div>
-      <div class="card-text">
-        <p class="card-key">${esc(me.key_line)}</p>
-        <dl class="card-stats">${me.stats.map(([n, l]) => `<div class="stat"><dt class="num">${esc(n)}</dt><dd class="lbl">${esc(l)}</dd></div>`).join('')}</dl>
-      </div>`;
-    $('#pg-what').textContent = me.what;
-    $('#pg-why').textContent = me.why;
-    $('#pg-record').innerHTML = me.evidence.map((e, i) => `<li><span class="idx">${pad(i + 1)}</span><p>${esc(e)}</p></li>`).join('');
+  /* ─────────────────────────── 02 · national priorities ─────────────────────────── */
+  /* The article page's National Priority card (Figma 1980:2686 / 1980:2697),
+     stacked and alternating; each also points to the stories that count toward it. */
+  function buildPriorities() {
+    $('#np-h').textContent = `How does ${me.name} contribute to Qatar’s national priorities?`;
+    $('#pg-np').innerHTML = me.outcomes.map((o, i) => {
+      const seen = all.filter(x => x.align.includes(o.key));
+      return `
+      <article class="np-card${i % 2 ? ' np-card--alt' : ''}">
+        <h3 class="np-title">${esc(NP[o.key].name)}</h3>
+        <svg class="np-icon" viewBox="0 0 32 32" aria-hidden="true">${NP[o.key].icon}</svg>
+        <div class="np-text">
+          <p>${o.text}</p>
+          ${seen.length ? `<p class="np-seen"><span>Seen in</span>${seen.map(x => `<a href="#${x.id}">${esc(x.title)}</a>`).join('')}</p>` : ''}
+        </div>
+      </article>`;
+    }).join('');
+  }
 
-    // themes behind it, strongest first, each with its own gradient
-    const rows = THEMES.map((t, i) => ({ t, i, n: MATRIX[t.key][me.key], count: mine.filter(s => s.theme === t.key).length }))
-      .filter(r => r.n > 0).sort((a, b) => b.n - a.n || a.i - b.i);
-    $('#pg-xrows').innerHTML = rows.map(r => `
-      <li><a class="xrow xrow--theme" href="${themeHref(r.t)}" data-slug="${r.t.slug}">
-        <span class="swatch"><canvas></canvas></span>
-        <span class="xrow-name">${esc(r.t.name)}</span>
-        <span class="xrow-meta">${meter(r.n)}<span class="xrow-lbl">${STRENGTH[r.n]}</span></span>
-        <span class="xrow-count">${r.count} ${r.count === 1 ? 'story' : 'stories'}</span>
-        ${arrow}
+  /* ─────────────────────────── 03 · achievements ─────────────────────────── */
+  function buildAchievements() {
+    const list = me.achievements;
+    $('#ach-sub').textContent = `${list.length} stories of ${me.name} at Qatar Foundation, each tagged with the national priorities it counts toward.`;
+    // the index: one card per story
+    $('#pg-index').innerHTML = list.map((x, i) => `
+      <li><a class="sx-card" href="#${x.id}">
+        ${media(x, 'sx-card-media')}
+        <span class="sx-card-top"><span class="idx">${pad(i + 1)}</span>${x.group ? `<span>${esc(x.group)}</span>` : ''}</span>
+        <span class="sx-card-foot">
+          ${x.stat ? `<span class="sx-card-num">${esc(x.stat[0])}</span>` : ''}
+          <span class="sx-card-title">${esc(x.title)}</span>
+        </span>
       </a></li>`).join('');
-    $$('.xrow--theme').forEach(a => paintGradient($('canvas', a), a.dataset.slug, 1));
+    $('#pg-toc').innerHTML = list.map((x, i) =>
+      `<li><a href="#${x.id}"><span class="idx">${pad(i + 1)}</span><span class="nm">${esc(x.title)}</span></a></li>`).join('');
+    // the stories in full
+    $('#pg-stories').innerHTML = list.map((x, i) => `
+      <article class="sx" id="${x.id}">
+        <p class="sx-eyebrow"><span class="idx">${pad(i + 1)}</span>${x.group ? esc(x.group) : 'Achievement'}</p>
+        <h3 class="sx-title">${esc(x.title)}</h3>
+        ${chips(x.align)}
+        ${x.img ? `<figure class="sx-media"><img src="${x.img}" alt="" loading="lazy" decoding="async"></figure>` : ''}
+        ${figure(x.stat)}
+        ${x.intro.map((p, k) => `<p class="${k ? 'pg-p' : 'sx-lede'}">${p}</p>`).join('')}
+        ${itemList(x.items)}
+      </article>`).join('');
+  }
+
+  /* ─────────────────────────── 04 · making a difference ─────────────────────────── */
+  function buildDifference() {
+    $('#pg-diff').innerHTML = me.difference.map((x, i) => {
+      const more = x.timeline
+        ? `<ol class="dx-timeline" role="list">${x.timeline.map(y => `<li><span class="yr">${y.year}</span><div>${y.items.map(p => `<p>${p}</p>`).join('')}</div></li>`).join('')}</ol>`
+        : itemList(x.items);
+      const n = x.timeline ? x.timeline.length : x.items.length;
+      const label = x.timeline ? `Read the timeline, ${x.timeline[0].year}–${x.timeline[n - 1].year}` : `Read the evidence (${n})`;
+      return `
+      <article class="dx" id="${x.id}">
+        ${media(x, 'dx-media')}
+        <div class="dx-in">
+          <p class="sx-eyebrow"><span class="idx">${pad(i + 1)}</span>${x.timeline ? 'Timeline' : 'Impact'}</p>
+          <h3 class="dx-title">${esc(x.title)}</h3>
+          ${chips(x.align)}
+          ${figure(x.stat)}
+          ${x.intro.map(p => `<p class="dx-p">${p}</p>`).join('')}
+          ${n ? `<details class="dx-more"><summary><span class="when-closed">${label}</span><span class="when-open">Close</span></summary>${more}</details>` : ''}
+        </div>
+      </article>`;
+    }).join('');
+  }
+
+  function buildNotes() {
+    if (!me.notes.length) return;
+    const ol = $('#pg-notes');
+    ol.hidden = false;
+    ol.innerHTML = me.notes.map(n => `<li id="fn-${n.n}"><span class="idx">${n.n}</span><div>${n.html.map(p => `<p>${p}</p>`).join('')}</div></li>`).join('');
   }
 
   /* ─────────────────────────── stories ─────────────────────────── */
   function buildStories() {
-    const themeName = Object.fromEntries(THEMES.map(t => [t.key, t.name]));
     const tabs = [
       ['all', 'All', () => true],
       ['qf', 'Across QF', s => !(s.partners || []).length],
       ['partners', 'With partners', s => (s.partners || []).length > 0]
     ];
     let mode = 'all', open = false;
-    $('#st-sub').textContent = `${mine.length} stories from 2025${isTheme ? '' : ', across ' + new Set(mine.map(s => s.theme)).size + ' themes'}.`;
+    $('#st-sub').textContent = `${mine.length} stories from the monthly reviews, filed under ${me.name}.`;
     $('#st-tabs').innerHTML = tabs.map(([k, l, f]) =>
       `<button type="button" role="tab" data-k="${k}" aria-selected="${k === mode}">${l}<span>${mine.filter(f).length}</span></button>`).join('');
 
@@ -180,7 +226,7 @@
       $('#st-grid').innerHTML = shown.map(s => `
         <li><a class="scard${s.photo ? '' : ' no-photo'}" href="${s.href}" data-theme="${s.theme}">
           <span class="scard-media">${s.photo ? `<img src="${s.photo}" alt="" loading="lazy" decoding="async">` : ''}</span>
-          <span class="scard-top"><span>${esc(s.month)}</span>${isTheme ? '' : `<span>${esc(themeName[s.theme] || '')}</span>`}</span>
+          <span class="scard-top"><span>${esc(s.month)}</span></span>
           <span class="scard-foot"><span class="scard-title">${esc(s.title)}</span><span class="scard-sum">${esc(s.summary)}</span></span>
         </a></li>`).join('') || '<li class="st-empty">No stories in this view yet.</li>';
       // media that isn't deployed falls back to the theme's tone
@@ -202,12 +248,12 @@
 
   /* ─────────────────────────── next + peers ─────────────────────────── */
   function buildNext() {
-    const href = isTheme ? themeHref : priorityHref;
-    const next = set[(idx + 1) % set.length];
+    const href = themeHref;
+    const next = THEMES[(idx + 1) % THEMES.length];
     const a = $('#pg-next');
     a.href = href(next);
     a.innerHTML = `<span>${esc(next.name)}</span>${arrow}`;
-    $('#pg-peers').innerHTML = set.map((x, i) =>
+    $('#pg-peers').innerHTML = THEMES.map((x, i) =>
       `<li><a href="${href(x)}"${x === me ? ' aria-current="page"' : ''}><span class="idx">${pad(i + 1)}</span>${esc(x.name)}</a></li>`).join('');
   }
 
@@ -256,10 +302,28 @@
     update();
   }
 
+  /* Land on a story from the long page (…#s-arabic-language-preservation)
+     once the page exists; a "difference" card opens its evidence on arrival. */
+  function landOnHash() {
+    const t = location.hash.length > 1 && document.getElementById(location.hash.slice(1));
+    if (!t) return;
+    const more = t.classList.contains('dx') && $('details', t);
+    if (more) more.open = true;
+    const navH = parseFloat(getComputedStyle(root).getPropertyValue('--nav-h')) || 63;
+    scrollTo({ top: t.getBoundingClientRect().top + scrollY - navH - 24 });
+  }
+
   /* ─────────────────────────── boot ─────────────────────────── */
-  isTheme ? buildTheme() : buildPriority();
+  buildHero();
+  buildWhy();
+  buildPriorities();
+  buildAchievements();
+  buildDifference();
+  buildNotes();
   buildStories();
   buildNext();
   buildNav();
   trackToc();
+  landOnHash();
+  document.fonts && document.fonts.ready.then(landOnHash);
 })();

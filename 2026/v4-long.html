@@ -79,15 +79,21 @@
     <!-- 02 · NATIONAL PRIORITIES -->
     <section class="panel panel--priorities" id="priorities" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="priorities-h">
       <div class="panel-in">
-        <div class="pc split" data-split="priorities">
-          <div class="split-text">
-            <header class="split-head">
-              <h2 class="h-section" id="priorities-h">National Priorities</h2>
-              <p class="intro">Qatar’s national outcomes set the direction for the country. This is where our year meets those ambitions, showing what we contributed and which outcomes it counted toward.</p>
-            </header>
-            <ol class="split-list" role="list"></ol>
+        <!-- Figma 1975:2655: one card per story, each counted toward a national
+             priority; a card opens that story on its theme page -->
+        <div class="pc np-home">
+          <header class="split-head">
+            <h2 class="h-section" id="priorities-h">National Priorities</h2>
+            <p class="intro">Qatar’s national outcomes set the direction for the country. This is where our year meets those ambitions, showing what we contributed and which outcomes it counted toward.</p>
+          </header>
+          <ul class="rail np-rail" id="np-rail" role="list" aria-label="Stories by national priority"></ul>
+          <div class="rail-ctrl">
+            <div class="dots" id="np-dots" role="group" aria-label="Card positions"></div>
+            <div class="arrows">
+              <button type="button" data-dir="-1" aria-label="Previous stories"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+              <button type="button" data-dir="1" aria-label="Next stories"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+            </div>
           </div>
-          <div class="split-media"></div>
         </div>
       </div>
     </section>

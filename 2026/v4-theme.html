@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Theme — YIR 2026</title>
-<meta name="description" content="A theme page of the 2026 Year in Review, opened from the long page's Themes section.">
+<meta name="description" content="A theme page of the 2026 Year in Review, opened from the long page's Themes section: why the theme matters, the national priorities it serves, QF’s achievements and the difference they make.">
 <link rel="preload" href="fonts/QFSerif-VF.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/QF-VF.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="tokens.css">
@@ -57,41 +57,66 @@
         </div>
         <figure class="t-hero-media"><img id="pg-img" src="" alt="" decoding="async"></figure>
       </div>
-      <p class="t-achieved" id="pg-achieved"></p>
+      <!-- the page's four parts, as SID's source document orders them -->
+      <ol class="t-parts" id="pg-parts" role="list"></ol>
       <dl class="t-stats" id="pg-stats"></dl>
     </div>
   </section>
 
-  <!-- The year in this theme: pinned contents beside the chapters -->
-  <section class="pg-sec pg-chapters" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="ch-h">
+  <!-- 01 · Why -->
+  <section class="pg-sec pg-why" id="why" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="why-h">
     <div class="pg-split">
+      <header class="pg-aside">
+        <p class="pg-num">01</p>
+        <h2 class="pg-h2" id="why-h"></h2>
+      </header>
+      <div class="pg-body" id="pg-why"></div>
+    </div>
+  </section>
+
+  <!-- 02 · National priorities: Figma "National Priority Module" (1985:2953) -->
+  <section class="pg-sec pg-np" id="priorities" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="np-h">
+    <div class="pg-split">
+      <header class="pg-aside">
+        <p class="pg-num">02</p>
+        <h2 class="pg-h2" id="np-h"></h2>
+        <p class="pg-note">The outcomes set out in Qatar’s Third National Development Strategy (2024–2030), and where this theme meets them.</p>
+      </header>
+      <div class="np-stack" id="pg-np"></div>
+    </div>
+  </section>
+
+  <!-- 03 · Achievements: the stories -->
+  <section class="pg-sec pg-ach" id="achievements" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="ach-h">
+    <header class="pg-sec-head">
+      <p class="pg-num">03</p>
+      <h2 class="pg-h2" id="ach-h">What are QF’s achievements?</h2>
+      <p class="pg-note" id="ach-sub"></p>
+    </header>
+    <ul class="sx-grid" id="pg-index" role="list"></ul>
+    <div class="pg-split pg-split--stories">
       <aside class="pg-aside">
-        <h2 class="pg-h2" id="ch-h">The year in <span id="ch-name"></span></h2>
         <ol class="split-list pg-toc" id="pg-toc" role="list"></ol>
       </aside>
-      <div class="pg-body">
-        <p class="pg-lede" id="pg-intro"></p>
-        <div id="pg-chapters"></div>
-      </div>
+      <div class="pg-body" id="pg-stories"></div>
     </div>
   </section>
 
-  <!-- Cross-link: the national outcomes this theme counts toward -->
-  <section class="pg-sec pg-links" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="np-h">
-    <div class="pg-split">
-      <header class="pg-aside pg-aside--static">
-        <h2 class="pg-h2" id="np-h">Where it counts</h2>
-        <p class="pg-note">Every theme reaches beyond itself. These are the national outcomes this work counted toward in 2025, strongest first.</p>
-      </header>
-      <ol class="xrows" id="pg-xrows" role="list"></ol>
-    </div>
+  <!-- 04 · Making a difference -->
+  <section class="pg-sec pg-diff" id="difference" data-bar="rgba(17,54,42,.94)" data-tone="light" aria-labelledby="diff-h">
+    <header class="pg-sec-head">
+      <p class="pg-num">04</p>
+      <h2 class="pg-h2" id="diff-h">How is QF making a difference?</h2>
+      <p class="pg-note">Where the work reaches past QF: into national policy, public services and Qatar’s place in the world.</p>
+    </header>
+    <div class="dx-grid" id="pg-diff"></div>
   </section>
 
-  <!-- Stories -->
-  <section class="pg-sec pg-stories" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="st-h">
+  <!-- Through the year: the monthly stories filed under this theme -->
+  <section class="pg-sec pg-stories" id="year" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="st-h">
     <header class="st-head">
       <div>
-        <h2 class="pg-h2" id="st-h">Stories</h2>
+        <h2 class="pg-h2" id="st-h">Through the year</h2>
         <p class="pg-note" id="st-sub"></p>
       </div>
       <div class="st-tabs" role="tablist" aria-label="Filter stories" id="st-tabs"></div>
@@ -99,6 +124,12 @@
     <div class="st-partners" id="st-partners" hidden></div>
     <ul class="st-grid" id="st-grid" role="list"></ul>
     <button class="st-more" id="st-more" type="button" hidden>Show all stories</button>
+  </section>
+
+  <!-- Source -->
+  <section class="pg-sec pg-source" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-label="Sources">
+    <p class="pg-source-line">Figures come from QF entities’ 2025 annual reporting, the most recent available, or were verified by a QF entity and validated by QF’s Strategy and Impact Department (SID).</p>
+    <ol class="pg-notes" id="pg-notes" role="list" hidden></ol>
   </section>
 
   <!-- Next -->
@@ -125,6 +156,7 @@
 </svg>
 
 <script src="data.js"></script>
+<script src="v4-sid-data.js"></script>
 <script src="v4-pages-data.js"></script>
 <script src="v4-pages.js"></script>
 </body>

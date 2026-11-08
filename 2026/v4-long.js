@@ -16,28 +16,27 @@
   const IMG = 'v4/img/';
   const AUTO_MS = 6000;    // Priorities / Themes auto-advance
 
-  const PRIORITIES = [
-    { name: 'Sustainable Economic Growth', img: 'priority-1.jpg',
-      key: 'We turn research into companies, and train the people who run them.',
-      stats: [['40%', 'of Qatar’s published research is QF-affiliated'], ['50%+', 'of the country’s patented technology'], ['11', 'tech products shipped from QSTP']] },
-    { name: 'Fiscal Sustainability', img: 'priority-2.jpg',
-      key: 'Prevention is the most fiscally conservative policy a state can buy.',
-      stats: [['90%', 'of prediabetic patients kept from progressing to diabetes'], ['900+', 'cardiac patients on personalised, lower-risk treatment'], ['250+', 'newborns screened for risk at birth']] },
-    { name: 'Future-Ready Workforce', img: 'priority-3.jpg',
-      key: 'A graduate pipeline aligned to the sectors Qatar is building.',
-      stats: [['1,000+', 'graduates from 70+ programmes this year'], ['11,000+', 'university graduates over 30 years'], ['500+', 'alumni placed into jobs and internships']] },
-    { name: 'Cohesive Society', img: 'priority-4.jpg',
-      key: 'Arabic, identity and family, carried into policy and the classroom.',
-      stats: [['27,500+', 'students worldwide in QFI Arabic programmes'], ['29,000', 'students taking part in QatarDebate'], ['3M+', 'visitors to Education City']] },
-    { name: 'Quality of Life', img: 'priority-5.jpg',
-      key: 'Children with complex conditions treated at home, not abroad.',
-      stats: [['45+', 'children treated with gene therapy since 2022'], ['35,000', 'genomic records released for research'], ['2,900+', 'patients receiving free diabetes supplies']] },
-    { name: 'Environmental Sustainability', img: 'priority-6.jpg',
-      key: 'Solutions built for a hot, arid climate, proven on our own campus.',
-      stats: [['125,000+', 'seedlings collected to restore forty hectares of coastline'], ['5.3M', 'kWh of renewable energy generated in Education City'], ['20,000+', 'students in Eco-Schools programmes']] },
-    { name: 'Government Excellence', img: 'priority-7.jpg',
-      key: 'Research that lands as national policy.',
-      stats: [['5', 'family-policy recommendations implemented nationally'], ['6+', 'ministries working inside QF’s stories this year'], ['7', 'countries in our genomics-policy study']] }
+  /* National Priorities: stories from the theme pages, each counted toward one
+     of the seven outcomes of the Third National Development Strategy, in its
+     order. Figures are quoted from the SID source documents (v4-sid-data.js);
+     a card opens its story on the theme page. */
+  const NP_CARDS = [
+    { p: 'Sustainable Economic Growth', t: 'artificial-intelligence', id: 's-research-and-innovation-in-ai', img: 'ai-01-quantum-computing',
+      title: 'Research and Innovation in AI', num: '400+', cap: 'research publications from QF’s AI ecosystem in 2025, feeding a knowledge-based economy.' },
+    { p: 'Sustainable Economic Growth', t: 'precision-health', id: 's-mapping-the-qatari-genome', img: 'precision-health-05-qbri-researcher',
+      title: 'Mapping the Qatari Genome', num: '35,000', cap: 'genomic records released to researchers, the base of a home-grown precision health sector.' },
+    { p: 'Future-Ready Workforce', t: 'progressive-education', id: 'd-contribution-to-qatars-skilled-workforce-development', img: 'education-02-convocation-ceremony',
+      title: 'Qatar’s Skilled Workforce', num: '1,000+', cap: 'graduates from QF’s homegrown and partner universities, building the workforce Qatar needs.' },
+    { p: 'Cohesive Society', t: 'social-progress', id: 's-arabic-language-preservation', img: 'social-progress-03-bilaraby',
+      title: 'Arabic Language Preservation', num: '27,500+', cap: 'students worldwide learning Arabic through QFI, keeping the language at the heart of society.' },
+    { p: 'Quality of Life', t: 'precision-health', id: 's-preventative-population-health', img: 'precision-health-01-sidra-medicine',
+      title: 'Preventative Population Health', num: '90%', cap: 'of prediabetic patients kept from progressing to diabetes, a direct gain in quality of life.' },
+    { p: 'Quality of Life', t: 'social-progress', id: 'd-inclusivity-in-cultural-activities', img: 'social-progress-02-ability-friendly',
+      title: 'Inclusivity in Cultural Activities', num: '2,400+', cap: 'people in QF programmes for people with disabilities, widening who takes part in public life.' },
+    { p: 'Environmental Sustainability', t: 'sustainability', id: 'd-national-projects-and-programs', img: 'sustainability-03-earthna-mangroves',
+      title: 'Mangrove Restoration', num: '40,000', cap: 'mangrove seedlings planted in 2025 to restore Qatar’s coastline.' },
+    { p: 'Government Excellence', t: 'artificial-intelligence', id: 'd-societal-impact-and-cultural-ai', img: 'ai-03-ai-ethics',
+      title: 'Fanar, Qatar’s Sovereign AI', num: '400bn', cap: 'words of Arabic behind Fanar, an AI model government agencies can run on securely.' }
   ];
 
   /* Gradients are the theme pages' own layers (frames 216:163 … 216:1213):
@@ -138,7 +137,7 @@
         <div class="rcard-foot"><p>2026 Recap</p><h3>${esc(r.name)}</h3></div>
       </article>`).join('');
     const cards = $$('.rcard', rail);
-    const [prev, next] = $$('.arrows button');
+    const [prev, next] = $$('#recaps .arrows button');
     let dotEls = [];
 
     /* One dot per position the rail can actually reach: with ~3.5 cards on a
@@ -167,7 +166,7 @@
     };
     buildDots();
     addEventListener('resize', () => { buildDots(); sync(); });
-    $$('.arrows button').forEach(b => b.addEventListener('click', () => {
+    $$('#recaps .arrows button').forEach(b => b.addEventListener('click', () => {
       const step = cards[0].offsetWidth + 24;
       rail.scrollBy({ left: +b.dataset.dir * step, behavior: mqReduce.matches ? 'auto' : 'smooth' });
     }));
@@ -246,13 +245,59 @@
     });
   }
 
+  /* ─────────────────────────── 02 · national priorities ─────────────────────────── */
+  /* A rail of story cards (Figma 1975:2655): photo, title and figure on the
+     card, the priority and caption beneath it. Scrolls natively; the dots and
+     arrows work as on the recaps rail. */
+  function buildPriorityCards() {
+    const rail = $('#np-rail'), dots = $('#np-dots');
+    const [prev, next] = $$('#priorities .arrows button');
+    rail.innerHTML = NP_CARDS.map(c => `
+      <li class="npc">
+        <a href="v4-theme.html?t=${c.t}#${c.id}" aria-label="${esc(c.title)}: ${esc(c.num)} ${esc(c.cap)} Counts toward ${esc(c.p)}.">
+          <span class="npc-card">
+            <img src="${IMG}stories/${c.img}.jpg" alt="" loading="lazy" decoding="async">
+            <span class="npc-title">${esc(c.title)}</span>
+            <span class="npc-num">${esc(c.num)}</span>
+          </span>
+          <span class="npc-p">${esc(c.p)}</span>
+          <span class="npc-cap">${esc(c.cap)}</span>
+        </a>
+      </li>`).join('');
+    const cards = $$('.npc', rail);
+    const step = () => cards[0].offsetWidth + parseFloat(getComputedStyle(rail).columnGap || 24);
+    const maxLeft = () => Math.max(0, rail.scrollWidth - rail.clientWidth);
+    const count = () => maxLeft() < 4 ? 1 : Math.ceil(maxLeft() / step() - 0.05) + 1;
+    let dotEls = [];
+    const buildDots = () => {
+      const n = count();
+      dots.innerHTML = Array.from({ length: n }, (_, k) => `<button type="button" aria-label="Go to position ${k + 1} of ${n}"></button>`).join('');
+      dotEls = $$('button', dots);
+      dotEls.forEach((d, k) => d.addEventListener('click', () =>
+        rail.scrollTo({ left: Math.min(k * step(), maxLeft()), behavior: mqReduce.matches ? 'auto' : 'smooth' })));
+      dots.hidden = n < 2;
+    };
+    const sync = () => {
+      const n = count();
+      const at = rail.scrollLeft >= maxLeft() - 4 ? n - 1 : clamp(Math.round(rail.scrollLeft / step()), 0, n - 1);
+      dotEls.forEach((d, k) => d.classList.toggle('on', k === at));
+      prev.disabled = rail.scrollLeft < 4;
+      next.disabled = rail.scrollLeft > maxLeft() - 4;
+    };
+    [prev, next].forEach(b => b.addEventListener('click', () =>
+      rail.scrollBy({ left: +b.dataset.dir * step(), behavior: mqReduce.matches ? 'auto' : 'smooth' })));
+    rail.addEventListener('scroll', sync, { passive: true });
+    addEventListener('resize', () => { buildDots(); sync(); });
+    buildDots();
+    sync();
+  }
+
   /* ─────────── 02/03 · split: pinned list beside a column of cards ─────────── */
-  /* Each item opens its own page (v4-theme.html / v4-priority.html): the
+  /* Each item opens its own page (v4-theme.html): the
      card is the link, and in the pinned list a click on the item already
      showing opens it while a click on any other scrolls to its card. */
   const slug = name => name.toLowerCase().replace(/[^a-z]+/g, '-').replace(/^-|-$/g, '');
   const PAGE = {
-    priority: { href: it => `v4-priority.html?p=${slug(it.name)}`, cta: 'Explore this priority' },
     theme: { href: it => `v4-theme.html?t=${slug(it.name)}`, cta: 'Explore this theme' }
   };
   const ctaArrow = '<svg width="14" height="10" viewBox="0 0 14 10" aria-hidden="true"><path d="M9 1l4 4-4 4M13 5H0" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
@@ -489,10 +534,10 @@
 
   /* ─────────────────────────── boot ─────────────────────────── */
   buildRecaps();
+  buildPriorityCards();
   buildMarquee();
   const setThemeBg = buildThemeBackdrops();
   const splits = [
-    buildSplit($('[data-split="priorities"]'), PRIORITIES, 'priority'),
     buildSplit($('[data-split="themes"]'), THEMES, 'theme', setThemeBg)
   ];
   const partners = buildPartners();
