@@ -1,0 +1,13 @@
+# Deploys from Git: the site is static, so there is no build step.
+# Pushing to main updates production; every other branch gets its own
+# branch deploy at https://<branch>--qf-year-in-review-2025.netlify.app.
+[build]
+  publish = "."
+  command = ""
+
+# The 2025 media is too large for Git (see .gitignore). It is served from
+# the last manual deploy that included it, so Git deploys keep every image.
+[[redirects]]
+  from = "/2025 content/Media/*"
+  to = "https://69a2a69b9a9fe5bd064eeec5--qf-year-in-review-2025.netlify.app/2025 content/Media/:splat"
+  status = 200
