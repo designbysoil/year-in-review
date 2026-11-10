@@ -23,7 +23,9 @@ window.YIRP = (() => {
       key_line: 'Putting the coast back, and the knowledge that manages it.' },
     { slug: 'social-progress', key: 'social', name: 'Social Progress', img: 'theme-5.jpg',
       key_line: 'Social progress is measured by who is included, not by how many attended.' }
-  ].map(t => ({ ...t, ...SID.themes[t.slug] }));
+  ].map(t => ({ ...t, ...SID.themes[t.slug] }))
+    // achievements lead with their SID headline only, no figures
+    .map(t => ({ ...t, achievements: t.achievements.map(a => ({ ...a, stat: null })) }));
 
   /* The seven outcomes of the Third National Development Strategy, in its order. */
   const PRIORITIES = [

@@ -458,7 +458,6 @@
         <span class="scard-foot">
           ${x.stat ? `<span class="scard-num">${esc(x.stat[0])}</span>` : ''}
           <span class="scard-title">${esc(x.title)}</span>
-          <span class="scard-sum">${esc(x.stat ? x.stat[1] : plain(x.intro[0] || x.items[0] || '').split(/(?<=\.)\s/)[0])}</span>
           <span class="scard-go">Read the story<svg width="14" height="10" viewBox="0 0 14 10" aria-hidden="true"><path d="M9 1l4 4-4 4M13 5H0" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></span>
         </span>
       </a></li>`).join('');
