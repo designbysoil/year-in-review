@@ -114,8 +114,9 @@
     if ($('#pg-parts')) $('#pg-parts').innerHTML = parts.map(([id, l], i) =>
       `<li><a href="#${id}"><span class="idx">${pad(i + 1)}</span>${esc(l)}</a></li>`).join('');
     // the year in four figures, quoted from the stories below
-    $('#pg-stats').innerHTML = all.filter(x => x.stat).slice(0, 4).map(x =>
-      `<div class="stat"><dt class="num">${esc(x.stat[0])}</dt><dd class="lbl">${esc(x.stat[1])}</dd></div>`).join('');
+    // achievements carry no figures themselves; the hero still quotes theirs
+    $('#pg-stats').innerHTML = all.map(x => x.stat || x.heroStat).filter(Boolean).slice(0, 4).map(st =>
+      `<div class="stat"><dt class="num">${esc(st[0])}</dt><dd class="lbl">${esc(st[1])}</dd></div>`).join('');
     const canvas = $('#t-hero-bg canvas');
     const paint = () => paintGradient(canvas, me.slug);
     paint();

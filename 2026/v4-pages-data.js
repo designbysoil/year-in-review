@@ -25,7 +25,7 @@ window.YIRP = (() => {
       key_line: 'Social progress is measured by who is included, not by how many attended.' }
   ].map(t => ({ ...t, ...SID.themes[t.slug] }))
     // achievements lead with their SID headline only, no figures
-    .map(t => ({ ...t, achievements: t.achievements.map(a => ({ ...a, stat: null })) }));
+    .map(t => ({ ...t, achievements: t.achievements.map(a => ({ ...a, stat: null, heroStat: a.stat })) }));
 
   /* The seven outcomes of the Third National Development Strategy, in its order. */
   const PRIORITIES = [
