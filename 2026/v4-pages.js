@@ -165,26 +165,23 @@
 
   /* ─────────────────────────── 04 · making a difference ─────────────────────────── */
   function buildDifference() {
-    $('#pg-diff').innerHTML = me.difference.map((x, i) => {
-      const more = x.timeline
-        ? `<ol class="dx-timeline" role="list">${x.timeline.map(y => `<li><span class="yr">${y.year}</span><div>${y.items.map(p => `<p>${p}</p>`).join('')}</div></li>`).join('')}</ol>`
-        : itemList(x.items);
-      const n = x.timeline ? x.timeline.length : x.items.length;
-      const label = x.timeline ? `Read the timeline, ${x.timeline[0].year}–${x.timeline[n - 1].year}` : `Read the evidence (${n})`;
-      return `
-      <article class="dx" id="${x.id}">
-        ${media(x, 'dx-media')}
-        <div class="dx-in">
-          <p class="sx-eyebrow"><span class="idx">${pad(i + 1)}</span>${x.timeline ? 'Timeline' : 'Impact'}</p>
-          <h3 class="dx-title">${esc(x.title)}</h3>
-          ${chips(x.align)}
-          ${figure(x.stat)}
-          ${x.intro.map(p => `<p class="dx-p">${p}</p>`).join('')}
-          ${n ? `<details class="dx-more"><summary><span class="when-closed">${label}</span><span class="when-open">Close</span></summary>${more}</details>` : ''}
-        </div>
-      </article>`;
-    }).join('');
+    const list = me.difference;
+    $('#pg-dtoc').innerHTML = list.map((x, i) =>
+      `<li><a href="#${x.id}"><span class="idx">${pad(i + 1)}</span><span class="nm">${esc(x.title)}</span></a></li>`).join('');
+    $('#pg-diff').innerHTML = list.map((x, i) => `
+      <article class="sx" id="${x.id}">
+        <p class="sx-eyebrow"><span class="idx">${pad(i + 1)}</span>${x.timeline ? 'Timeline' : 'Making a difference'}</p>
+        <h3 class="sx-title">${esc(x.title)}</h3>
+        ${chips(x.align)}
+        ${x.img ? `<figure class="sx-media"><img src="${x.img}" alt="" loading="lazy" decoding="async"></figure>` : ''}
+        ${figure(x.stat)}
+        ${x.intro.map((p, k) => `<p class="${k ? 'pg-p' : 'sx-lede'}">${p}</p>`).join('')}
+        ${x.timeline
+          ? `<ol class="dx-timeline" role="list">${x.timeline.map(y => `<li><span class="yr">${y.year}</span><div>${y.items.map(p => `<p>${p}</p>`).join('')}</div></li>`).join('')}</ol>`
+          : itemList(x.items)}
+      </article>`).join('');
   }
+
 
   function buildNotes() {
     if (!me.notes.length) return;
@@ -282,8 +279,8 @@
   }
 
   /* The theme contents list follows the chapter being read. */
-  function trackToc() {
-    const links = $$('#pg-toc a'); if (!links.length) return;
+  function trackToc(sel) {
+    const links = $$(sel); if (!links.length) return;
     const targets = links.map(a => document.getElementById(a.getAttribute('href').slice(1)));
     const update = () => {
       const probe = innerHeight * 0.4;
@@ -470,7 +467,8 @@
   if ($('#st-grid')) buildStories();
   buildNext();
   buildNav();
-  B ? trackSections() : trackToc();
+  B ? trackSections() : trackToc('#pg-toc a');
+  trackToc('#pg-dtoc a');
   landOnHash();
   document.fonts && document.fonts.ready.then(landOnHash);
 })();
