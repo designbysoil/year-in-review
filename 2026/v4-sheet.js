@@ -1,7 +1,7 @@
 /* 2026 Year in Review — an achievement's story in a bottom sheet.
    Loads after v4-pages.js on the theme pages (versions A and C). A click on an
    achievement card, or on a "Seen in" link, slides the story up from the
-   bottom over 80% of the screen; close, Escape, a click outside, a drag down
+   bottom up to 72px below the top of the screen; close, Escape, a click outside, a drag down
    or the back button slide it away again. The URL carries the story
    (…#s-ai-in-education), so a story can be shared and the homepage cards
    open it directly. The full page (v4-story.html) stays as the fallback.
