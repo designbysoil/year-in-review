@@ -37,8 +37,10 @@
   const list = theme.achievements;
   const idx = Math.max(0, list.findIndex(x => x.id === qs.get('s')));
   const me = list[idx];
-  const themeUrl = `v4-theme-c.html?t=${theme.slug}`;
-  const storyUrl = x => `v4-story.html?t=${theme.slug}&s=${x.id}`;
+  // back to the version the story was opened from (A or C)
+  const fromA = qs.get('v') === 'a';
+  const themeUrl = `${fromA ? 'v4-theme.html' : 'v4-theme-c.html'}?t=${theme.slug}`;
+  const storyUrl = x => `v4-story.html?t=${theme.slug}&s=${x.id}${fromA ? '&v=a' : ''}`;
 
   document.title = `${me.title} — ${theme.name} — YIR 2026`;
   document.body.dataset.theme = theme.key;

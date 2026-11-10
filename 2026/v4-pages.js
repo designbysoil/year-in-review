@@ -151,30 +151,16 @@
   /* ─────────────────────────── 03 · achievements ─────────────────────────── */
   function buildAchievements() {
     const list = me.achievements;
-    $('#ach-sub').textContent = `${list.length} stories of ${me.name} at Qatar Foundation, each tagged with the national priorities it counts toward.`;
-    // the index: one card per story
+    $('#ach-sub').textContent = `${list.length} achievements of ${me.name} at Qatar Foundation. Open one to read the full story.`;
+    // one card per achievement, each opening its story page
     $('#pg-index').innerHTML = list.map((x, i) => `
-      <li><a class="sx-card" href="#${x.id}">
+      <li><a class="sx-card" id="${x.id}" href="v4-story.html?t=${me.slug}&amp;s=${x.id}&amp;v=a">
         ${media(x, 'sx-card-media')}
         <span class="sx-card-top"><span class="idx">${pad(i + 1)}</span>${x.group ? `<span>${esc(x.group)}</span>` : ''}</span>
         <span class="sx-card-foot">
-          ${x.stat ? `<span class="sx-card-num">${esc(x.stat[0])}</span>` : ''}
           <span class="sx-card-title">${esc(x.title)}</span>
         </span>
       </a></li>`).join('');
-    $('#pg-toc').innerHTML = list.map((x, i) =>
-      `<li><a href="#${x.id}"><span class="idx">${pad(i + 1)}</span><span class="nm">${esc(x.title)}</span></a></li>`).join('');
-    // the stories in full
-    $('#pg-stories').innerHTML = list.map((x, i) => `
-      <article class="sx" id="${x.id}">
-        <p class="sx-eyebrow"><span class="idx">${pad(i + 1)}</span>${x.group ? esc(x.group) : 'Achievement'}</p>
-        <h3 class="sx-title">${esc(x.title)}</h3>
-        ${chips(x.align)}
-        ${x.img ? `<figure class="sx-media"><img src="${x.img}" alt="" loading="lazy" decoding="async"></figure>` : ''}
-        ${figure(x.stat)}
-        ${x.intro.map((p, k) => `<p class="${k ? 'pg-p' : 'sx-lede'}">${p}</p>`).join('')}
-        ${itemList(x.items)}
-      </article>`).join('');
   }
 
   /* ─────────────────────────── 04 · making a difference ─────────────────────────── */
