@@ -105,14 +105,6 @@
   function buildHero() {
     $('#pg-key').textContent = me.key_line;
     $('#pg-img').src = IMG + me.img;
-    const parts = [
-      ['why', `Why ${me.name}`],
-      ['priorities', 'National priorities'],
-      ['achievements', `${me.achievements.length} achievements`],
-      ['difference', 'Making a difference']
-    ];
-    if ($('#pg-parts')) $('#pg-parts').innerHTML = parts.map(([id, l], i) =>
-      `<li><a href="#${id}"><span class="idx">${pad(i + 1)}</span>${esc(l)}</a></li>`).join('');
     // the year in four figures, quoted from the stories below
     // achievements carry no figures themselves; the hero still quotes theirs
     $('#pg-stats').innerHTML = all.map(x => x.stat || x.heroStat).filter(Boolean).slice(0, 4).map(st =>
@@ -252,10 +244,14 @@
   function buildNav() {
     const nav = $('#nav'), menu = $('#nav-menu'), btn = $('#nav-current');
     const sections = $$('[data-bar]');
-    const toggle = open => { menu.hidden = !open; btn.setAttribute('aria-expanded', String(open)); };
-    btn.addEventListener('click', e => { e.stopPropagation(); toggle(menu.hidden); });
-    document.addEventListener('click', e => { if (!menu.hidden && !menu.contains(e.target)) toggle(false); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden) { toggle(false); btn.focus(); } });
+    if (menu && btn) {
+      const toggle = open => { menu.hidden = !open; btn.setAttribute('aria-expanded', String(open)); };
+      btn.addEventListener('click', e => { e.stopPropagation(); toggle(menu.hidden); });
+      document.addEventListener('click', e => { if (!menu.hidden && !menu.contains(e.target)) toggle(false); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden) { toggle(false); btn.focus(); } });
+    }
+    // the section nav sticks once it reaches the top
+    const sub = $('#pg-subnav');
 
     let ticking = false;
     const update = () => {
@@ -265,6 +261,11 @@
       nav.dataset.tone = under.dataset.tone;
       nav.style.setProperty('--bar', under.dataset.bar);
       nav.classList.toggle('is-solid', scrollY > 8);
+      if (sub) {
+        const stuck = sub.getBoundingClientRect().top <= parseFloat(getComputedStyle(sub).top) + 0.5;
+        sub.classList.toggle('is-stuck', stuck);
+        nav.classList.toggle('is-solid', scrollY > 8 || stuck);
+      }
     };
     addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
     update();
@@ -275,7 +276,9 @@
       const t = document.getElementById(a.getAttribute('href').slice(1)); if (!t) return;
       e.preventDefault();
       const navH = parseFloat(getComputedStyle(root).getPropertyValue('--nav-h')) || 63;
-      scrollTo({ top: t.getBoundingClientRect().top + scrollY - navH - 24, behavior: mqReduce.matches ? 'auto' : 'smooth' });
+      const sub = $('#pg-subnav');
+      const subH = sub && getComputedStyle(sub).top !== '0px' ? sub.offsetHeight : 0;   // phones: a second row under the bar
+      scrollTo({ top: t.getBoundingClientRect().top + scrollY - navH - subH - 24, behavior: mqReduce.matches ? 'auto' : 'smooth' });
     });
   }
 
@@ -409,23 +412,20 @@
 
   /* The nav's tabs follow the section being read. */
   function trackSections() {
-    const links = $$('.nav-tabs a, .nav-menu a');
+    const links = $$('.pg-subnav a');
     const ids = [...new Set(links.map(a => a.getAttribute('href').slice(1)))];
-    const label = $('#nav-current-label');
+    let last = null;
     const update = () => {
       const probe = innerHeight * 0.35;
       let cur = '';
       ids.forEach(id => { const t = document.getElementById(id); if (t && t.getBoundingClientRect().top <= probe) cur = id; });
       links.forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + cur)));
+      // phones: keep the current tab in view
       const on = links.find(a => a.getAttribute('href') === '#' + cur);
-      label.textContent = on ? on.textContent.replace(/^\d+/, '') : me.name;
+      if (on && on !== last) { last = on; const r = on.parentNode; r.scrollTo({ left: on.offsetLeft - 16, behavior: 'smooth' }); }
     };
     addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
     update();
-    // on phones the section menu closes once a section is picked
-    $$('.nav-menu a').forEach(a => a.addEventListener('click', () => {
-      $('#nav-menu').hidden = true; $('#nav-current').setAttribute('aria-expanded', 'false');
-    }));
   }
 
   /* ─────────────────────────── version C ───────────────────────────

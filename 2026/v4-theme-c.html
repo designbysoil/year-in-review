@@ -21,26 +21,10 @@
   <a class="nav-logo" href="v4-long.html#recaps" aria-label="Year in Review, back to start">
     <svg viewBox="0 0 40 26" width="40" height="26" aria-hidden="true"><use href="#qf-logo"/></svg>
   </a>
-  <nav class="nav-tabs" aria-label="On this page">
-    <a href="#why"><span>01</span>Why</a>
-    <a href="#priorities"><span>02</span>National priorities</a>
-    <a href="#achievements"><span>03</span>Achievements</a>
-    <a href="#difference"><span>04</span>Making a difference</a>
-  </nav>
-  <button class="nav-current" id="nav-current" type="button" aria-expanded="false" aria-controls="nav-menu">
-    <span id="nav-current-label">Why</span>
-    <svg class="i-chev" width="14" height="8" viewBox="0 0 14 8" aria-hidden="true"><path d="M1 1l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-  </button>
   <div class="nav-right">
     <span class="nav-menu-btn" aria-hidden="true">
       <svg class="i-menu" width="35" height="13" viewBox="0 0 35 13"><path d="M0 .5h35M0 6.5h35M0 12.5h35" stroke="currentColor"/></svg>
     </span>
-  </div>
-  <div class="nav-menu" id="nav-menu" hidden>
-    <a href="#why"><span>01</span>Why</a>
-    <a href="#priorities"><span>02</span>National priorities</a>
-    <a href="#achievements"><span>03</span>Achievements</a>
-    <a href="#difference"><span>04</span>Making a difference</a>
   </div>
 </header>
 
@@ -62,6 +46,16 @@
       <dl class="t-stats" id="pg-stats"></dl>
     </div>
   </section>
+
+  <!-- The page's own sections: sits under the hero, then sticks to the top -->
+  <nav class="pg-subnav" id="pg-subnav" aria-label="On this page">
+    <div class="pg-subnav-in">
+      <a href="#why"><span>01</span>Why</a>
+      <a href="#priorities"><span>02</span>National priorities</a>
+      <a href="#achievements"><span>03</span>Achievements</a>
+      <a href="#difference"><span>04</span>Making a difference</a>
+    </div>
+  </nav>
 
   <!-- 01 · Why -->
   <section class="pg-sec pg-why" id="why" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="why-h">
