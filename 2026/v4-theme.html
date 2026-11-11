@@ -4,41 +4,26 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Theme — YIR 2026</title>
-<meta name="description" content="A theme page of the 2026 Year in Review, opened from the long page's Themes section.">
+<meta name="description" content="A theme page of the 2026 Year in Review, opened from the long page's Themes section: why the theme matters, the national priorities it serves, QF’s achievements and the difference they make.">
 <link rel="preload" href="fonts/QFSerif-VF.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/QF-VF.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="v4.css">
 <link rel="stylesheet" href="v4-pages.css">
+<link rel="stylesheet" href="v4-sheet.css">
 <script>document.documentElement.classList.replace('no-js','js')</script>
 </head>
 <body class="pg pg--theme" data-page="theme">
 
-<!-- ───────── Navigation (as the long page; tabs lead back into it) ───────── -->
+<!-- ───────── Navigation: this page's own sections ───────── -->
 <header class="nav" id="nav" data-tone="light">
   <a class="nav-logo" href="v4-long.html#recaps" aria-label="Year in Review, back to start">
     <svg viewBox="0 0 40 26" width="40" height="26" aria-hidden="true"><use href="#qf-logo"/></svg>
   </a>
-  <nav class="nav-tabs" aria-label="Sections">
-    <a href="v4-long.html#recaps"><span>01</span>Recaps</a>
-    <a href="v4-long.html#priorities"><span>02</span>National Priorities</a>
-    <a href="v4-long.html#themes" aria-current="true"><span>03</span>Themes</a>
-    <a href="v4-long.html#partners"><span>04</span>Partners</a>
-  </nav>
-  <button class="nav-current" id="nav-current" type="button" aria-expanded="false" aria-controls="nav-menu">
-    <span>Themes</span>
-    <svg class="i-chev" width="14" height="8" viewBox="0 0 14 8" aria-hidden="true"><path d="M1 1l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-  </button>
   <div class="nav-right">
     <span class="nav-menu-btn" aria-hidden="true">
       <svg class="i-menu" width="35" height="13" viewBox="0 0 35 13"><path d="M0 .5h35M0 6.5h35M0 12.5h35" stroke="currentColor"/></svg>
     </span>
-  </div>
-  <div class="nav-menu" id="nav-menu" hidden>
-    <a href="v4-long.html#recaps"><span>01</span>Recaps</a>
-    <a href="v4-long.html#priorities"><span>02</span>National Priorities</a>
-    <a href="v4-long.html#themes" aria-current="true"><span>03</span>Themes</a>
-    <a href="v4-long.html#partners"><span>04</span>Partners</a>
   </div>
 </header>
 
@@ -57,52 +42,76 @@
         </div>
         <figure class="t-hero-media"><img id="pg-img" src="" alt="" decoding="async"></figure>
       </div>
-      <p class="t-achieved" id="pg-achieved"></p>
       <dl class="t-stats" id="pg-stats"></dl>
     </div>
   </section>
 
-  <!-- The year in this theme: pinned contents beside the chapters -->
-  <section class="pg-sec pg-chapters" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="ch-h">
-    <div class="pg-split">
-      <aside class="pg-aside">
-        <h2 class="pg-h2" id="ch-h">The year in <span id="ch-name"></span></h2>
-        <ol class="split-list pg-toc" id="pg-toc" role="list"></ol>
-      </aside>
-      <div class="pg-body">
-        <p class="pg-lede" id="pg-intro"></p>
-        <div id="pg-chapters"></div>
-      </div>
+  <!-- The page's own sections: sits under the hero, then sticks to the top -->
+  <nav class="pg-subnav" id="pg-subnav" aria-label="On this page">
+    <div class="pg-subnav-in">
+      <a href="#why"><span>01</span>Why</a>
+      <a href="#priorities"><span>02</span>National priorities</a>
+      <a href="#achievements"><span>03</span>Achievements</a>
+      <a href="#difference"><span>04</span>Making a difference</a>
     </div>
-  </section>
+  </nav>
 
-  <!-- Cross-link: the national outcomes this theme counts toward -->
-  <section class="pg-sec pg-links" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="np-h">
+  <!-- 01 · Why -->
+  <section class="pg-sec pg-why" id="why" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="why-h">
     <div class="pg-split">
-      <header class="pg-aside pg-aside--static">
-        <h2 class="pg-h2" id="np-h">Where it counts</h2>
-        <p class="pg-note">Every theme reaches beyond itself. These are the national outcomes this work counted toward in 2025, strongest first.</p>
+      <header class="pg-aside">
+        <p class="pg-num">01</p>
+        <h2 class="pg-h2" id="why-h"></h2>
       </header>
-      <ol class="xrows" id="pg-xrows" role="list"></ol>
+      <div class="pg-body" id="pg-why"></div>
     </div>
   </section>
 
-  <!-- Stories -->
-  <section class="pg-sec pg-stories" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="st-h">
-    <header class="st-head">
-      <div>
-        <h2 class="pg-h2" id="st-h">Stories</h2>
-        <p class="pg-note" id="st-sub"></p>
-      </div>
-      <div class="st-tabs" role="tablist" aria-label="Filter stories" id="st-tabs"></div>
+  <!-- 02 · National priorities: Figma "National Priority Module" (1985:2953) -->
+  <section class="pg-sec pg-np" id="priorities" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="np-h">
+    <div class="pg-split">
+      <header class="pg-aside">
+        <p class="pg-num">02</p>
+        <h2 class="pg-h2" id="np-h"></h2>
+        <p class="pg-note">The outcomes set out in Qatar’s Third National Development Strategy (2024–2030), and where this theme meets them.</p>
+      </header>
+      <div class="np-stack" id="pg-np"></div>
+    </div>
+  </section>
+
+  <!-- 03 · Achievements: the stories -->
+  <section class="pg-sec pg-ach" id="achievements" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="ach-h">
+    <header class="pg-sec-head">
+      <p class="pg-num">03</p>
+      <h2 class="pg-h2" id="ach-h">What are QF’s achievements?</h2>
+      <p class="pg-note" id="ach-sub"></p>
     </header>
-    <div class="st-partners" id="st-partners" hidden></div>
-    <ul class="st-grid" id="st-grid" role="list"></ul>
-    <button class="st-more" id="st-more" type="button" hidden>Show all stories</button>
+    <ul class="sx-grid" id="pg-index" role="list"></ul>
+  </section>
+
+  <!-- 04 · Making a difference -->
+  <section class="pg-sec pg-diff" id="difference" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="diff-h">
+    <header class="pg-sec-head">
+      <p class="pg-num">04</p>
+      <h2 class="pg-h2" id="diff-h">How is QF making a difference?</h2>
+      <p class="pg-note">Where the work reaches past QF: into national policy, public services and Qatar’s place in the world.</p>
+    </header>
+    <div class="pg-split pg-split--stories">
+      <aside class="pg-aside">
+        <ol class="split-list pg-toc" id="pg-dtoc" role="list"></ol>
+      </aside>
+      <div class="pg-body" id="pg-diff"></div>
+    </div>
+  </section>
+
+  <!-- Source -->
+  <section class="pg-sec pg-source" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-label="Sources">
+    <p class="pg-source-line">Figures come from QF entities’ 2025 annual reporting, the most recent available, or were verified by a QF entity and validated by QF’s Strategy and Impact Department (SID).</p>
+    <ol class="pg-notes" id="pg-notes" role="list" hidden></ol>
   </section>
 
   <!-- Next -->
-  <nav class="pg-next" aria-label="More themes" data-bar="#11362A" data-tone="light">
+  <nav class="pg-next" aria-label="More themes" data-bar="rgba(238,233,222,.94)" data-tone="dark">
     <p class="pg-eyebrow">Next theme</p>
     <a class="pg-next-link" id="pg-next" href="#"></a>
     <ul class="pg-peers" id="pg-peers" role="list"></ul>
@@ -110,7 +119,7 @@
 </main>
 
 <footer class="pg-foot" data-tone="dark">
-  <svg viewBox="0 0 40 26" width="58" height="38" aria-hidden="true"><use href="#qf-logo"/></svg>
+  <img class="pg-foot-logo" src="v4/img/qf-lockup.svg" width="282" height="64" alt="Qatar Foundation">
   <ul role="list">
     <li><a href="../index.html">Qatar Foundation home</a></li>
     <li><a href="#">Contact us</a></li>
@@ -125,7 +134,9 @@
 </svg>
 
 <script src="data.js"></script>
+<script src="v4-sid-data.js"></script>
 <script src="v4-pages-data.js"></script>
 <script src="v4-pages.js"></script>
+<script src="v4-sheet.js"></script>
 </body>
 </html>

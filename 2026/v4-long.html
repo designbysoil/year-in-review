@@ -24,7 +24,6 @@
     <a href="#recaps" data-go="0"><span>01</span>Recaps</a>
     <a href="#priorities" data-go="1"><span>02</span>National Priorities</a>
     <a href="#themes" data-go="2"><span>03</span>Themes</a>
-    <a href="#partners" data-go="3"><span>04</span>Partners</a>
   </nav>
 
   <button class="nav-current" id="nav-current" type="button" aria-expanded="false" aria-controls="nav-menu">
@@ -43,7 +42,6 @@
     <a href="#recaps" data-go="0"><span>01</span>Recaps</a>
     <a href="#priorities" data-go="1"><span>02</span>National Priorities</a>
     <a href="#themes" data-go="2"><span>03</span>Themes</a>
-    <a href="#partners" data-go="3"><span>04</span>Partners</a>
   </div>
 </header>
 
@@ -79,15 +77,21 @@
     <!-- 02 · NATIONAL PRIORITIES -->
     <section class="panel panel--priorities" id="priorities" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="priorities-h">
       <div class="panel-in">
-        <div class="pc split" data-split="priorities">
-          <div class="split-text">
-            <header class="split-head">
-              <h2 class="h-section" id="priorities-h">National Priorities</h2>
-              <p class="intro">Qatar’s national outcomes set the direction for the country. This is where our year meets those ambitions, showing what we contributed and which outcomes it counted toward.</p>
-            </header>
-            <ol class="split-list" role="list"></ol>
+        <!-- Figma 1975:2655: one card per story, each counted toward a national
+             priority; a card opens that story on its theme page -->
+        <div class="pc np-home">
+          <header class="split-head">
+            <h2 class="h-section" id="priorities-h">National Priorities</h2>
+            <p class="intro">Qatar’s national outcomes set the direction for the country. This is where our year meets those ambitions, showing what we contributed and which outcomes it counted toward.</p>
+          </header>
+          <ul class="rail np-rail" id="np-rail" role="list" aria-label="Stories by national priority"></ul>
+          <div class="rail-ctrl">
+            <div class="dots" id="np-dots" role="group" aria-label="Card positions"></div>
+            <div class="arrows">
+              <button type="button" data-dir="-1" aria-label="Previous stories"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+              <button type="button" data-dir="1" aria-label="Next stories"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+            </div>
           </div>
-          <div class="split-media"></div>
         </div>
       </div>
     </section>
@@ -109,31 +113,19 @@
       </div>
     </section>
 
-    <!-- 04 · PARTNERS -->
-    <section class="panel panel--partners" id="partners" data-bar="rgba(238,233,222,.94)" data-tone="dark" aria-labelledby="partners-h">
-      <div class="panel-in">
-        <div class="pc split split--partners">
-          <div class="split-text">
-            <header class="split-head">
-              <h2 class="h-section" id="partners-h">With partners</h2>
-              <p class="intro">Little of this was achieved alone. These are the ministries, universities, companies and organisations we worked alongside in 2026, each of them part of the same national effort.</p>
-            </header>
-            <div class="partners-actions">
-              <a class="search-pill" href="#partners">
-                <span class="search-ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="6" cy="6" r="4.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9.5 9.5L13 13" stroke="currentColor" stroke-width="1.5"/></svg></span>
-                Search all 130 partners in the index
-              </a>
-              <a class="show-all" href="#partners">Show all 130 partners</a>
-            </div>
-          </div>
-          <div class="split-media split-media--grid">
-            <div class="pgrid" id="pgrid" aria-label="A selection of 2026 partners"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
 </main>
+
+<!-- Footer, as on the theme pages (Figma "Footer A – Neutral") -->
+<footer class="pg-foot" data-tone="dark">
+  <img class="pg-foot-logo" src="v4/img/qf-lockup.svg" width="282" height="64" alt="Qatar Foundation">
+  <ul role="list">
+    <li><a href="../index.html">Qatar Foundation home</a></li>
+    <li><a href="#">Contact us</a></li>
+    <li><a href="#">Privacy policy</a></li>
+    <li><a href="#">Terms of use</a></li>
+  </ul>
+  <p>© 2026 Qatar Foundation. All rights reserved.</p>
+</footer>
 
 <!-- QF logo, used by the nav (fill follows currentColor) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
