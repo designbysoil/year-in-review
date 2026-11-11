@@ -468,7 +468,7 @@
   if ($('#st-grid')) buildStories();
   buildNext();
   buildNav();
-  B ? trackSections() : trackToc('#pg-toc a');
+  trackSections();   // every version carries the page's own section nav
   trackToc('#pg-dtoc a');
   landOnHash();
   document.fonts && document.fonts.ready.then(landOnHash);
