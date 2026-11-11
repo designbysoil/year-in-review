@@ -21,22 +21,16 @@
      order. Figures are quoted from the SID source documents (v4-sid-data.js);
      a card opens its story on the theme page. */
   const NP_CARDS = [
-    { p: 'Sustainable Economic Growth', t: 'artificial-intelligence', id: 's-research-and-innovation-in-ai', img: 'ai-01-quantum-computing',
-      title: 'Research and Innovation in AI', num: '400+', cap: 'research publications from QF’s AI ecosystem in 2025, feeding a knowledge-based economy.' },
-    { p: 'Sustainable Economic Growth', t: 'precision-health', id: 's-mapping-the-qatari-genome', img: 'precision-health-05-qbri-researcher',
-      title: 'Mapping the Qatari Genome', num: '35,000', cap: 'genomic records released to researchers, the base of a home-grown precision health sector.' },
-    { p: 'Future-Ready Workforce', t: 'progressive-education', id: 'd-contribution-to-qatars-skilled-workforce-development', img: 'education-02-convocation-ceremony',
-      title: 'Qatar’s Skilled Workforce', num: '1,000+', cap: 'graduates from QF’s homegrown and partner universities, building the workforce Qatar needs.' },
-    { p: 'Cohesive Society', t: 'social-progress', id: 's-arabic-language-preservation', img: 'social-progress-03-bilaraby',
-      title: 'Arabic Language Preservation', num: '27,500+', cap: 'students worldwide learning Arabic through QFI, keeping the language at the heart of society.' },
-    { p: 'Quality of Life', t: 'precision-health', id: 's-preventative-population-health', img: 'precision-health-01-sidra-medicine',
+    // four cards, as in Figma (1761:1784); the third runs wide. Photos are
+    // the Figma placeholders for now; titles and figures stay the SID's.
+    { p: 'Quality of Life', t: 'precision-health', id: 's-preventative-population-health', img: 'priorities/np-portrait-1',
       title: 'Preventative Population Health', num: '90%', cap: 'of prediabetic patients kept from progressing to diabetes, a direct gain in quality of life.' },
-    { p: 'Quality of Life', t: 'social-progress', id: 'd-inclusivity-in-cultural-activities', img: 'social-progress-02-ability-friendly',
-      title: 'Inclusivity in Cultural Activities', num: '2,400+', cap: 'people in QF programmes for people with disabilities, widening who takes part in public life.' },
-    { p: 'Environmental Sustainability', t: 'sustainability', id: 'd-national-projects-and-programs', img: 'sustainability-03-earthna-mangroves',
+    { p: 'Future-Ready Workforce', t: 'progressive-education', id: 'd-contribution-to-qatars-skilled-workforce-development', img: 'priorities/np-workshop',
+      title: 'Qatar’s Skilled Workforce', num: '1,000+', cap: 'graduates from QF’s homegrown and partner universities, building the workforce Qatar needs.' },
+    { p: 'Environmental Sustainability', t: 'sustainability', id: 'd-national-projects-and-programs', img: 'priorities/np-qncc', wide: true,
       title: 'Mangrove Restoration', num: '40,000', cap: 'mangrove seedlings planted in 2025 to restore Qatar’s coastline.' },
-    { p: 'Government Excellence', t: 'artificial-intelligence', id: 'd-societal-impact-and-cultural-ai', img: 'ai-03-ai-ethics',
-      title: 'Fanar, Qatar’s Sovereign AI', num: '400bn', cap: 'words of Arabic behind Fanar, an AI model government agencies can run on securely.' }
+    { p: 'Cohesive Society', t: 'social-progress', id: 's-arabic-language-preservation', img: 'priorities/np-portrait-2',
+      title: 'Arabic Language Preservation', num: '27,500+', cap: 'students worldwide learning Arabic through QFI, keeping the language at the heart of society.' }
   ];
 
   /* Gradients are the theme pages' own layers (frames 216:163 … 216:1213):
@@ -253,10 +247,10 @@
     const rail = $('#np-rail'), dots = $('#np-dots');
     const [prev, next] = $$('#priorities .arrows button');
     rail.innerHTML = NP_CARDS.map(c => `
-      <li class="npc">
+      <li class="npc${c.wide ? ' npc--wide' : ''}">
         <a href="v4-theme.html?t=${c.t}#${c.id}" aria-label="${esc(c.title)}: ${esc(c.num)} ${esc(c.cap)} Counts toward ${esc(c.p)}.">
           <span class="npc-card">
-            <img src="${IMG}stories/${c.img}.jpg" alt="" loading="lazy" decoding="async">
+            <img src="${IMG}${c.img.includes('/') ? c.img : 'stories/' + c.img}.jpg" alt="" loading="lazy" decoding="async">
             <span class="npc-title">${esc(c.title)}</span>
             <span class="npc-num">${esc(c.num)}</span>
           </span>
