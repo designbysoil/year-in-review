@@ -112,3 +112,14 @@
   .pg-foot{grid-template-columns:1fr}
   .pg-foot ul{gap:16px 24px}
 }
+
+/* ───────────────── Themes: fade in from the cream above, fade out into the footer ─────────────────
+   The gradient no longer starts and stops on a hard line. Extra padding keeps
+   the white text and the cards clear of the fades. */
+.panel--themes{--fade:clamp(160px,22vh,260px);padding-top:calc(var(--nav-h) + var(--fade) * .6);padding-bottom:var(--fade)}
+.panel--themes::before,.panel--themes::after{content:"";position:absolute;left:0;right:0;z-index:1;height:var(--fade);pointer-events:none}
+.panel--themes::before{top:0;background:linear-gradient(to bottom,var(--v4-cream),rgba(238,233,222,.85) 25%,rgba(238,233,222,0))}
+.panel--themes::after{bottom:0;background:linear-gradient(to top,var(--v4-cream),rgba(238,233,222,.85) 25%,rgba(238,233,222,0))}
+.panel--themes .panel-in{z-index:2}
+.panel--themes .theme-bg{margin-top:calc((var(--nav-h) + var(--fade) * .6) * -1)}
+.panel--themes + .pg-foot,main + .pg-foot{padding-top:24px}
