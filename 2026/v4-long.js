@@ -484,7 +484,7 @@
   /* ─────────────────────────── nav ─────────────────────────── */
   const tabLinks = $$('.nav-tabs a'), menuLinks = $$('.nav-menu a');
   const menu = $('#nav-menu'), menuBtns = [$('#nav-current')];   // section switcher (phones)
-  const SECTION_NAMES = ['Recaps', 'National Priorities', 'Themes', 'Partners'];
+  const SECTION_NAMES = ['Recaps', 'National Priorities', 'Themes'];
 
   function setActive(i) {
     if (i === active) return;
@@ -540,10 +540,8 @@
   const splits = [
     buildSplit($('[data-split="themes"]'), THEMES, 'theme', setThemeBg)
   ];
-  const partners = buildPartners();
 
   setThemeBg.paint();
-  partners.render();
   placeRecapsGradient();
   update();
 
@@ -558,11 +556,10 @@
     clearTimeout(resizeT);
     resizeT = setTimeout(() => {
       setThemeBg.paint();
-      partners.render();
-      buildMarquee();
+          buildMarquee();
       placeRecapsGradient();
       update();
     }, 120);
   });
-  mqMobile.addEventListener('change', () => { partners.render(); update(); });
+  mqMobile.addEventListener('change', update);
 })();
